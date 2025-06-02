@@ -20,7 +20,7 @@ create table users (
     join_date timestamp default now(),
     is_private boolean default true,
     role roles not null,
-    boolean is_active default true
+    is_active boolean default true
 );
 
 create type statuses as enum('Accepted', 'Pending', 'Rejected');
@@ -151,15 +151,15 @@ create table job_skills (
 
 create table job_interested_users (
     job_id integer references jobs(id) on delete cascade,
-    user_id integer references users(id) on delete cascade.
+    user_id integer references users(id) on delete cascade,
     primary key (job_id, user_id)
 );
 
 create table job_accepted_users (
     job_id integer references jobs(id) on delete cascade,
-    user_id integer references users(id) on delete cascade.
+    user_id integer references users(id) on delete cascade,
     primary key (job_id, user_id)
-)
+);
 
 create table friends (
     following_id integer references users(id) on delete cascade,
@@ -208,11 +208,11 @@ create table message_seen (
 create type notification_type as enum('Friends-Request', 'Comment', 'Like');
 
 create table notifications (
-    id serial primary key
+    id serial primary key,
     sender_id integer references users(id) on delete cascade,
     receiver_id integer references users(id) on delete cascade,
     content text not null,
-    post_id references posts(id),
+    post_id integer references posts(id),
     type notification_type not null
 );
 
@@ -223,5 +223,5 @@ create table login_logs (
 	user_id int references users(id) on delete cascade,
 	login_at timestamp default now(),
 	ip_address varchar(50),
-    status login_status default 'Success',
+    status login_status default 'Success' not null
 );
