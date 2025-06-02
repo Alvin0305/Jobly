@@ -33,6 +33,14 @@ export const findUserById = async (id) => {
   return rows[0];
 };
 
+export const markUserAsOnline = async (user_id) => {
+  // update the is_active value in users table for the user_id
+}
+
+export const markUserAsOffline = async (user_id) => {
+  // update the is_active value in users table for the user_id
+}
+
 export const getUserFollowersFunction = async (user_id) => {
   // get all the followers of the user with given id from the friendlist table
 };
