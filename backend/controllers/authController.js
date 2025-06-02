@@ -1,11 +1,6 @@
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
-import {
-  createUser,
-  findUserByEmail,
-  findUserById,
-  markUserAsOnline,
-} from "../models/user.js";
+import { createUser, findUserByEmail, findUserById } from "../models/user.js";
 
 export const getUserProfile = async (req, res) => {
   const { id } = req.user;
@@ -38,8 +33,7 @@ export const registerUser = async (req, res) => {
       role
     );
     if (!user) return res.status(400).json({ error: "Error in creating user" });
-    markUserAsOnline(user.id);
-    res.json({
+    return res.json({
       id: user.id,
       firstname: user.firstname,
       lastname: user.lastname,
@@ -65,7 +59,7 @@ export const loginUser = async (req, res) => {
     console.log(user);
     const valid = await bcrypt.compare(password, user.password_hash);
     if (!valid) return res.status(401).json({ error: "Incorrect Password" });
-    markUserAsOnline(user.id);
+
     res.json({
       id: user.id,
       firstname: user.firstname,

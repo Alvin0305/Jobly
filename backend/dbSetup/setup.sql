@@ -33,6 +33,11 @@ create table requests (
     request_date timestamp default now()
 );
 
+create table domains (
+    id serial primary key,
+    name varchar(100)
+);
+
 create table posts(
     id serial primary key,
     user_id integer references users(id) on delete cascade,
@@ -47,6 +52,26 @@ create table tags (
     primary key (post_id, user_id)
 );
 
+create table post_domains (
+    post_id integer references posts(id) on delete cascade,
+    domain_id integer references domains(id) on delete cascade,
+    primary key (post_id, domain_id)
+);
+
+create table post_likes (
+	post_id int references posts(id) on delete cascade,
+	liked_by int references users(id) on delete cascade,
+	liked_at timestamp default now(),
+	primary key (post_id, liked_by)
+);
+
+create table post_images (
+	id serial primary key,
+	post_id int references posts(id) on delete cascade,
+	image_url text,
+	uploaded_at timestamp
+);
+
 create table comments (
     id serial primary key,
     post_id integer references posts(id) on delete cascade,
@@ -55,25 +80,15 @@ create table comments (
     time timestamp default now()
 );
 
-create table skills (
-    id serial primary key,
-    name varchar(100)
-);
-
 create table user_skills (
     user_id integer references users(id) on delete cascade,
-    skill_id integer references skills(id) on delete cascade,
+    skill_id integer references domains(id) on delete cascade,
     primary key (user_id, skill_id)
-);
-
-create table interests (
-    id serial primary key,
-    name varchar(100)
 );
 
 create table user_interests (
     user_id integer references users(id) on delete cascade,
-    interest_id integer references interests(id) on delete cascade,
+    interest_id integer references domains(id) on delete cascade,
     primary key (user_id, interest_id)
 );
 
@@ -128,6 +143,24 @@ create table job_images (
     primary key (job_id, image_url)
 );
 
+create table job_skills (
+    job_id integer references jobs(id) on delete cascade,
+    skill_id integer references domains(id) on delete cascade,
+    primary key (job_id, skill_id)
+);
+
+create table job_interested_users (
+    job_id integer references jobs(id) on delete cascade,
+    user_id integer references users(id) on delete cascade.
+    primary key (job_id, user_id)
+);
+
+create table job_accepted_users (
+    job_id integer references jobs(id) on delete cascade,
+    user_id integer references users(id) on delete cascade.
+    primary key (job_id, user_id)
+)
+
 create table friends (
     following_id integer references users(id) on delete cascade,
     follower_id integer references users(id) on delete cascade,
@@ -172,16 +205,15 @@ create table message_seen (
 	seen_at timestamp default now()
 );
 
+create type notification_type as enum('Friends-Request', 'Comment', 'Like');
 
-
-
-
-
-create table post_likes (
-	post_id int references posts(id) on delete cascade,
-	liked_by int references users(id) on delete cascade,
-	liked_at timestamp default now(),
-	primary key (post_id, liked_by)
+create table notifications (
+    id serial primary key
+    sender_id integer references users(id) on delete cascade,
+    receiver_id integer references users(id) on delete cascade,
+    content text not null,
+    post_id references posts(id),
+    type notification_type not null
 );
 
 create type login_status as enum ('Success', 'Failed');
@@ -191,12 +223,5 @@ create table login_logs (
 	user_id int references users(id) on delete cascade,
 	login_at timestamp default now(),
 	ip_address varchar(50),
-	status login_status
-);
-
-create table post_images (
-	id serial primary key,
-	post_id int references posts(id) on delete cascade,
-	image_url text,
-	uploaded_at timestamp
+    status login_status default 'Success',
 );

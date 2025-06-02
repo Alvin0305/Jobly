@@ -33,12 +33,19 @@ export const findUserById = async (id) => {
   return rows[0];
 };
 
+export const addLogFunction = async (user_id) => {
+  // insert user_id into login logs table
+  // after implementation, call this function in login and register
+};
+
 export const markUserAsOnline = async (user_id) => {
   // update the is_active value in users table for the user_id
+  // after implementation, call this function in login and register
 };
 
 export const markUserAsOffline = async (user_id) => {
   // update the is_active value in users table for the user_id
+  // after implementation of this function and log out function, call this function in log out function
 };
 
 export const getUserFollowersFunction = async (user_id) => {
