@@ -2,8 +2,8 @@ export const createInterest = async (req, res) => {
   // use the create interst function in the metadata model to create interest
 };
 
-export const getInterests = async (req, res) => {
-  // use the get interests function in the metadata model to get all intersts available
+export const getDomains = async (req, res) => {
+  // use the get domains function in the metadata model to get all domains available
 };
 
 export const getInterestsOfUser = async (req, res) => {
@@ -12,10 +12,6 @@ export const getInterestsOfUser = async (req, res) => {
 
 export const createSkill = async (req, res) => {
   // use the create skill function in the metadata model to create skill
-};
-
-export const getSkills = async (req, res) => {
-  // use the get skills function in the metadata model to get all skills available
 };
 
 export const getSkillsOfUser = async (req, res) => {

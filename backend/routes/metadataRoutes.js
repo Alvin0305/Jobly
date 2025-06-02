@@ -7,20 +7,18 @@ import {
   createSkill,
   getCodingLanguages,
   getCodingLanguagesOfUser,
-  getInterests,
+  getDomains,
   getInterestsOfUser,
   getLanguages,
   getLanguagesOfUser,
   getQualifications,
   getQualificationsOfUser,
-  getSkills,
   getSkillsOfUser,
 } from "../controllers/metdataController.js";
 
 const router = express.Router();
 
-router.get("/interest", getInterests);
-router.get("/skill", getSkills);
+router.get("/domain", getDomains);
 router.get("/codinglanguage", getCodingLanguages);
 router.get("/language", getLanguages);
 router.get("/qualification", getQualifications);

@@ -1,14 +1,23 @@
-export const createInterestFunction = async (user_id, name) => {
-  // insert a new interest into the interest table
-  // update the user interest table, add this interst to it
-};
+export const getDomainsFunction = async () => {
+  // get all domain in domain table
+}
 
-export const getInterestsFunction = async () => {
-  // retrive all the interests in the interest table
+export const createInterestFunction = async (user_id, name) => {
+  // insert a new domain into the domain table
+  // update the user interest table, add this interst to it
 };
 
 export const getInterestsOfUserFunction = async (user_id) => {
   // retrive all the interests of the user from the user interests table
+};
+
+export const createSkillFunction = async (user_id, name) => {
+  // insert a new skill into the skills table
+  // update the user skills table, add this skill to it
+};
+
+export const getSkillsOfUserFunction = async (user_id) => {
+  // retrive all the skills of the user from the user skills table
 };
 
 export const createLanguageFunction = async (user_id, language) => {
@@ -35,19 +44,6 @@ export const getQualificationsFunction = () => {
 
 export const getQualificationsOfUserFunction = async (user_id) => {
   // get all qualifications of the given user
-};
-
-export const createSkillFunction = async (user_id, name) => {
-  // insert a new skill into the skills table
-  // update the user skills table, add this skill to it
-};
-
-export const getSkillsFunction = async () => {
-  // retrive all the skills in the skills table
-};
-
-export const getSkillsOfUserFunction = async (user_id) => {
-  // retrive all the skills of the user from the user skills table
 };
 
 export const createCodingLanguageFunction = async (user_id, language) => {
