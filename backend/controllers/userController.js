@@ -21,3 +21,7 @@ export const deleteUser = async (req, res) => {
 export const getUserNotifications = async (req, res) => {
   // use the get user notification function in the user model to get the notifications of the user
 };
+
+export const searchUsers = async (req, res) => {
+  //use the search user function in the user model to get the search result for users
+};

@@ -1,4 +1,3 @@
-import { likePost } from "./controllers/postController.js";
 import {
   deleteMessage,
   disconnect,
@@ -10,6 +9,7 @@ import {
 import { createJob, replyJob } from "./socketControllers/jobController.js";
 import {
   commentPost,
+  likePost,
   sendConnectionRequest,
 } from "./socketControllers/notificationController.js";
 

@@ -3,20 +3,22 @@ import pool from "../db.js";
 export const createJobFunction = async (
   employer_id,
   required_experience,
+  skills_required,
   salary,
   image_urls
 ) => {
   // insert a new job in the jobs table
   // insert the images and job_id from the job table into the job_images table
+  // insert skills_required into job skills table
 };
 
 export const getJobByIdFunction = async (job_id) => {
   // get all the job details of the job with given id
+  // return everything related to that job
 };
 
 export const deleteJobFunction = async (job_id) => {
   // delete the particular job from the jobs table
-  // also emit a signal in the socket signaling the deletion
 };
 
 export const getJobsCreatedByEmployerFunction = async (employer_id) => {

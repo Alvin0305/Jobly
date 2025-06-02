@@ -5,6 +5,7 @@ import {
   getUserFollowers,
   getUserFollowing,
   getUserNotifications,
+  searchUsers,
   updateUser,
 } from "../controllers/userController.js";
 import { protect } from "../middlewares/authMiddleware.js";
@@ -17,5 +18,6 @@ router.get("/mutual/:id", protect, getMutualFriends);
 router.get("/notification/:id", protect, getUserNotifications);
 router.put("/:id", protect, updateUser);
 router.delete("/:id", protect, deleteUser);
+router.post("/search", protect, searchUsers);
 
 export default router;

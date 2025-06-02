@@ -35,11 +35,11 @@ export const findUserById = async (id) => {
 
 export const markUserAsOnline = async (user_id) => {
   // update the is_active value in users table for the user_id
-}
+};
 
 export const markUserAsOffline = async (user_id) => {
   // update the is_active value in users table for the user_id
-}
+};
 
 export const getUserFollowersFunction = async (user_id) => {
   // get all the followers of the user with given id from the friendlist table
@@ -54,7 +54,7 @@ export const getMutualFriendsFunction = async (user_id) => {
   // add the number of mutual friends count also in the result
 };
 
-export const updateUserFunction = async (user_id, user) => {
+export const updateUserFunction = async (user_id, userData) => {
   // update all the details of the user accordingly.
   // If the user variable contain a new language, add the language into the user language table.
   // If the language is not in the languages table, add it to the languages table first
@@ -66,4 +66,9 @@ export const deleteUserFunction = async (user_id) => {
 
 export const getUserNotificationsFunction = async (user_id) => {
   // get notifications of the user from the notification table
+};
+
+export const searchUsersFunctions = async (searchValue, tags, isEmployee) => {
+  // get the users based on the searchValue, skills (tags) and whether they are
+  // looking for an employee or employer or both
 };

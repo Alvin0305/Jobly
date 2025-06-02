@@ -3,9 +3,11 @@ import { protect } from "../middlewares/authMiddleware.js";
 import {
   createPost,
   deletePost,
+  getComments,
   getPostById,
   getPostsByUser,
-  likePost,
+  getPostsInFeed,
+  searchPosts,
 } from "../controllers/postController.js";
 
 const router = express.Router();
@@ -13,7 +15,9 @@ const router = express.Router();
 router.post("/", protect, createPost);
 router.delete("/", protect, deletePost);
 router.get("/user/:id", protect, getPostsByUser);
+router.get("/feed", protect, getPostsInFeed);
 router.get("/:id", protect, getPostById);
-router.patch("/like", protect, likePost);
+router.get("/comments/:id", protect, getComments);
+router.post("/search", protect, searchPosts);
 
 export default router;
