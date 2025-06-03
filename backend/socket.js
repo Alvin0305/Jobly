@@ -17,12 +17,24 @@ export const configureSockets = (io) => {
   io.on("connection", (socket) => {
     console.log("user connected");
 
-    socket.on("join_chat", joinChat);
-    socket.on("read_messages", readMessages);
-    socket.on("send_message", sendMessage);
-    socket.on("delete_message", deleteMessage);
-    socket.on("update_message", updateMessage);
-    socket.on("disconnect", disconnect);
+    socket.on("join_chat", (user_id, chat_id) =>
+      joinChat({ user_id, chat_id, socket, io })
+    );
+    socket.on("read_messages", (user_id, chat_id) =>
+      readMessages({ user_id, chat_id, io })
+    );
+    socket.on("send_message", (messageData) =>
+      sendMessage({ messageData, io })
+    );
+    socket.on("delete_message", (message_id, chat_id) =>
+      deleteMessage({ message_id, chat_id, io })
+    );
+    socket.on("update_message", (messageData, chat_id) =>
+      updateMessage({ messageData, chat_id, io })
+    );
+    socket.on("disconnect", (chat_id, user_id) =>
+      disconnect({ chat_id, user_id, socket })
+    );
 
     socket.on("create_job", createJob);
     socket.on("reply_to_job", replyJob);
