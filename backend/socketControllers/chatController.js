@@ -73,3 +73,4 @@ export const disconnect = async (chat_id, user_id, socket) => {
     `user ${user_id} disconnected from ${chat_id} with socket id: ${socket.id}`
   );
 };
+
