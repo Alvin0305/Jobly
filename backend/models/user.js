@@ -54,6 +54,15 @@ export const getUserFollowersFunction = async (user_id) => {
 
 export const getUserFollowingFunction = async (user_id) => {
   // get all the users who follows the given user from the friendlist table
+
+  const {rows} = await pool.query(
+    `SELECT users.*
+    FROM friends
+    JOIN users ON friends.following_id = users.id
+    WHERE friends.follower_id = $1`,
+    [user_id]
+  );
+  return rows;
 };
 
 export const getMutualFriendsFunction = async (user_id) => {

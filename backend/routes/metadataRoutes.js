@@ -15,24 +15,25 @@ import {
   getQualificationsOfUser,
   getSkillsOfUser,
 } from "../controllers/metdataController.js";
+import { protect } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
 router.get("/domain", getDomains);
 router.get("/codinglanguage", getCodingLanguages);
-router.get("/language", getLanguages);
+router.get("/language",getLanguages);
 router.get("/qualification", getQualifications);
 
-router.post("/interest/:id", createInterest);
-router.post("/skill/:id", createSkill);
+router.post("/interest/:id",protect, createInterest);
+router.post("/skill/:id",protect, createSkill);
 router.post("/codinglanguage/:id", createCodingLanguage);
-router.post("/language/:id", createLanguage);
-router.post("/qualification/:id", createQualification);
+router.post("/language/:id",protect, createLanguage);
+router.post("/qualification/:id",protect, createQualification);
 
-router.get("/interest/:id", getInterestsOfUser);
-router.get("/skill/:id", getSkillsOfUser);
+router.get("/interest/:id", protect,getInterestsOfUser);
+router.get("/skill/:id",protect, getSkillsOfUser);
 router.get("/codinglanguage/:id", getCodingLanguagesOfUser);
-router.get("/language/:id", getLanguagesOfUser);
+router.get("/language/:id",protect, getLanguagesOfUser);
 router.get("/qualification/:id", getQualificationsOfUser);
 
 export default router;

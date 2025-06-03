@@ -1,10 +1,22 @@
-export const getUserFollowers = async (req, res) => {
-  // use get user followers function in the user model to get all the followers of the user
-};
+import { getUserFollowingFunction } from "../models/user.js";
 
 export const getUserFollowing = async (req, res) => {
   // use the get user following function in the user model to get the users who follow the given user
+
+  const {id} = req.params;
+
+  try{
+    const following = await getUserFollowingFunction(id);
+    res.status(200).json(following);
+  }catch(err){
+    console.log("Error fetching following: ",err);
+    res.status(500).json({ error:"Internal server error"});
+  }
 };
+
+export const getUserFollowers = async (req, res) => {
+  
+}
 
 export const getMutualFriends = async (req, res) => {
   // use the get mutual friends function in the user model to get the mutual friends
