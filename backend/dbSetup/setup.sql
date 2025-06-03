@@ -22,6 +22,16 @@ create table users (
     role roles not null,
     is_active boolean default true
 );
+create  table work_experience (
+    id serial primary key,
+    user_id integer references users(id) on delete cascade,
+    company_name varchar(255) not null,
+    designation varchar(255) not null,
+    start_date date,
+    end_date date, -- NULL if still working
+    description text,
+    location varchar(255)
+);
 
 create type statuses as enum('Accepted', 'Pending', 'Rejected');
 
