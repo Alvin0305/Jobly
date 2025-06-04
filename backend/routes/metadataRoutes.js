@@ -26,14 +26,14 @@ router.get("/qualification", getQualifications);
 
 router.post("/interest/:id",protect, createInterest);
 router.post("/skill/:id",protect, createSkill);
-router.post("/codinglanguage/:id", createCodingLanguage);
+router.post("/codinglanguage/:id",protect, createCodingLanguage);
 router.post("/language/:id",protect, createLanguage);
 router.post("/qualification/:id",protect, createQualification);
 
 router.get("/interest/:id", protect,getInterestsOfUser);
 router.get("/skill/:id",protect, getSkillsOfUser);
-router.get("/codinglanguage/:id", getCodingLanguagesOfUser);
+router.get("/codinglanguage/:id",protect, getCodingLanguagesOfUser);
 router.get("/language/:id",protect, getLanguagesOfUser);
-router.get("/qualification/:id", getQualificationsOfUser);
+router.get("/qualification/:id",protect, getQualificationsOfUser);
 
 export default router;

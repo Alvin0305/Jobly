@@ -199,23 +199,79 @@ export const createQualificationFunction = async (user_id, qualification) => {
   }
 };
 
-export const getQualificationsFunction = () => {
+export const getQualificationsFunction = async () => {
   // get all the qualifications in the qualifications table
+  const {rows} = await pool.query(
+    `SELECT * FROM qualifications ORDER BY name`
+  );
+  return rows;
 };
 
 export const getQualificationsOfUserFunction = async (user_id) => {
   // get all qualifications of the given user
+  const {rows} = await pool.query(
+    `SELECT qua.id,qua.name
+    FROM user_qualifications usqu
+    JOIN qualifications qua ON usqu.qualification_id = qua.id
+    WHERE usqu.user_id=$1`,
+    [user_id]
+  );
+  return rows;
 };
 
-export const createCodingLanguageFunction = async (user_id, language) => {
+export const createCodingLanguageFunction = async (user_id, codlang) => {
   // insert a new coding language into the coding language table
   // update the user coding languge table, add this coding language to it
+  console.log(user_id);
+  try{
+    let res = await pool.query(
+      `SELECT id FROM coding_languages WHERE name = $1`,
+      [codlang]
+    );
+
+    let lanId;
+
+    if(res.rows.length === 0){
+      const insertRes = await pool.query(
+        `INSERT INTO coding_languages (name) VALUES ($1) RETURNING id`,
+        [codlang]
+      );
+
+      lanId= insertRes.rows[0].id;
+    }
+    else{
+      lanId = res.rows[0].id;
+    }
+     
+    await pool.query(
+      `INSERT INTO user_coding_languages (user_id, coding_language_id) VALUES ($1,$2) ON CONFLICT DO NOTHING`,
+      [user_id,lanId]
+    );
+
+    return { success: true, coding_language_id: lanId };
+
+  }catch(err){
+    console.error("createCodingLanguageFunction error:", err.message);
+    throw err;
+  }
 };
 
 export const getCodingLanguagesFunction = async () => {
   // retrive all coding languages in the coding language table
+  const {rows} = await pool.query(
+    `SELECT * FROM coding_languages ORDER BY name`
+  );
+  return rows;
 };
 
 export const getCodingLanguagesOfUserFunction = async (user_id) => {
   // retrive all the coding languages a user know from the user coding languages table
+  const {rows} = await pool.query(
+  `SELECT lan.id,lan.name
+    FROM user_coding_languages usla
+    JOIN coding_languages lan ON usla.coding_language_id = lan.id
+    WHERE usla.user_id=$1`,
+    [user_id]
+  );
+  return rows;
 };

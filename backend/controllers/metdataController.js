@@ -1,4 +1,4 @@
-import { createInterestFunction, createLanguageFunction, createQualificationFunction, createSkillFunction, getDomainsFunction, getInterestsOfUserFunction, getLanguagesByUserFunction, getLanguagesFunction, getSkillsOfUserFunction } from "../models/metadata.js";
+import { createCodingLanguageFunction, createInterestFunction, createLanguageFunction, createQualificationFunction, createSkillFunction, getCodingLanguagesFunction, getDomainsFunction, getInterestsOfUserFunction, getLanguagesByUserFunction, getLanguagesFunction, getQualificationsFunction, getQualificationsOfUserFunction, getSkillsOfUserFunction } from "../models/metadata.js";
 
 export const createInterest = async (req, res) => {
   // use the create interst function in the metadata model to create interest
@@ -127,14 +127,43 @@ export const getLanguagesOfUser = async (req, res) => {
 
 export const createCodingLanguage = async (req, res) => {
   // use the create coding language function in the metadata model to create coding language
+  const {codlang} = req.body;
+  const user_id = req.user?.id;
+  console.log("Logged-in user:", req.user);
+
+  if(!codlang)
+    return res.status(400).json({error :"codlang is required"});
+
+  try{
+    const result = await createCodingLanguageFunction(user_id,codlang);
+    res.status(201).json({
+      message:"Language added successfully", 
+      coding_language_id:result.coding_language_id
+    });
+  }catch(err){
+    res.status(500).json({ error: "Failed to add language", details: err.message });
+  }
+
 };
 
 export const getCodingLanguages = async (req, res) => {
   // use the get coding languages function in the metadata model to get all coding  languages available
+  try{
+    const languages = await getCodingLanguagesFunction();
+    res.status(200).json({languages});
+  }catch(err){
+    res.status(500).json({error:"Failed to fetch languages",details:err.message});
+  }
 };
 
 export const getCodingLanguagesOfUser = async (req, res) => {
   // use the get coding language of user function to get all the coding  languages of the user
+  try{
+    const languages = await getLanguagesFunction();
+    res.status(200).json({languages});
+  }catch(err){
+    res.status(500).json({error:"Failed to fetch languages",details:err.message});
+  }
 };
 
 export const createQualification = async (req, res) => {
@@ -159,8 +188,26 @@ export const createQualification = async (req, res) => {
 
 export const getQualifications = async (req, res) => {
   // use the get qualifications function in the metadata model to get all the qualifications available
+  try{
+    const qualifications = await getQualificationsFunction();
+    res.status(200).json({qualifications});
+  }catch(err){
+    res.status(500).json({error:"Failed to fetch qualifications", details:err.message});
+  }
 };
 
 export const getQualificationsOfUser = async (req, res) => {
   // use the get qualifications of user function in the metadata model to get all the qualifications of the user
+  const userId = req.user?.id;
+
+  if(!userId){
+    return res.status(401).json({error:"User not authenticated"});
+  }
+
+  try{
+    const qualifications = await getQualificationsOfUserFunction(userId);
+    res.status(200).json({qualifications});
+  }catch(err){
+    res.status(500).json({error:"Failed to fetch qualifications"});
+  }
 };
