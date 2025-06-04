@@ -11,6 +11,7 @@ import jobRoutes from "./routes/jobRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import metadataRoutes from "./routes/metadataRoutes.js";
+import chatRoutes from "./routes/chatRoutes.js";
 
 dotenv.config();
 
@@ -35,11 +36,12 @@ app.use(express.json());
 configureSockets(io);
 
 // all routes goes here
-app.use("/auth", authRoutes);
-app.use("/job", jobRoutes);
-app.use("/post", postRoutes);
-app.use("/user", userRoutes);
-app.use("/metadata", metadataRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/job", jobRoutes);
+app.use("/api/post", postRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/metadata", metadataRoutes);
+app.use("/api/chat", chatRoutes);
 
 const PORT = process.env.PORT;
 server.listen(PORT, () => {
