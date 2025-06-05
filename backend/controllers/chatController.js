@@ -5,8 +5,6 @@ import {
   getMessagesInChatFunction,
   getPinnedMessageFunction,
   getUserChatsFunction,
-  pinMessageFunction,
-  unpinMessageFunction,
 } from "../models/chat.js";
 
 export const createChat = async (req, res) => {
