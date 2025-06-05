@@ -1,6 +1,13 @@
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
-import { createUser, findUserByEmail, findUserById } from "../models/user.js";
+import {
+  addToLoginLogs,
+  createUser,
+  findUserByEmail,
+  findUserById,
+  markUserAsOffline,
+  markUserAsOnline,
+} from "../models/user.js";
 
 export const getUserProfile = async (req, res) => {
   const { id } = req.user;
@@ -33,6 +40,7 @@ export const registerUser = async (req, res) => {
       role
     );
     if (!user) return res.status(400).json({ error: "Error in creating user" });
+    await markUserAsOnline(user.id);
     return res.json({
       id: user.id,
       firstname: user.firstname,
@@ -54,11 +62,14 @@ export const loginUser = async (req, res) => {
 
   try {
     const user = await findUserByEmail(email);
-    console.log(user);
     if (!user) return res.status(404).json({ error: "User not found" });
-    console.log(user);
     const valid = await bcrypt.compare(password, user.password_hash);
-    if (!valid) return res.status(401).json({ error: "Incorrect Password" });
+    if (!valid) {
+      await addToLoginLogs(user.id, "Failed");
+      return res.status(401).json({ error: "Incorrect Password" });
+    }
+    await markUserAsOnline(user.id);
+    await addToLoginLogs(user.id, "Success");
 
     res.json({
       id: user.id,
@@ -70,5 +81,20 @@ export const loginUser = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: `Login failed with error ${err.message}` });
+  }
+};
+
+export const logoutUser = async (req, res) => {
+  const id = req.user?.id;
+
+  try {
+    const offlineUser = await markUserAsOffline(id);
+    if (!offlineUser)
+      return res.status(400).json({ error: "Failed to log out user" });
+    res.json({ message: "User logged out successfully" });
+  } catch (err) {
+    console.log("Failed to mark offline");
+    console.log(err);
+    res.status(500).json({ error: err.message });
   }
 };

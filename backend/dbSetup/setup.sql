@@ -216,7 +216,7 @@ create table message_seen (
 );
 
 create type notification_type as enum('Friends-Request', 'Comment', 'Like');
-import { generateToken } from "../../../Jobly/backend/utils/generateToken.js";
+
 create table notifications (
     id serial primary key,
     sender_id integer references users(id) on delete cascade,

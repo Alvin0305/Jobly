@@ -33,19 +33,30 @@ export const findUserById = async (id) => {
   return rows[0];
 };
 
-export const addLogFunction = async (user_id) => {
-  // insert user_id into login logs table
-  // after implementation, call this function in login and register
+export const addToLoginLogs = async (user_id, status) => {
+  const { rows } = await pool.query(
+    `INSERT INTO login_logs (user_id, status)
+    VALUES ($1, $2)
+    RETURNING *`,
+    [user_id, status]
+  );
+  return rows[0];
 };
 
 export const markUserAsOnline = async (user_id) => {
-  // update the is_active value in users table for the user_id
-  // after implementation, call this function in login and register
+  const { rows } = await pool.query(
+    `UPDATE users SET is_active = True WHERE id = $1 RETURNING *`,
+    [user_id]
+  );
+  return rows[0];
 };
 
 export const markUserAsOffline = async (user_id) => {
-  // update the is_active value in users table for the user_id
-  // after implementation of this function and log out function, call this function in log out function
+  const { rows } = await pool.query(
+    `UPDATE users SET is_active = False WHERE id = $1 RETURNING *`,
+    [user_id]
+  );
+  return rows[0];
 };
 
 export const getUserFollowersFunction = async (user_id) => {
@@ -55,7 +66,7 @@ export const getUserFollowersFunction = async (user_id) => {
 export const getUserFollowingFunction = async (user_id) => {
   // get all the users who follows the given user from the friendlist table
 
-  const {rows} = await pool.query(
+  const { rows } = await pool.query(
     `SELECT users.*
     FROM friends
     JOIN users ON friends.following_id = users.id
