@@ -22,19 +22,11 @@ export const createMessageFunction = async (messageData) => {
 export const readMessagesFunction = async (chat_id, user_id) => {
   const { rows } = await pool.query(
     `
-        INSERT INTO message_seen (message_id, user_id)
-        SELECT m.id, $2 
-        FROM messages AS m
-          WHERE m.chat_id = $1
-          AND m.sender_id != $2
-          AND m.deleted = FALSE
-          AND NOT EXISTS (
-              SELECT 1 FROM message_seen ms
-              WHERE ms.message_id = m.id 
-              AND ms.user_id = $2
-          )
-          ORDER BY m.created_at ASC
-          RETURNING *
+    UPDATE messages
+    SET seen = true,
+    seen_at = NOW()
+    WHERE chat_id = $1
+    AND sender_id != $2
         `,
     [chat_id, user_id]
   );
@@ -61,6 +53,41 @@ export const updateMessageFunction = async (messageData) => {
     WHERE id = $2
     RETURNING *`,
     [content, message_id]
+  );
+  return rows[0];
+};
+
+export const pinMessageFunction = async (message_id) => {
+  const { rows: chat } = await pool.query(
+    `SELECT chat_id FROM messages WHERE id = $1`,
+    [message_id]
+  );
+
+  await pool.query(
+    `UPDATE messages 
+    SET is_pinned = false
+    WHERE chat_id = $1 
+    AND is_pinned = true`,
+    [chat[0].chat_id]
+  );
+
+  const { rows } = await pool.query(
+    `UPDATE messages 
+    SET is_pinned = true
+    WHERE id = $1
+    RETURNING *`,
+    [message_id]
+  );
+  return rows[0];
+};
+
+export const unpinMessageFunction = async (message_id) => {
+  const { rows } = await pool.query(
+    `UPDATE messages 
+      SET is_pinned = false
+      WHERE id = $1
+      RETURNING *`,
+    [message_id]
   );
   return rows[0];
 };

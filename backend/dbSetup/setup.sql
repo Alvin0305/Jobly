@@ -180,11 +180,11 @@ create table friends (
 
 create table chats (
 	id serial primary key,
-	name varchar(100),
-	is_group boolean default false,
-	created_by int references users(id) on delete set null,
-	created_at timestamp,
-	image text
+    user1_id integer references users(id) on delete cascade,
+    user2_id integer references users(id) on delete cascade,
+    user1_unread integer default 0,
+    user2_unread integer default 0,
+	created_at timestamp default now()
 );
 
 create table messages (
@@ -193,26 +193,13 @@ create table messages (
 	chat_id int references chats(id) on delete cascade,
 	content text,
 	reply_to int references messages(id) on delete set null,
+    seen boolean default false,
+    seen_at time default null,
 	file_url text,
 	is_edited boolean default false,
 	is_deleted boolean default false,
 	is_pinned boolean default false,
 	created_at timestamp default now()
-);
-
-create table chat_members (
-	id serial primary key,
-	chat_id int references chats(id) on delete cascade,
-	user_id int references users(id) on delete cascade,
-	added_at timestamp,
-	is_admin boolean default false
-);
-
-create table message_seen (
-	id serial primary key,
-	message_id int references messages(id) on delete cascade,
-	user_id int references users(id) on delete cascade,
-	seen_at timestamp default now()
 );
 
 create type notification_type as enum('Friends-Request', 'Comment', 'Like');
