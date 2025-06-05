@@ -182,6 +182,8 @@ create table chats (
 	id serial primary key,
     user1_id integer references users(id) on delete cascade,
     user2_id integer references users(id) on delete cascade,
+    user1_unread integer default 0,
+    user2_unread integer default 0,
 	created_at timestamp default now()
 );
 
