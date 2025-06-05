@@ -22,7 +22,6 @@ router.get("/user/:id", protect, getPostsByUser);
 router.get("/feed", protect, getPostsInFeed);
 router.get("/:id", protect, getPostById);
 router.get("/comments/:id", protect, getComments);
-router.post("/search", protect, searchPosts);
 // make sure the key value being based is images not image
 router.post(
   "/upload",
