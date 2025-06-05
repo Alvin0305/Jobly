@@ -180,7 +180,6 @@ create table friends (
 
 create table chats (
 	id serial primary key,
-	name varchar(100),
     user1_id integer references users(id) on delete cascade,
     user2_id integer references users(id) on delete cascade,
 	created_at timestamp
