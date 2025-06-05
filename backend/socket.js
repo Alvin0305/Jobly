@@ -2,8 +2,10 @@ import {
   deleteMessage,
   disconnect,
   joinChat,
+  pinMessage,
   readMessages,
   sendMessage,
+  unpinMessage,
   updateMessage,
 } from "./socketControllers/chatController.js";
 import { createJob, replyJob } from "./socketControllers/jobController.js";
@@ -31,6 +33,10 @@ export const configureSockets = (io) => {
     );
     socket.on("update_message", (messageData, chat_id) =>
       updateMessage({ messageData, chat_id, io })
+    );
+    socket.on("pin_message", (message_id) => pinMessage({ message_id, io }));
+    socket.on("unpin_message", (message_id) =>
+      unpinMessage({ message_id, io })
     );
     socket.on("disconnect", (chat_id, user_id) =>
       disconnect({ chat_id, user_id, socket })

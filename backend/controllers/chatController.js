@@ -85,31 +85,3 @@ export const clearChat = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
-export const pinMessage = async (req, res) => {
-  const message_id = req.params.id;
-  try {
-    const pinnedMessage = await pinMessageFunction(message_id);
-    if (!pinnedMessage)
-      return res.status(400).json({ error: "Failed to pin message" });
-    res.json(pinnedMessage);
-  } catch (err) {
-    console.log("Failed to pin message");
-    console.log(err);
-    res.status(500).json({ error: err.message });
-  }
-};
-
-export const unpinMessage = async (req, res) => {
-  const message_id = req.params.id;
-  try {
-    const unpinnedMessage = await unpinMessageFunction(message_id);
-    if (!unpinnedMessage)
-      return res.status(400).json({ error: "Failed to unpin message" });
-    res.json(unpinnedMessage);
-  } catch (err) {
-    console.log("Failed to unpin message");
-    console.log(err);
-    res.status(500).json({ error: err.message });
-  }
-};

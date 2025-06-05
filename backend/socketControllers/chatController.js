@@ -2,7 +2,9 @@ import {
   createMessageFunction,
   deleteMessageFunction,
   getMessageByIdFunction,
+  pinMessageFunction,
   readMessagesFunction,
+  unpinMessageFunction,
   updateMessageFunction,
 } from "../models/message.js";
 
@@ -68,9 +70,28 @@ export const updateMessage = async ({ messageData, chat_id, io }) => {
   }
 };
 
+export const pinMessage = async ({ message_id, io }) => {
+  try {
+    const pinnedMessage = await pinMessageFunction(message_id);
+    io.to(`chat_${chat_id}`).emit("message_pinned", { pinnedMessage });
+  } catch (err) {
+    console.log("Failed to pin message");
+    console.log(err);
+  }
+};
+
+export const unpinMessage = async ({ message_id, io }) => {
+  try {
+    const unpinnedMessage = await unpinMessageFunction(message_id);
+    io.to(`chat_${chat_id}`).emit("message_unpinned", { unpinnedMessage });
+  } catch (err) {
+    console.log("Failed to unpin message");
+    console.log(err);
+  }
+};
+
 export const disconnect = async (chat_id, user_id, socket) => {
   console.log(
     `user ${user_id} disconnected from ${chat_id} with socket id: ${socket.id}`
   );
 };
-

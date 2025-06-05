@@ -8,8 +8,6 @@ import {
   getMessagesInChat,
   getPinnedMessage,
   getUserChats,
-  pinMessage,
-  unpinMessage,
 } from "../controllers/chatController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 
@@ -28,7 +26,5 @@ router.get("/:id", protect, getMessagesInChat);
 router.get("/pinned/:id", protect, getPinnedMessage);
 router.get("/media/:id", protect, fetchMediaInChat);
 router.delete("/:id", protect, clearChat);
-router.patch("/pin/:id", protect, pinMessage);
-router.patch("/unpin/:id", protect, unpinMessage);
 
 export default router;

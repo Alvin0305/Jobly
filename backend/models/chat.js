@@ -68,38 +68,3 @@ export const clearChatFunction = async (chat_id) => {
   );
   return rows;
 };
-
-export const pinMessageFunction = async (message_id) => {
-  const { rows: chat } = await pool.query(
-    `SELECT chat_id FROM messages WHERE id = $1`,
-    [message_id]
-  );
-
-  await pool.query(
-    `UPDATE messages 
-    SET is_pinned = false
-    WHERE chat_id = $1 
-    AND is_pinned = true`,
-    [chat[0].chat_id]
-  );
-
-  const { rows } = await pool.query(
-    `UPDATE messages 
-    SET is_pinned = true
-    WHERE id = $1
-    RETURNING *`,
-    [message_id]
-  );
-  return rows[0];
-};
-
-export const unpinMessageFunction = async (message_id) => {
-  const { rows } = await pool.query(
-    `UPDATE messages 
-      SET is_pinned = false
-      WHERE id = $1
-      RETURNING *`,
-    [message_id]
-  );
-  return rows[0];
-};
