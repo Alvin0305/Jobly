@@ -1,3 +1,4 @@
+import { joinUserOnLoggin } from "./socketControllers/authController.js";
 import {
   deleteMessage,
   disconnect,
@@ -18,6 +19,10 @@ import {
 export const configureSockets = (io) => {
   io.on("connection", (socket) => {
     console.log("user connected");
+
+    socket.on("loggin_user", (user_id) => {
+      joinUserOnLoggin({ user_id, socket });
+    });
 
     socket.on("join_chat", (user_id, chat_id) =>
       joinChat({ user_id, chat_id, socket, io })
