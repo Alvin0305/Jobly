@@ -4,6 +4,7 @@ export const likePost = async (user_id, post_id,io) => {
   // insert to post like table
   // add to notifications
   // emit post_liked signal to send a notification to the post creator
+<<<<<<< HEAD
 
   try{
     await insertPostLike(post_id,user_id);
@@ -25,12 +26,19 @@ export const likePost = async (user_id, post_id,io) => {
       console.error("Error in likePost :", err);
   }
 
+=======
+  // i.e., io.to(`user_${post_creater_id}`).emit("post_liked", {
+  //  user_id, post_details, ... other fields that might be needed in front end to show in the notification
+  // });
+  //  ---- take the post creater id from the post using post id or take it as parameter.
+>>>>>>> a6f889ca857e03483878cfaa9e29213a6363a82d
 };
 
 export const commentPost = async (user_id, comment,io) => {
   // insert into comments table
   // add to notifications
   // emit post_commented signal to send a notification to the post creator
+<<<<<<< HEAD
 
   try{
     const {post_id, content} = comment;
@@ -52,11 +60,18 @@ export const commentPost = async (user_id, comment,io) => {
   }catch(err){
     console.error("Error in commentPost : ",err);
   }
+=======
+  // i.e., io.to(`user_${post_creater_id}`).emit("post_commented", {
+  //  user_id, post_details, ... other fields that might be needed in front end to show in the notification
+  // });
+  //  ---- take the post creater id from the post using post id or take it as parameter.
+>>>>>>> a6f889ca857e03483878cfaa9e29213a6363a82d
 };
 
 export const sendConnectionRequest = async (sender_id, receiver_id,io) => {
   // add to notifications
   // emit reveive_connection_request to send a notification to the receiver
+<<<<<<< HEAD
 
   try{
     const alreadyFrnds = await alreadyFollowing(sender_id,receiver_id);
@@ -78,4 +93,9 @@ export const sendConnectionRequest = async (sender_id, receiver_id,io) => {
   }catch(err){
     console.error("Error in sendConnectionRequest : ",err);
   }
+=======
+  // i.e., io.to(`user_${receiverId}`).emit("receive_connection", {
+  //  sender_id, ... other fields that might be needed in front end to show in the notification
+  // });
+>>>>>>> a6f889ca857e03483878cfaa9e29213a6363a82d
 };
