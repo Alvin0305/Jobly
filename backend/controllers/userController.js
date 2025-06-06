@@ -1,4 +1,4 @@
-import { deleteUserFunction, getMutualFriendsFunction, getUserFollowersFunction, getUserFollowingFunction, searchUsersFunctions, updateUserFunction } from "../models/user.js";
+import { deleteUserFunction, getMutualFriendsFunction, getUserFollowersFunction, getUserFollowingFunction, getUserNotificationsFunction, searchUsersFunctions, updateUserFunction } from "../models/user.js";
 
 export const getUserFollowing = async (req, res) => {
   // use the get user following function in the user model to get the users who follow the given user
