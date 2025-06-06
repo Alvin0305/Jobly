@@ -18,7 +18,7 @@ export const likePost = async (user_id, post_id,io) => {
 
     const notification = await insertNotification({sender_id:user_id, receiver_id:receiver.owner_id, content, post_id,type:"Like"});
 
-    io.to(`user_${receiver}.owner_id`).emit("post_liked",{notification});
+    io.to(`user_${receiver.owner_id}`).emit("post_liked",{notification});
 
     console.log(`Notification sent to user ${receiver.owner_id}`);
   }catch(err){
@@ -50,7 +50,7 @@ export const commentPost = async (user_id, comment,io) => {
 
     const notification = await insertNotification({sender_id:user_id, receiver_id:owner.owner_id, content:cmntContent, post_id, type:"Comment"});
 
-    io.to(`user_${owner}.owner_id`).emit("post_commented",{notification, comment:insertCmnt});
+    io.to(`user_${owner.owner_id}`).emit("post_commented",{notification, comment:insertCmnt});
     console.log("comment notification sent successfully");
 
   }catch(err){
@@ -80,7 +80,7 @@ export const sendConnectionRequest = async (sender_id, receiver_id,io) => {
 
     const notification = await insertConnectionNotification({sender_id, receiver_id, content:reqContent, type:"Friend-request"});
 
-    io.to(`user_${owner}.owner_id`).emit("requested_friend_connection",{notification});
+    io.to(`user_${owner.owner_id}`).emit("requested_friend_connection",{notification});
     console.log("Friend request sent successfully");
 
   }catch(err){
