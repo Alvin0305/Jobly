@@ -1,15 +1,8 @@
-import {
-  alreadyFollowing,
-  getPostOwner,
-  getUserName,
-  insertComment,
-  insertConnectionNotification,
-  insertNotification,
-  insertPostLike,
-  reqExists,
-} from "../models/notification.js";
+
+import { alreadyFollowing, getPostOwner, getUserName, insertComment, insertConnectionNotification, insertNotification, insertPostLike, reqExists } from "../models/notification.js";
 
 export const likePost = async (user_id, post_id, io) => {
+
   // insert to post like table
   // add to notifications
   // emit post_liked signal to send a notification to the post creator
