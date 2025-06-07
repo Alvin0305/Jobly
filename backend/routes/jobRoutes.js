@@ -23,7 +23,7 @@ router.post("/", protect, createJob);
 router.delete("/:id", protect, deleteJob);
 router.get("/:id", protect, getJobById);
 router.get("/employer/:id", protect, getJobsCreatedByEmployer);
-router.get("/empoyee/:id", protect, getJobsForEmployee);
+router.get("/employee/:id", protect, getJobsForEmployee);
 router.get("/interested/:id", protect, getInterestedEmployees);
 router.get("/selected/:id", protect, getSelectedEmployeesForJob);
 router.post("/interested/:id", protect, addEmployeeToInterested);

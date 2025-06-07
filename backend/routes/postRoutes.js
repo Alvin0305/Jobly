@@ -7,7 +7,6 @@ import {
   getPostById,
   getPostsByUser,
   getPostsInFeed,
-  searchPosts,
 } from "../controllers/postController.js";
 import upload from "../middlewares/multer.js";
 import { uploadPostImages } from "../controllers/uploadController.js";
@@ -19,7 +18,7 @@ const maxUploadCount = 5;
 router.post("/", protect, createPost);
 router.delete("/", protect, deletePost);
 router.get("/user/:id", protect, getPostsByUser);
-router.get("/feed", protect, getPostsInFeed);
+router.get("/feed/:id", protect, getPostsInFeed);
 router.get("/:id", protect, getPostById);
 router.get("/comments/:id", protect, getComments);
 // make sure the key value being based is images not image
