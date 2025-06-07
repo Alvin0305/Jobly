@@ -7,7 +7,6 @@ import {
   getPostById,
   getPostsByUser,
   getPostsInFeed,
-  searchPosts,
 } from "../controllers/postController.js";
 import upload from "../middlewares/multer.js";
 import { uploadPostImages } from "../controllers/uploadController.js";

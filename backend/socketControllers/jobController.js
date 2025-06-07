@@ -1,4 +1,4 @@
-import { createJobFunction, addEmployeeToInterestedFunction } from "../models/job";
+import { createJobFunction, addEmployeeToInterestedFunction } from "../models/job.js";
 import pool from "../db.js";
 export const createJob = async (jobData) => {
   const{
