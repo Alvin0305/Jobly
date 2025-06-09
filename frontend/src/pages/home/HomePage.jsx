@@ -10,6 +10,7 @@ import Notifications from "./notifications/Notifications";
 import Chat from "./chat/Chat";
 import ViewProfile from "./profile/user/view/ViewProfile";
 import "./home.css";
+import CreateJob from "./job/create/CreateJob";
 
 const HomePage = () => {
   const { tab, setTab } = useTab();
@@ -29,6 +30,7 @@ const HomePage = () => {
         {tab === "Notifications" && <Notifications />}
         {tab === "Chats" && <Chat />}
         {tab === "Profile" && <ViewProfile />}
+        {tab === "Add Job" && <CreateJob />}
       </div>
     </div>
   );
