@@ -1,7 +1,7 @@
 import axios from "./axiosInstance";
 
-export const getPostsInFeed = (token) =>
-  axios.get("/api/post/feed", {
+export const getPostsInFeed = (id, token) =>
+  axios.get(`/api/post/feed${id}`, {
     headers: { Authorization: `Bearer ${token}` },
     withCredentials: true,
   });
