@@ -2,6 +2,8 @@ import React from "react";
 import { getPostsInFeed } from "../../../services/postService";
 import { useState, useEffect } from "react";
 import { useUser } from "../../../contexts/userContext";
+import PostTile from "../../../components/PostTile/PostTile";
+import "./feed.css";
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
@@ -10,8 +12,8 @@ const Feed = () => {
     const fetchPosts = async () => {
       try {
         const response = await getPostsInFeed(
-          2,
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQ5NDM5NDkzLCJleHAiOjE3NTAwNDQyOTN9.D24Ny2HgAiOa9KCrVBk6q2LASLAxhU3zdmxhbRehMiI"
+          3,
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzQ5NDQ1OTAzLCJleHAiOjE3NTAwNTA3MDN9.HYgCOnxsLXsOkoQQls4Lgx5VnLADchIkxd56KrkCNr8"
         );
         console.log(response.data);
         setPosts(response.data || []);
@@ -23,10 +25,9 @@ const Feed = () => {
   }, []);
 
   return (
-    <div>
-      feed
-      {posts.map((post) => (
-        <h1>{post.description}</h1>
+    <div className="feed">
+      {posts.map((post, index) => (
+        <PostTile postData={post} key={index} />
       ))}
     </div>
   );
