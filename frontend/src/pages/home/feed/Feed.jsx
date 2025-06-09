@@ -10,8 +10,8 @@ const Feed = () => {
     const fetchPosts = async () => {
       try {
         const response = await getPostsInFeed(
-          user?.id || 8,
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQ5MzA3ODYzLCJleHAiOjE3NDk5MTI2NjN9.4UYn2QK2ojcNaG678lKFrU2Y9dwEwVOly3bnPvO4IEY"
+          2,
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQ5NDM5NDkzLCJleHAiOjE3NTAwNDQyOTN9.D24Ny2HgAiOa9KCrVBk6q2LASLAxhU3zdmxhbRehMiI"
         );
         console.log(response.data);
         setPosts(response.data || []);
@@ -21,7 +21,7 @@ const Feed = () => {
     };
     fetchPosts();
   }, []);
-  
+
   return (
     <div>
       feed
