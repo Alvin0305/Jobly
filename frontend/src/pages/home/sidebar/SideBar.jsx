@@ -1,14 +1,27 @@
 import React from "react";
 import SideBarButton from "./SideBarButton";
 import "./sidebar.css";
+import { useUser } from "../../../contexts/userContext";
 
 const SideBar = () => {
+  // const { user } = useUser();
+  const user = {
+    role: "Employer",
+  };
   return (
     <div className="sidebar">
       <div>
         <SideBarButton name="Home" iconName="lucide:home" />
         <SideBarButton name="Friends" iconName="lucide:users" />
-        <SideBarButton name="Add Post" iconName="lucide:instagram" />
+        {user.role === "Employee" ? (
+          <SideBarButton name="Add Post" iconName="lucide:instagram" />
+        ) : (
+          <SideBarButton
+            name="Add Job"
+            iconName="material-symbols:work-outline"
+          />
+        )}
+
         <SideBarButton name="Search" iconName="lucide:search" />
         <SideBarButton name="Notifications" iconName="lucide:bell" />
         <SideBarButton name="Chats" iconName="lucide:mail" />
