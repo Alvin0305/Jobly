@@ -1,9 +1,10 @@
 :root {
-    /* add default font family, font-size for headings and content, color theme etc here */
-    --color-background: #151515;
-    --color-primary: #424242;
-    --color-selected: #505050;
-    --color-hover: #484848;
+  /* add default font family, font-size for headings and content, color theme etc here */
+  --color-background: #151515;
+  --color-primary: #424242;
+  --color-secondary: #202020;
+  --color-selected: #505050;
+  --color-hover: #484848;
 
-    --color-text: #fff;
+  --color-text: #fff;
 }

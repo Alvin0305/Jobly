@@ -11,6 +11,7 @@ import Chat from "./chat/Chat";
 import ViewProfile from "./profile/user/view/ViewProfile";
 import "./home.css";
 import CreateJob from "./job/create/CreateJob";
+import ViewPost from "./post/view/ViewPost";
 
 const HomePage = () => {
   const { tab, setTab } = useTab();
@@ -31,6 +32,7 @@ const HomePage = () => {
         {tab === "Chats" && <Chat />}
         {tab === "Profile" && <ViewProfile />}
         {tab === "Add Job" && <CreateJob />}
+        {tab === "View Post" && <ViewPost />}
       </div>
     </div>
   );

@@ -1,0 +1,90 @@
+.post-tile {
+  width: 100%;
+  display: flex;
+  box-sizing: border-box;
+  padding: 20px;
+  background-color: var(--color-primary);
+  border-radius: 20px;
+  height: 400px;
+  gap: 20px;
+  cursor: pointer;
+}
+
+.post-left-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  flex: 1;
+  padding: 20px;
+  min-width: 30%;
+}
+
+.post-left-div-moved-right {
+  order: 1;
+}
+
+.post-description {
+  flex: 1;
+  font-weight: normal;
+}
+
+.post-options {
+  display: flex;
+  background-color: var(--color-secondary);
+  padding: 10px 20px;
+  border-radius: 20px;
+  width: 70%;
+  align-self: center;
+  justify-content: space-around;
+}
+
+.post-action-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.post-right-div {
+  max-width: 65%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.post-images {
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  overflow-x: auto;
+  gap: 5px;
+  height: 100%;
+}
+
+.post-images::-webkit-scrollbar {
+  display: none;
+}
+
+.post-image {
+  height: 100%;
+  max-width: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.post-blog {
+  margin: 0;
+  font-weight: normal;
+  overflow-y: auto;
+}
+
+.post-blog::-webkit-scrollbar {
+  background-color: transparent;
+}
+
+.post-blog::-webkit-scrollbar-thumb {
+  background-color: var(--color-secondary);
+  border-radius: 5px;
+}

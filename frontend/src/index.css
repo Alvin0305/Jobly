@@ -6,13 +6,14 @@
 
 
 @font-face {
-  font-family: 'AndikaNewBasicRegular';
-  src: url('/fonts/andika/AndikaNewBasic-R.ttf') format('truetype');
+  font-family: "AndikaNewBasicRegular";
+  src: url("/fonts/andika/AndikaNewBasic-R.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
-html, body {
+html,
+body {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -20,6 +21,6 @@ html, body {
 }
 
 * {
-  font-family: 'AndikaNewBasicRegular', Arial, sans-serif;
+  font-family: "AndikaNewBasicRegular", Arial, sans-serif;
   color: var(--color-text);
 }
