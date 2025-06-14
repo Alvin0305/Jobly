@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import LandingPage from "./pages/landing/LandingPage";
 import LoginPage from "./pages/auth/LoginPage";
@@ -21,6 +26,8 @@ import ViewProfile from "./pages/home/profile/user/view/ViewProfile";
 import SearchPage from "./pages/home/search/SearchPage";
 import Settings from "./pages/home/settings/Settings";
 import HomePage from "./pages/home/HomePage";
+import NotFound from "./pages/others/NotFound/NotFound";
+import Feed from "./pages/home/feed/Feed";
 
 const App = () => {
   return (
@@ -43,20 +50,24 @@ const App = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/about" element={<AboutYouPage />} />
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/home/chat" element={<Chat />} />
-            <Route path="/home/connections" element={<Connections />} />
-            <Route path="/home/job/create" element={<CreateJob />} />
-            <Route path="/home/job/selected" element={<SelectedCandidates />} />
-            <Route path="/home/job/view" element={<ViewJob />} />
-            <Route path="/home/notifications" element={<Notifications />} />
-            <Route path="/home/post/create" element={<CreatePost />} />
-            <Route path="/home/post/view" element={<ViewPost />} />
-            <Route path="/home/profile/other" element={<OtherProfile />} />
-            <Route path="/home/profile/user/edit" element={<EditProfile />} />
-            <Route path="/home/profile/user/view" element={<ViewProfile />} />
-            <Route path="/home/search" element={<SearchPage />} />
-            <Route path="/home/settings" element={<Settings />} />
+            <Route path="/home" element={<HomePage />}>
+              <Route index element={<Navigate to="feed" />} />
+              <Route path="feed" element={<Feed />} />
+              <Route path="chat" element={<Chat />} />
+              <Route path="connections" element={<Connections />} />
+              <Route path="job/create" element={<CreateJob />} />
+              <Route path="job/selected" element={<SelectedCandidates />} />
+              <Route path="job/view" element={<ViewJob />} />
+              <Route path="notifications" element={<Notifications />} />
+              <Route path="post/create" element={<CreatePost />} />
+              <Route path="post/view" element={<ViewPost />} />
+              <Route path="profile/other" element={<OtherProfile />} />
+              <Route path="profile/user/edit" element={<EditProfile />} />
+              <Route path="profile/user/view" element={<ViewProfile />} />
+              <Route path="search" element={<SearchPage />} />
+              <Route path="settings" element={<Settings />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>
       </TabProvider>
