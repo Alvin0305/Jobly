@@ -4,6 +4,7 @@ import {ToastContainer,toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 import picture from '../../assets/office.jpg';
+import { useUser } from "../../contexts/userContext";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const RegisterPage = () => {
     password:"",
     role:"",
   });
+  const {setUser} = useUser();
 
   
 
@@ -35,7 +37,8 @@ const RegisterPage = () => {
       localStorage.setItem("token",res.data.token);
       localStorage.setItem("user",JSON.stringify(res.data));
 
-      setTimeout (() => navigate("/"),1500);
+      setUser(res.data);
+      setTimeout (() => navigate("/home"),1500);
     }
     catch(err)
     {

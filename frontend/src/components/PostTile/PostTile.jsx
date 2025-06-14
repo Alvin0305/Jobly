@@ -3,12 +3,13 @@ import { getPostById } from "../../services/postService";
 import { useTab } from "../../contexts/tabContext";
 import { Icon } from "@iconify/react";
 import "./posttile.css";
+import { useUser } from "../../contexts/userContext";
 
 const PostTile = ({ postData }) => {
   const [post, setPost] = useState(null);
+  const {user} = useUser();
   const { setTab } = useTab();
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzQ5NDQ1OTAzLCJleHAiOjE3NTAwNTA3MDN9.HYgCOnxsLXsOkoQQls4Lgx5VnLADchIkxd56KrkCNr8";
+  const token = user?.token;
   useEffect(() => {
     const fetchPost = async () => {
       try {

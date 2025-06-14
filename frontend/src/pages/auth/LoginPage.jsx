@@ -4,11 +4,13 @@ import {ToastContainer,toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 import picture from '../../assets/office.jpg';
+import { useUser } from "../../contexts/userContext";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const {setUser} = useUser();
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -30,7 +32,10 @@ const LoginPage = () => {
       localStorage.setItem("token",res.data.token);
       localStorage.setItem("user",JSON.stringify(res.data));
 
-      setTimeout (() => navigate("/"),1500);
+      console.log(res.data);
+
+      setUser(res.data);
+      setTimeout (() => navigate("/home"),1500);
     }
     catch(err)
     {

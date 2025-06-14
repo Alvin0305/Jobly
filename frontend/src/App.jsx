@@ -39,11 +39,11 @@ const App = () => {
             theme="dark"
           />
           <Routes>
-            {/* <Route path="/" element={<LandingPage />} /> */}
+            <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/about" element={<AboutYouPage />} />
-            <Route path="/" element={<HomePage />} />
+            <Route path="/home" element={<HomePage />} />
             <Route path="/home/chat" element={<Chat />} />
             <Route path="/home/connections" element={<Connections />} />
             <Route path="/home/job/create" element={<CreateJob />} />
