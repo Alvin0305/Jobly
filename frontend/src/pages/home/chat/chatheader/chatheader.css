@@ -1,0 +1,11 @@
+.chat-header {
+  background-color: var(--color-secondary);
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding: 8px 10px;
+  box-sizing: border-box;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}

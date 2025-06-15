@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -28,8 +28,15 @@ import Settings from "./pages/home/settings/Settings";
 import HomePage from "./pages/home/HomePage";
 import NotFound from "./pages/others/NotFound/NotFound";
 import Feed from "./pages/home/feed/Feed";
+import { ChatProvider } from "./contexts/chatContext";
+import { ChatListProvider } from "./contexts/chatlistContext";
+import socket from "./socket";
 
 const App = () => {
+  useEffect(() => {
+    socket.connect();
+    console.log("connecting to socket");
+  });
   return (
     <UserProvider>
       <TabProvider>
@@ -53,7 +60,6 @@ const App = () => {
             <Route path="/home" element={<HomePage />}>
               <Route index element={<Navigate to="feed" />} />
               <Route path="feed" element={<Feed />} />
-              <Route path="chat" element={<Chat />} />
               <Route path="connections" element={<Connections />} />
               <Route path="job/create" element={<CreateJob />} />
               <Route path="job/selected" element={<SelectedCandidates />} />
@@ -67,6 +73,16 @@ const App = () => {
               <Route path="search" element={<SearchPage />} />
               <Route path="settings" element={<Settings />} />
             </Route>
+            <Route
+              path="/chat"
+              element={
+                <ChatProvider>
+                  <ChatListProvider>
+                    <Chat />
+                  </ChatListProvider>
+                </ChatProvider>
+              }
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>

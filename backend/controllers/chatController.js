@@ -49,6 +49,7 @@ export const getMessagesInChat = async (req, res) => {
 
 export const getPinnedMessage = async (req, res) => {
   const chat_id = req.params.id;
+  console.log("getting pinned message");
 
   try {
     const pinnedMessage = await getPinnedMessageFunction(chat_id);

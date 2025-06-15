@@ -16,6 +16,12 @@ export const joinChat = async ({ user_id, chat_id, socket, io }) => {
   readMessages({ user_id, chat_id, io });
 };
 
+export const joinUser = async ({ user_id, socket }) => {
+  console.log(user_id);
+  socket.join(`user_${user_id}`);
+  console.log(`User ${user_id}, joined`);
+};
+
 export const readMessages = async ({ user_id, chat_id, io }) => {
   try {
     const messagesRead = await readMessagesFunction(chat_id, user_id);
@@ -31,7 +37,7 @@ export const readMessages = async ({ user_id, chat_id, io }) => {
 };
 
 export const sendMessage = async ({ messageData, io }) => {
-  const { chat_id } = messageData;
+  console.log("received data", messageData);
   try {
     const newMessage = await createMessageFunction(messageData);
     let replyInfo;
@@ -43,17 +49,28 @@ export const sendMessage = async ({ messageData, io }) => {
     newMessage.reply_info = replyInfo || null;
     newMessage.seen_by = [];
 
-    io.to(`chat_${chat_id}`).emit("receive_message", { newMessage });
+    io.to(`user_${messageData.other_user_id}`).emit(
+      "receive_message",
+      newMessage
+    );
   } catch (err) {
     console.log("send message failed");
     console.log(err);
   }
 };
 
-export const deleteMessage = async ({ message_id, chat_id, io }) => {
+export const deleteMessage = async ({
+  message_id,
+  sender_id,
+  receiver_id,
+  io,
+}) => {
   try {
     const deletedMessage = await deleteMessageFunction(message_id);
-    io.to(`chat_${chat_id}`).emit("message_deleted", { deletedMessage });
+    console.log(`message deleting for ${sender_id} and ${receiver_id} `);
+    console.log(deletedMessage);
+    io.to(`user_${sender_id}`).emit("message_deleted", deletedMessage);
+    io.to(`user_${receiver_id}`).emit("message_deleted", deletedMessage);
   } catch (err) {
     console.log("Failed to delete message");
     console.log(err);
@@ -70,20 +87,22 @@ export const updateMessage = async ({ messageData, chat_id, io }) => {
   }
 };
 
-export const pinMessage = async ({ message_id, io }) => {
+export const pinMessage = async ({ message_id, chat, io }) => {
   try {
     const pinnedMessage = await pinMessageFunction(message_id);
-    io.to(`chat_${chat_id}`).emit("message_pinned", { pinnedMessage });
+    io.to(`user_${chat.user1_id}`).emit("message_pinned", pinnedMessage);
+    io.to(`user_${chat.user2_id}`).emit("message_pinned", pinnedMessage);
   } catch (err) {
     console.log("Failed to pin message");
     console.log(err);
   }
 };
 
-export const unpinMessage = async ({ message_id, io }) => {
+export const unpinMessage = async ({ message_id, chat, io }) => {
   try {
     const unpinnedMessage = await unpinMessageFunction(message_id);
-    io.to(`chat_${chat_id}`).emit("message_unpinned", { unpinnedMessage });
+    io.to(`user_${chat.user1_id}`).emit("message_unpinned", unpinnedMessage);
+    io.to(`user_${chat.user2_id}`).emit("message_unpinned", unpinnedMessage);
   } catch (err) {
     console.log("Failed to unpin message");
     console.log(err);
@@ -91,7 +110,8 @@ export const unpinMessage = async ({ message_id, io }) => {
 };
 
 export const disconnect = async (chat_id, user_id, socket) => {
-  console.log(
-    `user ${user_id} disconnected from ${chat_id} with socket id: ${socket.id}`
-  );
+  console.log("user disconnected");
+  // console.log(
+  //   `user ${user_id} disconnected from ${chat_id} with socket id: ${socket.id}`
+  // );
 };

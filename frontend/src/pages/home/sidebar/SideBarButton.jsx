@@ -25,7 +25,7 @@ const SideBarButton = ({ name, iconName }) => {
       "Add Job": "/home/job/create",
       Search: "/home/search",
       Notifications: "/home/notifications",
-      Chats: "/home/chat",
+      Chats: "/chat",
       Profile: "/home/profile/user/view",
     };
 

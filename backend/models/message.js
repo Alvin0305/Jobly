@@ -58,27 +58,43 @@ export const updateMessageFunction = async (messageData) => {
 };
 
 export const pinMessageFunction = async (message_id) => {
-  const { rows: chat } = await pool.query(
-    `SELECT chat_id FROM messages WHERE id = $1`,
-    [message_id]
-  );
+  const client = await pool.connect();
+  try {
+    await client.query(`BEGIN`);
+    const { rows: chat } = await client.query(
+      `SELECT chat_id FROM messages WHERE id = $1`,
+      [message_id]
+    );
 
-  await pool.query(
-    `UPDATE messages 
+    if (!chat.length) {
+      throw new Error("Message not found");
+    }
+
+    await client.query(
+      `UPDATE messages 
     SET is_pinned = false
     WHERE chat_id = $1 
     AND is_pinned = true`,
-    [chat[0].chat_id]
-  );
+      [chat[0].chat_id]
+    );
 
-  const { rows } = await pool.query(
-    `UPDATE messages 
+    const { rows } = await client.query(
+      `UPDATE messages 
     SET is_pinned = true
     WHERE id = $1
     RETURNING *`,
-    [message_id]
-  );
-  return rows[0];
+      [message_id]
+    );
+
+    await client.query("COMMIT");
+
+    return rows[0];
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
 };
 
 export const unpinMessageFunction = async (message_id) => {

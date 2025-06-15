@@ -1,0 +1,72 @@
+.message {
+  width: fit-content;
+  background-color: var(--color-secondary);
+  padding: 10px;
+  border-radius: 10px;
+  border-top-left-radius: 0;
+  max-width: 50%;
+}
+
+.sent-message {
+  align-self: flex-end;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 0;
+}
+
+.message-details {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+
+.message-time {
+  font-size: 10px;
+  margin: 0;
+}
+
+.message-tags {
+  display: flex;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+.message-image {
+  max-width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.message-edit-tag {
+  margin: 0;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.deleted-message {
+  font-size: 12px;
+}
+
+.chat-context-menu {
+  position: absolute;
+  z-index: 1000;
+  background-color: var(--color-secondary);
+  padding: 0;
+  border-radius: 5px;
+}
+
+.chat-context-menu-option {
+  color: white;
+  margin: 0;
+  padding: 5px 20px;
+}
+
+.chat-context-menu-option:hover {
+  background-color: var(--color-hover);
+}
+
+.message-reply-tag {
+  background-color: var(--color-primary);
+  padding: 10px;
+  border-radius: 5px;
+}

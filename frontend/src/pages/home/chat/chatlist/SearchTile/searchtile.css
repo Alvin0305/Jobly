@@ -1,0 +1,38 @@
+.chat-search-tile {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.chat-search-tile:hover {
+  background-color: var(--color-hover);
+}
+
+.chat-role-button-div {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.chat-search-tile-role {
+  font-size: x-small;
+  color: gray;
+  margin: 0;
+}
+
+.start-chat-button {
+  background-color: var(--color-accent);
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.start-chat-button:hover {
+  background-color: var(--color-secondary);
+}
