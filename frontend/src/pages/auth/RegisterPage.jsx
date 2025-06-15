@@ -32,7 +32,9 @@ const RegisterPage = () => {
 
       toast.success("Signed Up successfully");
 
-      localStorage.setItem("token",res.data.token);
+      const token = localStorage.setItem("token",res.data.token);
+      console.log("Token: ",token);
+      
       localStorage.setItem("user",JSON.stringify(res.data));
 
       setTimeout (() => navigate("/"),1500);
