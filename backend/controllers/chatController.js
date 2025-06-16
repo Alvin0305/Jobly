@@ -4,6 +4,7 @@ import {
   fetchMediaInChatFunction,
   getMessagesInChatFunction,
   getPinnedMessageFunction,
+  getPublicAccountsFunction,
   getUserChatsFunction,
 } from "../models/chat.js";
 
@@ -80,6 +81,18 @@ export const clearChat = async (req, res) => {
     res.json({ message: "chat cleared succesfully" });
   } catch (err) {
     console.log("Failed to clear chat");
+    console.log(err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const getPublicAccounts = async (req, res) => {
+  const user_id = req.params.id;
+  try {
+    const accounts = await getPublicAccountsFunction(user_id);
+    res.json(accounts);
+  } catch (err) {
+    console.log("Failed to fetch public accounts");
     console.log(err);
     res.status(500).json({ error: err.message });
   }

@@ -47,7 +47,23 @@ const Message = ({
       }}
     >
       {message.file_url && getMimeType(message.file_url) === "image" && (
-        <img src={message.file_url} alt="Image" className="message-image" />
+        <a
+          href={message.file_url}
+          download
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src={message.file_url} alt="Image" className="message-image" />
+        </a>
+      )}
+      {message.file_url && getMimeType(message.file_url) === "video" && (
+        <video controls src={message.file_url} className="message-video" />
+      )}
+      {message.file_url && getMimeType(message.file_url) === "raw" && (
+        <a href={message.file_url} target="_blank" rel="noopener noreferrer">
+          {" "}
+          View Document{" "}
+        </a>
       )}
       {message.reply && (
         <div className="message-reply-tag">
@@ -79,7 +95,7 @@ const Message = ({
             </p>
           )}
 
-          {message.sender_id === user.id && (
+          {message.sender_id === user.id && !message.file_url && (
             <p
               className="chat-context-menu-option"
               onClick={() => setEditingMessage(message)}

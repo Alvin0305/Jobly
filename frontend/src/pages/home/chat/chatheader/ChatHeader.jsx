@@ -2,12 +2,15 @@ import React from "react";
 import { useChat } from "../../../../contexts/chatContext";
 import "./chatheader.css";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { useNavigate } from "react-router-dom";
 
 const ChatHeader = () => {
   const { chat, setChat } = useChat();
   const iconSize = 32;
+  const navigate = useNavigate();
   const handleBack = () => {
     setChat(null);
+    navigate("/home");
   };
   return (
     <div className="chat-header">

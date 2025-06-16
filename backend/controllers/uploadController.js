@@ -1,3 +1,4 @@
+import { getMimeType } from "../../frontend/src/utils/utils.js";
 import { uploadToCloudinary } from "../models/upload.js";
 
 // make sure the key value being based is image not images
@@ -73,9 +74,17 @@ export const uploadChatImages = async (req, res) => {
     if (!req.files || !req.files.length)
       return res.status(400).json({ error: "No files uploaded" });
 
-    const uploadPromises = req.files.map((file) =>
-      uploadToCloudinary(file.buffer, "chat")
-    );
+    const uploadPromises = req.files.map((file) => {
+      const getType = (mimetype) => {
+        if (mimetype.startsWith("image")) return "image";
+        if (mimetype.startsWith("video")) return "video";
+        return "raw";
+      };
+
+      const resourceType = getType(file.mimetype);
+      console.log(resourceType, file.originalname);
+      return uploadToCloudinary(file.buffer, "chat", resourceType);
+    });
 
     const results = await Promise.all(uploadPromises);
 

@@ -10,22 +10,25 @@ const ChatTile = ({ chat }) => {
 
   return (
     <div className="chat-tile" onClick={handleClick}>
-      <img
-        src={chat?.other_user_image || "/avatar.webp"}
-        alt="Avatar"
-        className="chat-avatar"
-      />
-      <div className="chat-tile-name-message-div">
-        <h4 className="m0">
-          {chat?.other_user_firstname + " " + chat?.other_user_lastname}
-        </h4>
-        <h5 className="m0">
-          {chat?.last_message !== null
-            ? chat?.last_message?.substring(0, 14) +
-              (chat?.last_message?.length > 14 && "...")
-            : "Image"}
-        </h5>
+      <div className="flex gap-20 align-center">
+        <img
+          src={chat?.other_user_image || "/avatar.webp"}
+          alt="Avatar"
+          className="chat-avatar"
+        />
+        <div className="chat-tile-name-message-div">
+          <h4 className="m0">
+            {chat?.other_user_firstname + " " + chat?.other_user_lastname}
+          </h4>
+          <h5 className="m0">
+            {chat?.last_message !== null
+              ? chat?.last_message?.substring(0, 14) +
+                (chat?.last_message?.length > 14 ? "..." : "")
+              : ""}
+          </h5>
+        </div>
       </div>
+
       <div className="chat-tile-details-div">
         <h5 className="m0">
           {new Date(chat?.other_user_last_seen).toLocaleTimeString("default", {
@@ -33,11 +36,6 @@ const ChatTile = ({ chat }) => {
             minute: "2-digit",
           })}
         </h5>
-        {chat?.other_user_unread !== 0 && (
-          <div className="unread-message-count-div">
-            <h5 className="m0">{chat?.other_user_unread}</h5>
-          </div>
-        )}
       </div>
     </div>
   );

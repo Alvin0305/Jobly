@@ -24,3 +24,6 @@ export const getPinnedMessage = (chat_id, token) =>
   axios.get(`/api/chat/pinned/${chat_id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+
+export const getPublicAccounts = (user_id) =>
+  axios.get(`/api/chat/public/${user_id}`);

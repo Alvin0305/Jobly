@@ -8,6 +8,7 @@ import {
   updateMessageFunction,
 } from "../models/message.js";
 
+// on clicking a chat
 export const joinChat = async ({ user_id, chat, socket, io }) => {
   socket.join(`chat_${chat.id}`);
   console.log(`User ${user_id} joined chat_${chat.id}`);
@@ -16,6 +17,7 @@ export const joinChat = async ({ user_id, chat, socket, io }) => {
   readMessages({ user_id, chat, io });
 };
 
+// on logging in
 export const joinUser = async ({ user_id, socket }) => {
   console.log(user_id);
   socket.join(`user_${user_id}`);
@@ -26,15 +28,21 @@ export const readMessages = async ({ user_id, chat, io }) => {
   console.log(`${user_id} reading messages in ${chat.id}`);
   try {
     const messagesRead = await readMessagesFunction(chat.id, user_id);
+    console.log("read messages:");
+    console.log(messagesRead);
+    const messageIds = [];
+    for (const msg of messagesRead) {
+      messageIds.push(msg.id);
+    }
     io.to(`user_${chat.user1_id}`).emit("messages_read", {
       chat_id: chat.id,
       reader_id: user_id,
-      messages_id: messagesRead,
+      messages_id: messageIds,
     });
     io.to(`user_${chat.user2_id}`).emit("messages_read", {
       chat_id: chat.id,
       reader_id: user_id,
-      messages_id: messagesRead,
+      messages_id: messageIds,
     });
   } catch (err) {
     console.log("marking messages failed");
@@ -42,7 +50,7 @@ export const readMessages = async ({ user_id, chat, io }) => {
   }
 };
 
-export const sendMessage = async ({ messageData, io }) => {
+export const sendMessage = async ({ messageData, chat, io }) => {
   console.log("received data", messageData);
   try {
     const newMessage = await createMessageFunction(messageData);
@@ -55,10 +63,8 @@ export const sendMessage = async ({ messageData, io }) => {
     newMessage.reply_info = replyInfo || null;
     newMessage.seen_by = [];
 
-    io.to(`user_${messageData.other_user_id}`).emit(
-      "receive_message",
-      newMessage
-    );
+    io.to(`user_${chat.user1_id}`).emit("receive_message", newMessage);
+    io.to(`user_${chat.user2_id}`).emit("receive_message", newMessage);
   } catch (err) {
     console.log("send message failed");
     console.log(err);
@@ -118,9 +124,6 @@ export const unpinMessage = async ({ message_id, chat, io }) => {
   }
 };
 
-export const disconnect = async (chat_id, user_id, socket) => {
+export const disconnect = async () => {
   console.log("user disconnected");
-  // console.log(
-  //   `user ${user_id} disconnected from ${chat_id} with socket id: ${socket.id}`
-  // );
 };
