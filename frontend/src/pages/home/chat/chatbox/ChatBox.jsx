@@ -26,6 +26,7 @@ const ChatBox = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [pinnedMessage, setPinnedMessage] = useState(null);
   const [replyMessage, setReplyMessage] = useState(null);
+  const [editingMessage, setEditingMessage] = useState(null);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -46,9 +47,18 @@ const ChatBox = () => {
   }, [chat]);
 
   useEffect(() => {
+    console.log("user joining chat", chat);
+    socket.emit("user_opened_chat", user.id, chat);
+  }, [chat]);
+
+  useEffect(() => {
     const handleReceiveMessage = (newMessage) => {
       console.log("a new message received", newMessage);
       setMessages((prev) => [...prev, newMessage]);
+      if (chat.id === newMessage.chat_id) {
+        console.log("user already in chat, reading the messages");
+        socket.emit("read_messages", user.id, chat);
+      }
     };
     socket.on("receive_message", handleReceiveMessage);
 
@@ -84,15 +94,63 @@ const ChatBox = () => {
     };
     socket.on("message_unpinned", handleMessageUnPin);
 
+    const handleMessageUpdate = (updatedMessage) => {
+      if (!updatedMessage || !updatedMessage.id) {
+        console.warn("message or id is null to update", updatedMessage);
+        return;
+      }
+      console.log("Updating message", updatedMessage);
+      setMessages((prevMessages) =>
+        prevMessages.map((m) =>
+          m.id === updatedMessage.id
+            ? { ...m, content: updatedMessage.content, is_edited: true }
+            : m
+        )
+      );
+    };
+    socket.on("message_updated", handleMessageUpdate);
+
+    const handleReadMessages = ({ chat_id, reader_id, messages_id }) => {
+      if (!messages_id || !messages_id.length || messages_id.length < 1) {
+        console.log("no messages to read");
+        return;
+      }
+      console.log(messages_id);
+      setMessages((prevMessages) =>
+        prevMessages.map((m) =>
+          messages_id.includes(m.id)
+            ? { ...m, seen: true, seen_at: new Date() }
+            : m
+        )
+      );
+    };
+    socket.on("messages_read", handleReadMessages);
+
     return () => {
       socket.off("receive_message", handleReceiveMessage);
       socket.off("message_deleted", handleMessageDeletion);
       socket.off("message_pinned", handleMessagePin);
       socket.off("message_unpinned", handleMessageUnPin);
+      socket.off("message_updated", handleMessageUpdate);
+      socket.off("messages_read", handleReadMessages);
     };
   }, [chat]);
 
   const handleSend = async () => {
+    if (editingMessage) {
+      socket.emit(
+        "update_message",
+        {
+          ...editingMessage,
+          content: newMessageContent,
+        },
+        chat
+      );
+      setEditingMessage(null);
+      setNewMessageContent("");
+      return;
+    }
+
     if (selectedFile) {
       const formData = new FormData();
       formData.append("images", selectedFile);
@@ -148,29 +206,34 @@ const ChatBox = () => {
 
   return (
     <div className="chat-box">
-      <div className="chat-box-content">
-        {pinnedMessage && (
-          <div className="pinned-message">
-            <h4 className="pinned-message-content">
-              {pinnedMessage.content.length > 30
-                ? pinnedMessage.content.substring(0, 30) + "..."
-                : pinnedMessage.content}
-            </h4>
-            <Icon
-              icon="lucide:pin"
-              width={20}
-              height={20}
-              onClick={handleUnPinMessage}
-            />
-          </div>
-        )}
-        {messages.map((message) => (
+      {pinnedMessage && (
+        <div className="pinned-message">
+          <h4 className="pinned-message-content">
+            {pinnedMessage.content.length > 30
+              ? pinnedMessage.content.substring(0, 30) + "..."
+              : pinnedMessage.content}
+          </h4>
+          <Icon
+            icon="lucide:pin-off"
+            width={20}
+            height={20}
+            onClick={handleUnPinMessage}
+          />
+        </div>
+      )}
+      <div
+        className={`chat-box-content ${
+          pinnedMessage ? "with-pinned-message" : ""
+        }`}
+      >
+        {messages.map((message, index) => (
           <Message
             message={message}
-            key={message.id}
+            key={message.id || `msg-${index}`}
             contextMenu={contextMenu}
             setContextMenu={setContextMenu}
             onReply={() => setReplyMessage(message)}
+            setEditingMessage={setEditingMessage}
           />
         ))}
       </div>
@@ -189,6 +252,21 @@ const ChatBox = () => {
           />
         </div>
       )}
+      {editingMessage && (
+        <div className="edit-banner">
+          <h4 className="edit-banner-content">
+            {editingMessage?.content?.length > 30
+              ? editingMessage.content.substring(0, 30) + "..."
+              : editingMessage.content}
+          </h4>
+          <Icon
+            icon="lucide:x-circle"
+            width={24}
+            height={24}
+            onClick={() => setEditingMessage(null)}
+          />
+        </div>
+      )}
       <div className="chat-box-message-bar">
         <label htmlFor="chat-file-upload-input" className="pointer">
           <Icon icon="lucide:plus-circle" width={iconSize} height={iconSize} />
@@ -198,6 +276,7 @@ const ChatBox = () => {
           type="file"
           onChange={(e) => setSelectedFile(e.target.files[0])}
           style={{ display: "none" }}
+          onKeyDown={(e) => e.key === "Enter" && handleSend()}
         />
 
         <input

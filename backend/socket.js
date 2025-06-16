@@ -24,8 +24,11 @@ export const configureSockets = (io) => {
     socket.on("user_joined", (user_id) => {
       joinUser({ user_id, socket });
     });
-    socket.on("read_messages", (user_id, chat_id) =>
-      readMessages({ user_id, chat_id, io })
+    socket.on("user_opened_chat", (user_id, chat) =>
+      joinChat({ user_id, chat, socket, io })
+    );
+    socket.on("read_messages", (user_id, chat) =>
+      readMessages({ user_id, chat, io })
     );
     socket.on("send_message", (messageData) =>
       sendMessage({ messageData, io })
@@ -33,8 +36,8 @@ export const configureSockets = (io) => {
     socket.on("delete_message", (message_id, sender_id, receiver_id) =>
       deleteMessage({ message_id, sender_id, receiver_id, io })
     );
-    socket.on("update_message", (messageData, chat_id) =>
-      updateMessage({ messageData, chat_id, io })
+    socket.on("update_message", (messageData, chat) =>
+      updateMessage({ messageData, chat, io })
     );
     socket.on("pin_message", (message_id, chat) =>
       pinMessage({ message_id, chat, io })

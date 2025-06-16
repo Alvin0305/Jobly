@@ -46,13 +46,14 @@ export const deleteMessageFunction = async (message_id) => {
 };
 
 export const updateMessageFunction = async (messageData) => {
-  const { message_id, content } = messageData;
+  const { id, content } = messageData;
   const { rows } = await pool.query(
     `UPDATE messages 
-    SET content = $1
+    SET content = $1,
+    is_edited = true
     WHERE id = $2
     RETURNING *`,
-    [content, message_id]
+    [content, id]
   );
   return rows[0];
 };

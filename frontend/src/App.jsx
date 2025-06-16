@@ -9,7 +9,7 @@ import { ToastContainer } from "react-toastify";
 import LandingPage from "./pages/landing/LandingPage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
-import { UserProvider } from "./contexts/userContext";
+import { UserProvider, useUser } from "./contexts/userContext";
 import { TabProvider } from "./contexts/tabContext";
 import AboutYouPage from "./pages/auth/AboutYouPage";
 import Chat from "./pages/home/chat/Chat";
@@ -31,61 +31,13 @@ import Feed from "./pages/home/feed/Feed";
 import { ChatProvider } from "./contexts/chatContext";
 import { ChatListProvider } from "./contexts/chatlistContext";
 import socket from "./socket";
+import AppRoutes from "./AppRoutes";
 
 const App = () => {
-  useEffect(() => {
-    socket.connect();
-    console.log("connecting to socket");
-  });
   return (
     <UserProvider>
       <TabProvider>
-        <Router>
-          <ToastContainer
-            position="top-right"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop={true}
-            closeOnClick
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="dark"
-          />
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/about" element={<AboutYouPage />} />
-            <Route path="/home" element={<HomePage />}>
-              <Route index element={<Navigate to="feed" />} />
-              <Route path="feed" element={<Feed />} />
-              <Route path="connections" element={<Connections />} />
-              <Route path="job/create" element={<CreateJob />} />
-              <Route path="job/selected" element={<SelectedCandidates />} />
-              <Route path="job/view" element={<ViewJob />} />
-              <Route path="notifications" element={<Notifications />} />
-              <Route path="post/create" element={<CreatePost />} />
-              <Route path="post/view" element={<ViewPost />} />
-              <Route path="profile/other" element={<OtherProfile />} />
-              <Route path="profile/user/edit" element={<EditProfile />} />
-              <Route path="profile/user/view" element={<ViewProfile />} />
-              <Route path="search" element={<SearchPage />} />
-              <Route path="settings" element={<Settings />} />
-            </Route>
-            <Route
-              path="/chat"
-              element={
-                <ChatProvider>
-                  <ChatListProvider>
-                    <Chat />
-                  </ChatListProvider>
-                </ChatProvider>
-              }
-            />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Router>
+        <AppRoutes />
       </TabProvider>
     </UserProvider>
   );

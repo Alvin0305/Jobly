@@ -6,7 +6,13 @@ import { getMimeType, trimText } from "../../../../../utils/utils";
 import socket from "../../../../../socket";
 import { useChat } from "../../../../../contexts/chatContext";
 
-const Message = ({ message, contextMenu, setContextMenu, onReply }) => {
+const Message = ({
+  message,
+  contextMenu,
+  setContextMenu,
+  onReply,
+  setEditingMessage,
+}) => {
   const { user } = useUser();
   const { chat } = useChat();
   const isSent = message.sender_id === user.id;
@@ -15,7 +21,6 @@ const Message = ({ message, contextMenu, setContextMenu, onReply }) => {
     socket.emit("delete_message", message.id, user.id, chat.other_user_id);
   };
 
-  const handleEdit = () => {};
   const handlePin = () => {
     console.log("pinning message", message);
     socket.emit("pin_message", message.id, chat);
@@ -33,12 +38,12 @@ const Message = ({ message, contextMenu, setContextMenu, onReply }) => {
       className={`message ${isSent ? "sent-message" : ""}`}
       onContextMenu={(e) => {
         e.preventDefault();
-        setContextMenu((prev) => ({
-          x: e.clientX,
-          y: e.clientY,
+        setContextMenu({
+          x: e.nativeEvent.offsetX,
+          y: e.nativeEvent.offsetY,
           visible: true,
           message_id: message.id,
-        }));
+        });
       }}
     >
       {message.file_url && getMimeType(message.file_url) === "image" && (
@@ -60,13 +65,13 @@ const Message = ({ message, contextMenu, setContextMenu, onReply }) => {
 
         <div className="message-tags">
           {message.is_edited && <p className="message-edit-tag">Edited</p>}
-          {message.seen && <Icon icon="lucide:check" />}
+          {isSent && message.seen && <Icon icon="lucide:check" />}
         </div>
       </div>
       {contextMenu.visible && contextMenu.message_id === message.id && (
         <div
           className="chat-context-menu"
-          style={{ top: contextMenu.y, left: contextMenu.x }}
+          style={{ top: `${contextMenu.y}px`, left: `${contextMenu.x}px` }}
         >
           {message.sender_id === user.id && (
             <p className="chat-context-menu-option" onClick={handleDelete}>
@@ -75,7 +80,10 @@ const Message = ({ message, contextMenu, setContextMenu, onReply }) => {
           )}
 
           {message.sender_id === user.id && (
-            <p className="chat-context-menu-option" onClick={handleEdit}>
+            <p
+              className="chat-context-menu-option"
+              onClick={() => setEditingMessage(message)}
+            >
               Edit
             </p>
           )}

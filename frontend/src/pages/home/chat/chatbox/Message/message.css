@@ -5,6 +5,7 @@
   border-radius: 10px;
   border-top-left-radius: 0;
   max-width: 50%;
+  position: relative;
 }
 
 .sent-message {

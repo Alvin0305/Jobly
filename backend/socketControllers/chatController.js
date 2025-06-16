@@ -8,12 +8,12 @@ import {
   updateMessageFunction,
 } from "../models/message.js";
 
-export const joinChat = async ({ user_id, chat_id, socket, io }) => {
-  socket.join(`chat_${chat_id}`);
-  console.log(`User ${user_id} joined chat_${chat_id}`);
+export const joinChat = async ({ user_id, chat, socket, io }) => {
+  socket.join(`chat_${chat.id}`);
+  console.log(`User ${user_id} joined chat_${chat.id}`);
 
   // mark the messages are read when the user opens the chat
-  readMessages({ user_id, chat_id, io });
+  readMessages({ user_id, chat, io });
 };
 
 export const joinUser = async ({ user_id, socket }) => {
@@ -22,11 +22,17 @@ export const joinUser = async ({ user_id, socket }) => {
   console.log(`User ${user_id}, joined`);
 };
 
-export const readMessages = async ({ user_id, chat_id, io }) => {
+export const readMessages = async ({ user_id, chat, io }) => {
+  console.log(`${user_id} reading messages in ${chat.id}`);
   try {
-    const messagesRead = await readMessagesFunction(chat_id, user_id);
-    io.to(`chat_${chat_id}`).emit("messages_read", {
-      chat_id,
+    const messagesRead = await readMessagesFunction(chat.id, user_id);
+    io.to(`user_${chat.user1_id}`).emit("messages_read", {
+      chat_id: chat.id,
+      reader_id: user_id,
+      messages_id: messagesRead,
+    });
+    io.to(`user_${chat.user2_id}`).emit("messages_read", {
+      chat_id: chat.id,
       reader_id: user_id,
       messages_id: messagesRead,
     });
@@ -43,7 +49,7 @@ export const sendMessage = async ({ messageData, io }) => {
     let replyInfo;
 
     if (newMessage.reply_to) {
-      replyInfo = getMessageByIdFunction(newMessage.reply_to);
+      replyInfo = await getMessageByIdFunction(newMessage.reply_to);
     }
 
     newMessage.reply_info = replyInfo || null;
@@ -77,10 +83,13 @@ export const deleteMessage = async ({
   }
 };
 
-export const updateMessage = async ({ messageData, chat_id, io }) => {
+export const updateMessage = async ({ messageData, chat, io }) => {
   try {
+    console.log("message updating");
+    console.log(messageData, chat);
     const updatedMessage = await updateMessageFunction(messageData);
-    io.to(`chat_${chat_id}`).emit("message_updated", { updatedMessage });
+    io.to(`user_${chat.user1_id}`).emit("message_updated", updatedMessage);
+    io.to(`user_${chat.user2_id}`).emit("message_updated", updatedMessage);
   } catch (err) {
     console.log("Failed to update message");
     console.log(err);
