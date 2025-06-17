@@ -71,7 +71,8 @@
 }
 
 .reply-banner,
-.edit-banner {
+.edit-banner,
+.file-banner {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -83,6 +84,44 @@
 }
 
 .reply-banner-content,
-.edit-banner-content {
+.edit-banner-content,
+.file-banner-content {
   margin: 0;
+}
+
+.chat-image-preview {
+  height: 50px;
+}
+
+.chat-sent-button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.chat-send-icon-highlighted * {
+  stroke: #c97c7c;
+  transform: scale(1.01);
+}
+
+.chat-attach-icon-highlighted * {
+  stroke: #c97c7c;
+  transform: scale(1.01);
+}
+
+.chat-floating-button {
+  background-color: var(--color-accent);
+  border: none;
+  width: fit-content;
+  border-radius: 50%;
+  padding: 10px;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-end;
+  position: absolute;
+  bottom: 70px;
+  right: 10px;
+  cursor: pointer;
 }

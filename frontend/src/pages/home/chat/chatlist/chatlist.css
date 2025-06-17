@@ -42,3 +42,14 @@
 .chat-search-result {
   width: 100%;
 }
+
+.chat-list-subheading {
+  margin-left: 20px;
+}
+
+.chat-list-log {
+  margin: 0;
+  margin-left: 30px;
+  font-size: small;
+  color: bisque;
+}

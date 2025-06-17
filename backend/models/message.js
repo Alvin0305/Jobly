@@ -27,6 +27,8 @@ export const readMessagesFunction = async (chat_id, user_id) => {
     seen_at = NOW()
     WHERE chat_id = $1
     AND sender_id != $2
+    AND seen = false
+    RETURNING *
         `,
     [chat_id, user_id]
   );

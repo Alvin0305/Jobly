@@ -1,14 +1,19 @@
+import { useChat } from "../../../../../contexts/chatContext";
 import { useUser } from "../../../../../contexts/userContext";
 import { createChat } from "../../../../../services/chatService";
 import "./searchtile.css";
 
-const SearchTile = ({ user, known }) => {
+const SearchTile = ({ user, known, setSearchValue, setNewChatAdded }) => {
   const { user: user1 } = useUser();
+  const { setChat } = useChat();
 
   const handleCreateChat = async () => {
     try {
       const response = await createChat(user.id, user1.token);
       console.log(response.data);
+      setChat(null);
+      setSearchValue("");
+      setNewChatAdded(true);
     } catch (err) {
       console.error(err);
     }

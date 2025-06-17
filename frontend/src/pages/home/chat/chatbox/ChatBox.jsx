@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./chatbox.css";
 import { Icon } from "@iconify/react";
 import { useChat } from "../../../../contexts/chatContext";
@@ -50,6 +50,10 @@ const ChatBox = () => {
     console.log("user joining chat", chat);
     socket.emit("user_opened_chat", user.id, chat);
   }, [chat]);
+
+  useEffect(() => {
+    endOfChatRef?.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   useEffect(() => {
     const handleReceiveMessage = (newMessage) => {
@@ -115,6 +119,7 @@ const ChatBox = () => {
         console.log("no messages to read");
         return;
       }
+      console.log("new message read are: ");
       console.log(messages_id);
       setMessages((prevMessages) =>
         prevMessages.map((m) =>
@@ -136,7 +141,12 @@ const ChatBox = () => {
     };
   }, [chat]);
 
-  const handleSend = async () => {
+  const handleSend = async (e) => {
+    e.preventDefault();
+    if (!selectedFile && !newMessageContent.trim()) {
+      console.log("empty");
+      return;
+    }
     if (editingMessage) {
       socket.emit(
         "update_message",
@@ -170,8 +180,10 @@ const ChatBox = () => {
           created_at: new Date(),
         };
 
-        socket.emit("send_message", newMessage);
-        setMessages((prev) => [...prev, newMessage]);
+        socket.emit("send_message", newMessage, chat);
+        setSelectedFile(null);
+        if (fileInputRef.current) fileInputRef.current.value = null;
+        setNewMessageContent("");
       } catch (err) {
         console.error(err);
       }
@@ -184,9 +196,8 @@ const ChatBox = () => {
         reply_to: replyMessage?.id || null,
         created_at: new Date(),
       };
-      socket.emit("send_message", newMessage);
+      socket.emit("send_message", newMessage, chat);
 
-      setMessages((prev) => [...prev, newMessage]);
       setReplyMessage(null);
       setNewMessageContent("");
     }
@@ -197,12 +208,21 @@ const ChatBox = () => {
     socket.emit("unpin_message", pinnedMessage.id, chat);
   };
 
+  const scrollToBottom = () => {
+    endOfChatRef?.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   useEffect(() => {
     const handleClick = () =>
       setContextMenu({ visible: false, x: 0, y: 0, message_id: null });
     window.addEventListener("click", handleClick);
     return () => window.removeEventListener("click", handleClick);
   });
+
+  const fileInputRef = useRef(null);
+  const endOfChatRef = useRef(null);
+  const [mouseEnteredAttach, setMouseEnteredAttach] = useState(false);
+  const [mouseEnteredSend, setMouseEnteredSend] = useState(false);
 
   return (
     <div className="chat-box">
@@ -236,6 +256,7 @@ const ChatBox = () => {
             setEditingMessage={setEditingMessage}
           />
         ))}
+        <div ref={endOfChatRef} />
       </div>
       {replyMessage && (
         <div className="reply-banner">
@@ -267,16 +288,68 @@ const ChatBox = () => {
           />
         </div>
       )}
-      <div className="chat-box-message-bar">
-        <label htmlFor="chat-file-upload-input" className="pointer">
-          <Icon icon="lucide:plus-circle" width={iconSize} height={iconSize} />
+      {selectedFile && (
+        <div className="file-banner">
+          {selectedFile.type.startsWith("image") && (
+            <img
+              src={URL.createObjectURL(selectedFile)}
+              alt="image"
+              className="chat-image-preview"
+            />
+          )}
+          {selectedFile.type.startsWith("video") && (
+            <video
+              src={URL.createObjectURL(selectedFile)}
+              alt="image"
+              className="chat-video-preview"
+              height={50}
+            />
+          )}
+          {!selectedFile.type.startsWith("image") &&
+            !selectedFile.type.startsWith("video") && (
+              <h4 className="m0">Document</h4>
+            )}
+          <Icon
+            icon="lucide:x-circle"
+            width={24}
+            height={24}
+            onClick={() => {
+              setSelectedFile(null);
+              if (fileInputRef.current) fileInputRef.current.value = null;
+            }}
+          />
+        </div>
+      )}
+      <button className="chat-floating-button" onClick={scrollToBottom}>
+        <Icon
+          icon="lucide:chevron-down"
+          width={24}
+          height={24}
+          className="chat-floating-icon"
+        />
+      </button>
+      <form className="chat-box-message-bar">
+        <label htmlFor="chat-file-upload-input" className="pointer flex center">
+          <Icon
+            icon="lucide:plus-circle"
+            width={iconSize}
+            height={iconSize}
+            onMouseEnter={() => setMouseEnteredAttach(true)}
+            onMouseLeave={() => setMouseEnteredAttach(false)}
+            className={`${
+              mouseEnteredAttach ? "chat-attach-icon-highlighted" : ""
+            }`}
+          />
         </label>
         <input
+          ref={fileInputRef}
           id="chat-file-upload-input"
           type="file"
-          onChange={(e) => setSelectedFile(e.target.files[0])}
+          onChange={(e) => {
+            setSelectedFile(e.target.files[0]);
+            console.log(e.target.files[0]);
+          }}
           style={{ display: "none" }}
-          onKeyDown={(e) => e.key === "Enter" && handleSend()}
         />
 
         <input
@@ -286,13 +359,17 @@ const ChatBox = () => {
           onChange={(e) => setNewMessageContent(e.target.value)}
           className="chat-box-message-input"
         />
-        <Icon
-          icon="lucide:send"
-          width={iconSize}
-          height={iconSize}
-          onClick={handleSend}
-        />
-      </div>
+        <button
+          onClick={(e) => handleSend(e)}
+          onMouseEnter={() => setMouseEnteredSend(true)}
+          onMouseLeave={() => setMouseEnteredSend(false)}
+          className={`chat-sent-button ${
+            mouseEnteredSend ? "chat-send-icon-highlighted" : ""
+          }`}
+        >
+          <Icon icon="lucide:send" width={iconSize} height={iconSize} />
+        </button>
+      </form>
     </div>
   );
 };

@@ -31,6 +31,10 @@
   gap: 10px;
 }
 
+.gap-20 {
+  gap: 20px;
+}
+
 .self-start {
   align-self: flex-start;
 }

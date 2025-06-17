@@ -30,8 +30,8 @@ export const configureSockets = (io) => {
     socket.on("read_messages", (user_id, chat) =>
       readMessages({ user_id, chat, io })
     );
-    socket.on("send_message", (messageData) =>
-      sendMessage({ messageData, io })
+    socket.on("send_message", (messageData, chat) =>
+      sendMessage({ messageData, chat, io })
     );
     socket.on("delete_message", (message_id, sender_id, receiver_id) =>
       deleteMessage({ message_id, sender_id, receiver_id, io })
@@ -45,9 +45,7 @@ export const configureSockets = (io) => {
     socket.on("unpin_message", (message_id, chat) =>
       unpinMessage({ message_id, chat, io })
     );
-    socket.on("disconnect", (chat_id, user_id) =>
-      disconnect({ chat_id, user_id, socket })
-    );
+    socket.on("disconnect", () => disconnect());
 
     socket.on("create_job", createJob);
     socket.on("reply_to_job", replyJob);

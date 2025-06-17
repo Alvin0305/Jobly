@@ -47,6 +47,7 @@ export const registerUser = async (req, res) => {
       lastname: user.lastname,
       email: user.email,
       token: generateToken(user.id),
+      role: user.role,
     });
   } catch (err) {
     console.log(`Register User failed due to ${err}`);
@@ -77,6 +78,7 @@ export const loginUser = async (req, res) => {
       lastname: user.lastname,
       email: user.email,
       token: generateToken(user.id),
+      role: user.role,
     });
   } catch (err) {
     console.log(err);

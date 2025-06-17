@@ -55,6 +55,14 @@ export const getUserChatsFunction = async (user1_id) => {
   return rows;
 };
 
+export const getPublicAccountsFunction = async (user_id) => {
+  const { rows } = await pool.query(
+    `SELECT * FROM users WHERE is_private = false AND id != $1`,
+    [user_id]
+  );
+  return rows;
+};
+
 export const getMessagesInChatFunction = async (chat_id) => {
   const { rows } = await pool.query(
     `SELECT m.*, 
