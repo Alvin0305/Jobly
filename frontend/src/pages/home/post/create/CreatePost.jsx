@@ -3,6 +3,9 @@ import React, { useEffect, useState } from "react";
 import "./createpost.css";
 import { getAllDomains } from "../../../../services/metadataService";
 import Bubble from "../../../../components/Bubble/Bubble";
+import { createPost, uploadPostImages } from "../../../../services/postService";
+import { useUser } from "../../../../contexts/userContext";
+import { useNavigate } from "react-router-dom";
 
 const CreatePost = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -12,6 +15,8 @@ const CreatePost = () => {
   const [domains, setDomains] = useState([]);
   const [selectedDomains, setSelectedDomains] = useState([]);
   const [selectedOption, setSelectedOption] = useState("Images");
+  const { user } = useUser();
+  const navigate = useNavigate();
 
   const iconSize = 32;
 
@@ -27,6 +32,46 @@ const CreatePost = () => {
     };
     fetchDomains();
   }, []);
+
+  const handlePost = async (e) => {
+    e.preventDefault();
+    const domain_ids = [];
+    for (const domain of selectedDomains) {
+      domain_ids.push(domain.id);
+    }
+    try {
+      let image_urls = [];
+      if (selectedFiles.length) {
+        const formData = new FormData();
+        for (const file of selectedFiles) {
+          formData.append("images", file);
+        }
+        console.log("uploading images to cloudinary");
+        const uploadFilesResponse = await uploadPostImages(formData);
+        console.log(uploadFilesResponse.data);
+        const filesUploaded = uploadFilesResponse.data.uploaded;
+        for (const file of filesUploaded) {
+          image_urls.push(file.file_url);
+        }
+      }
+
+      console.log("trying to post");
+      const response = await createPost(
+        {
+          blog,
+          description,
+          image_urls,
+          domain_tags: domain_ids,
+          user_tags: [],
+        },
+        user?.token
+      );
+      console.log(response.data);
+      navigate("/home");
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <form className="create-post-page">
@@ -62,7 +107,9 @@ const CreatePost = () => {
           </button>
         </div>
 
-        <button className="create-post-button">POST</button>
+        <button className="create-post-button" onClick={(e) => handlePost(e)}>
+          POST
+        </button>
       </div>
 
       <div className="create-post-top">
