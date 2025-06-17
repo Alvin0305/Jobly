@@ -3,6 +3,7 @@ import {
   deleteMessage,
   disconnect,
   joinChat,
+  joinUser,
   pinMessage,
   readMessages,
   sendMessage,
@@ -20,32 +21,31 @@ export const configureSockets = (io) => {
   io.on("connection", (socket) => {
     console.log("user connected");
 
-    socket.on("loggin_user", (user_id) => {
-      joinUserOnLoggin({ user_id, socket });
+    socket.on("user_joined", (user_id) => {
+      joinUser({ user_id, socket });
     });
-
-    socket.on("join_chat", (user_id, chat_id) =>
-      joinChat({ user_id, chat_id, socket, io })
+    socket.on("user_opened_chat", (user_id, chat) =>
+      joinChat({ user_id, chat, socket, io })
     );
-    socket.on("read_messages", (user_id, chat_id) =>
-      readMessages({ user_id, chat_id, io })
+    socket.on("read_messages", (user_id, chat) =>
+      readMessages({ user_id, chat, io })
     );
-    socket.on("send_message", (messageData) =>
-      sendMessage({ messageData, io })
+    socket.on("send_message", (messageData, chat) =>
+      sendMessage({ messageData, chat, io })
     );
-    socket.on("delete_message", (message_id, chat_id) =>
-      deleteMessage({ message_id, chat_id, io })
+    socket.on("delete_message", (message_id, sender_id, receiver_id) =>
+      deleteMessage({ message_id, sender_id, receiver_id, io })
     );
-    socket.on("update_message", (messageData, chat_id) =>
-      updateMessage({ messageData, chat_id, io })
+    socket.on("update_message", (messageData, chat) =>
+      updateMessage({ messageData, chat, io })
     );
-    socket.on("pin_message", (message_id) => pinMessage({ message_id, io }));
-    socket.on("unpin_message", (message_id) =>
-      unpinMessage({ message_id, io })
+    socket.on("pin_message", (message_id, chat) =>
+      pinMessage({ message_id, chat, io })
     );
-    socket.on("disconnect", (chat_id, user_id) =>
-      disconnect({ chat_id, user_id, socket })
+    socket.on("unpin_message", (message_id, chat) =>
+      unpinMessage({ message_id, chat, io })
     );
+    socket.on("disconnect", () => disconnect());
 
     socket.on("create_job", createJob);
     socket.on("reply_to_job", replyJob);

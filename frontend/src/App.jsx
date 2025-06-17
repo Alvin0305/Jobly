@@ -1,10 +1,15 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import LandingPage from "./pages/landing/LandingPage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
-import { UserProvider } from "./contexts/userContext";
+import { UserProvider, useUser } from "./contexts/userContext";
 import { TabProvider } from "./contexts/tabContext";
 import AboutYouPage from "./pages/auth/AboutYouPage";
 import Chat from "./pages/home/chat/Chat";
@@ -21,44 +26,18 @@ import ViewProfile from "./pages/home/profile/user/view/ViewProfile";
 import SearchPage from "./pages/home/search/SearchPage";
 import Settings from "./pages/home/settings/Settings";
 import HomePage from "./pages/home/HomePage";
+import NotFound from "./pages/others/NotFound/NotFound";
+import Feed from "./pages/home/feed/Feed";
+import { ChatProvider } from "./contexts/chatContext";
+import { ChatListProvider } from "./contexts/chatlistContext";
+import socket from "./socket";
+import AppRoutes from "./AppRoutes";
 
 const App = () => {
   return (
     <UserProvider>
       <TabProvider>
-        <Router>
-          <ToastContainer
-            position="top-right"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop={true}
-            closeOnClick
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="dark"
-          />
-          <Routes>
-            {/* <Route path="/" element={<LandingPage />} /> */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/about" element={<AboutYouPage />} />
-            <Route path="/" element={<HomePage />} />
-            <Route path="/home/chat" element={<Chat />} />
-            <Route path="/home/connections" element={<Connections />} />
-            <Route path="/home/job/create" element={<CreateJob />} />
-            <Route path="/home/job/selected" element={<SelectedCandidates />} />
-            <Route path="/home/job/view" element={<ViewJob />} />
-            <Route path="/home/notifications" element={<Notifications />} />
-            <Route path="/home/post/create" element={<CreatePost />} />
-            <Route path="/home/post/view" element={<ViewPost />} />
-            <Route path="/home/profile/other" element={<OtherProfile />} />
-            <Route path="/home/profile/user/edit" element={<EditProfile />} />
-            <Route path="/home/profile/user/view" element={<ViewProfile />} />
-            <Route path="/home/search" element={<SearchPage />} />
-            <Route path="/home/settings" element={<Settings />} />
-          </Routes>
-        </Router>
+        <AppRoutes />
       </TabProvider>
     </UserProvider>
   );

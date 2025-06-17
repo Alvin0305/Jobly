@@ -7,6 +7,7 @@ import {
   fetchMediaInChat,
   getMessagesInChat,
   getPinnedMessage,
+  getPublicAccounts,
   getUserChats,
 } from "../controllers/chatController.js";
 import { protect } from "../middlewares/authMiddleware.js";
@@ -22,6 +23,7 @@ router.post(
 );
 router.post("/", protect, createChat);
 router.get("/", protect, getUserChats);
+router.get("/public/:id", getPublicAccounts);
 router.get("/:id", protect, getMessagesInChat);
 router.get("/pinned/:id", protect, getPinnedMessage);
 router.get("/media/:id", protect, fetchMediaInChat);

@@ -4,10 +4,8 @@ import "./sidebar.css";
 import { useUser } from "../../../contexts/userContext";
 
 const SideBar = () => {
-  // const { user } = useUser();
-  const user = {
-    role: "Employer",
-  };
+  const { user } = useUser();
+
   return (
     <div className="sidebar">
       <div>

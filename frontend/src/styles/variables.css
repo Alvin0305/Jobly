@@ -3,8 +3,14 @@
   --color-background: #151515;
   --color-primary: #424242;
   --color-secondary: #202020;
+  --color-tertiary: #303030;
   --color-selected: #505050;
   --color-hover: #484848;
+  --color-accent: #abcdef;
+
+  --color-text-area: #363434;
+  --color-border: #3c3a3a;
+  --color-post-background: #212121;
 
   --color-text: #fff;
 }

@@ -1,0 +1,35 @@
+.search-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+}
+
+.search-page-bar {
+  display: flex;
+  width: 70%;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: 30px;
+  color: black;
+  padding: 0 20px;
+}
+
+.search-page-input {
+  flex: 1;
+  height: 50px;
+  background-color: transparent;
+  border: none;
+  color: inherit;
+  font-size: medium;
+}
+
+.search-page-input:focus {
+  outline: none;
+  border: none;
+}
+
+.custom-icon * {
+  color: black;
+}

@@ -12,6 +12,7 @@ import ViewProfile from "./profile/user/view/ViewProfile";
 import "./home.css";
 import CreateJob from "./job/create/CreateJob";
 import ViewPost from "./post/view/ViewPost";
+import { Outlet } from "react-router-dom";
 
 const HomePage = () => {
   const { tab, setTab } = useTab();
@@ -24,15 +25,7 @@ const HomePage = () => {
     <div className="homepage">
       <SideBar />
       <div className="homepage-content">
-        {tab === "Home" && <Feed />}
-        {tab === "Friends" && <Connections />}
-        {tab === "Add Post" && <CreatePost />}
-        {tab === "Search" && <SearchPage />}
-        {tab === "Notifications" && <Notifications />}
-        {tab === "Chats" && <Chat />}
-        {tab === "Profile" && <ViewProfile />}
-        {tab === "Add Job" && <CreateJob />}
-        {tab === "View Post" && <ViewPost />}
+        <Outlet />
       </div>
     </div>
   );

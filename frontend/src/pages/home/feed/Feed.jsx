@@ -9,11 +9,12 @@ const Feed = () => {
   const [posts, setPosts] = useState([]);
   const { user } = useUser();
   useEffect(() => {
+    console.log(user);
     const fetchPosts = async () => {
       try {
         const response = await getPostsInFeed(
-          3,
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzQ5NDQ1OTAzLCJleHAiOjE3NTAwNTA3MDN9.HYgCOnxsLXsOkoQQls4Lgx5VnLADchIkxd56KrkCNr8"
+          user?.id,
+          user?.token
         );
         console.log(response.data);
         setPosts(response.data || []);

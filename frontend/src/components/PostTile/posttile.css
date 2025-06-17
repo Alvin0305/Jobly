@@ -37,6 +37,7 @@
   width: 70%;
   align-self: center;
   justify-content: space-around;
+  max-width: 250px;
 }
 
 .post-action-button {
@@ -72,6 +73,7 @@
   border-radius: 10px;
   box-sizing: border-box;
   flex-shrink: 0;
+  border: 0.5px solid #555;
 }
 
 .post-blog {
