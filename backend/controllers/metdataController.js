@@ -1,4 +1,4 @@
-import { createCodingLanguageFunction, createInterestFunction, createLanguageFunction, createQualificationFunction, createSkillFunction, getCodingLanguagesFunction, getDomainsFunction, getInterestsOfUserFunction, getLanguagesByUserFunction, getLanguagesFunction, getQualificationsFunction, getQualificationsOfUserFunction, getSkillsOfUserFunction } from "../models/metadata.js";
+import { createCodingLanguageFunction, createInterestFunction, createLanguageFunction, createQualificationFunction, createSkillFunction, createWorkExperienceFunction, getCodingLanguagesFunction, getDomainsFunction, getInterestsOfUserFunction, getLanguagesByUserFunction, getLanguagesFunction, getQualificationsFunction, getQualificationsOfUserFunction, getSkillsOfUserFunction, getWorkExperienceFunction } from "../models/metadata.js";
 
 export const createInterest = async (req, res) => {
   // use the create interst function in the metadata model to create interest
@@ -31,7 +31,7 @@ export const getDomains = async (req, res) => {
 
 export const getInterestsOfUser = async (req, res) => {
   // use the get interest of user function to get all the interests of the user
-  const userId = req.user?.id;
+  const userId = req.params.id || req.user?.id;
 
   if(!userId){
     return res.status(401).json({error:"User not authenticated"});
@@ -64,7 +64,7 @@ export const createSkill = async (req, res) => {
 
 export const getSkillsOfUser = async (req, res) => {
   // use the get skill of user function to get all the skills of the user
-  const userId = req.user?.id;
+  const userId = req.params.id || req.user?.id;
 
   if(!userId){
     return res.status(401).json({error:"User not authenticated"});
@@ -110,7 +110,7 @@ export const getLanguages = async (req, res) => {
 
 export const getLanguagesOfUser = async (req, res) => {
   // use the get language of user function to get all the languages of the user
-  const userId = req.user?.id;
+  const userId = req.params.id || req.user?.id;
   console.log(userId);
 
   if(!userId){
@@ -125,10 +125,35 @@ export const getLanguagesOfUser = async (req, res) => {
   }
 };
 
+export const createWorkExperience = async (req, res) => {
+  const user_id = req.params.id || req.user?.id;
+  const {company_name, designation, start_date, end_date, location } = req.body;
+
+  const result = await createWorkExperienceFunction(user_id, company_name, designation, start_date, end_date, location);
+
+  if(result.success)
+    res.status(201).json(result);
+  else
+    res.status(500).json(result);
+};
+
+export const getWorkExperience = async (req, res) => {
+  const user_id = req.params?.id || req.user?.id;
+
+  try{
+    const exp = await getWorkExperienceFunction(user_id);
+    res.status(200).json({exp});
+  }catch(err){
+    console.log("getjdhf u")
+    console.log(err.stack)
+    res.status(500).json({error:"Failed to fetch work experience"});
+  }
+}
+
 export const createCodingLanguage = async (req, res) => {
   // use the create coding language function in the metadata model to create coding language
   const {codlang} = req.body;
-  const user_id = req.user?.id;
+  const user_id = req.params.id || req.user?.id;
   console.log("Logged-in user:", req.user);
 
   if(!codlang)
@@ -169,7 +194,7 @@ export const getCodingLanguagesOfUser = async (req, res) => {
 export const createQualification = async (req, res) => {
   // use this create qualification function in metadata model to create qualification
   const {qualification} = req.body;
-  const user_id = req.user?.id;
+  const user_id = req.params.id || req.user?.id;
   console.log("Logged-in user:", req.user);
 
   if(!qualification)
@@ -198,7 +223,7 @@ export const getQualifications = async (req, res) => {
 
 export const getQualificationsOfUser = async (req, res) => {
   // use the get qualifications of user function in the metadata model to get all the qualifications of the user
-  const userId = req.user?.id;
+  const userId = req.params.id || req.user?.id;
 
   if(!userId){
     return res.status(401).json({error:"User not authenticated"});
