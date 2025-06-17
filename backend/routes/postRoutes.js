@@ -7,6 +7,7 @@ import {
   getPostById,
   getPostsByUser,
   getPostsInFeed,
+  searchPost
 } from "../controllers/postController.js";
 import upload from "../middlewares/multer.js";
 import { uploadPostImages } from "../controllers/uploadController.js";
@@ -21,6 +22,7 @@ router.get("/user/:id", protect, getPostsByUser);
 router.get("/feed/:id", protect, getPostsInFeed);
 router.get("/:id", protect, getPostById);
 router.get("/comments/:id", protect, getComments);
+router.get("/search",protect,searchPost);
 // make sure the key value being based is images not image
 router.post(
   "/upload",

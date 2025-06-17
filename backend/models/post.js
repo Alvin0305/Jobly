@@ -6,7 +6,7 @@ export const createPostFunction = async (
   description,
   image_urls=[],
   domain_tags=[],
-  user_tags =[]
+  user_tags =[],
 ) => {
   const client = await pool.connect();
   // insert the post into the posts table
@@ -163,3 +163,22 @@ export const getPostsByUserFunction = async (user_id) => {
     throw err;
   }
 };
+
+export const searchPostFunction = async(domain_name) => {
+  try{
+    const result = await pool.query(
+      `select p.*
+       from posts p
+       join post_domains pd on p.id = pd.post_id
+       join domains d on d.od = pd.domain_id
+       where d.name = $1
+      `,
+      [domain_name]
+    )
+    return result.rows;
+
+  }catch(err) {
+    console.error("Error filtering post by domain",err);
+    throw err;
+  }
+} 

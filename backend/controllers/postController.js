@@ -4,7 +4,8 @@ import {
   getPostByIdFunction,
   deletePostFunction,
   getPostsByUserFunction,
-  getPostsInFeedFunction,
+  getPostsInFeedFunction,searchPostFunction
+
 } from "../models/post.js";
 import { getCommentsFunction } from "../models/comment.js";
 
@@ -109,3 +110,16 @@ export const getPostsInFeed = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const searchPost = async(req,res) => {
+  try{
+    const domain_name = req.query.domain;
+    if(!domain_name) return req.status(400).json({error:"Daomin name required"})
+    const posts = await searchPostFunction(domain_name);
+    return res.status(200).json(posts);
+  }catch(err) {
+    console.error("Error searching posts by domain",err)
+    res.status(500).json({error:"Internal server error"});
+  }
+
+}
