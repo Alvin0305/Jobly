@@ -163,6 +163,95 @@ export const getLanguagesByUserFunction = async (user_id) => {
   return rows;
 };
 
+export const createWorkExperienceFunction = async (user_id,company_name,designation,start_date,end_date,location) => {
+  try{
+    let res = await pool.query(
+      `INSERT INTO work_experience
+      (user_id, company_name, designation, start_date, end_date, location)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING id`,
+      [user_id,company_name,designation,start_date,end_date,location]
+    );
+
+    return {success:true, experience_id: res.rows[0].id, message:"Work experience added successfully"};
+
+  }catch(err){
+    console.log("createDescription error:", err.message);
+    return {success:false, message:"Failed to create work experience", error: err.message};
+  }
+};
+
+export const getWorkExperienceFunction = async (user_id) => {
+  
+    
+    console.log("Fetching experience for user:", user_id);
+
+    const { rows } = await pool.query(
+      `SELECT id, company_name, designation, start_date, end_date, location
+       FROM work_experience
+       WHERE user_id = $1
+       ORDER BY start_date DESC`,
+      [user_id]
+    );
+    return rows;
+
+}
+
+export const createJobDetails = async(user_id,company_name,designation,location) => {
+  try{
+    let res = await pool.query(
+      `INSERT INTO work_experience
+      (user_id, company_name, designation,location)
+      VALUES ($1, $2, $3, $4)
+      RETURNING id`,
+      [user_id,company_name,designation,location]
+    );
+
+    return {success:true, experience_id: res.rows[0].id, message:"Job details added successfully"};
+
+  }catch(err){
+    console.log("createJobDetails error:", err.message);
+    return {success:false, message:"Failed to create job details", error: err.message};
+  }
+};
+
+export const getJobDetails = async (user_id) => {
+  console.log(user_id);
+  const {rows} = await pool.query (
+    `SELECT id, company_name, designation,  location
+    FROM work_experience WHERE user_id = $1`,
+    [user_id]
+  );
+  return rows;
+};
+
+export const createDescription = async (user_id, description) => {
+  try{
+    const res = await pool.query(
+      `INSERT INTO work_experience (user_id, description)
+      VALUES ($1,$2)
+      RETURNING id`,
+      [user_id, description]
+    );
+
+    return {success:true, experience_id: res.rows[0].id, message:"Description added successfully"};
+
+  }catch(err){
+    console.log("createDescription error:", err.message);
+    return {success:false, message:"Failed to create description", error:err.message};
+  }
+};
+
+export const getDescription = async (user_id) => {
+  console.log(user_id);
+  const {rows} = await pool.query (
+    `SELECT id, description
+    FROM work_experience WHERE user_id = $1`,
+    [user_id]
+  );
+  return rows;
+};
+
 export const createQualificationFunction = async (user_id, qualification) => {
   // insert the qualifiction into qualifications table
   // update the user qualifications table, add this qualification to it
