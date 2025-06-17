@@ -4,10 +4,11 @@ import { useTab } from "../../contexts/tabContext";
 import { Icon } from "@iconify/react";
 import "./posttile.css";
 import { useUser } from "../../contexts/userContext";
+import { useNavigate } from "react-router-dom";
 
 const PostTile = ({ postData }) => {
   const [post, setPost] = useState(null);
-  const {user} = useUser();
+  const { user } = useUser();
   const { setTab } = useTab();
   const token = user?.token;
   useEffect(() => {
@@ -28,8 +29,10 @@ const PostTile = ({ postData }) => {
   const handleComment = () => {};
   const handleShare = () => {};
 
+  const navigate = useNavigate();
+
   const handleViewPost = () => {
-    setTab("View Post");
+    navigate("/home/post/view", { state: { id: postData.id } });
   };
 
   const shiftContentToRight = Math.random() < 0.5;
