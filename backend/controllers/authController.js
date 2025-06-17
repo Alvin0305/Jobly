@@ -71,12 +71,15 @@ export const loginUser = async (req, res) => {
     await markUserAsOnline(user.id);
     await addToLoginLogs(user.id, "Success");
 
+    const token = generateToken(user.id);
+    console.log(token);
+
     res.json({
       id: user.id,
       firstname: user.firstname,
       lastname: user.lastname,
       email: user.email,
-      token: generateToken(user.id),
+      token: token,
     });
   } catch (err) {
     console.log(err);
