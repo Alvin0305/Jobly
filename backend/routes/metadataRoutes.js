@@ -16,6 +16,7 @@ import {
   getQualificationsOfUser,
   getSkillsOfUser,
   getWorkExperience,
+  createDomain
 } from "../controllers/metdataController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 
@@ -43,6 +44,7 @@ router.get("/qualification/:id", protect, getQualificationsOfUser);
 
 router.post("/workexperience/:id", protect, createWorkExperience); // only for employee
 router.get("/workexperience/:id", protect, getWorkExperience);
+router.post("/domain",protect,createDomain);
 // router.put("/workexperience/:id",protect,)
 
 // router.post("/jobdetails/:id", protect, createJobDetails); // for employer -> only company, designation, location

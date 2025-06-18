@@ -1,4 +1,4 @@
-import { createCodingLanguageFunction, createInterestFunction, createLanguageFunction, createQualificationFunction, createSkillFunction, createWorkExperienceFunction, getCodingLanguagesFunction, getDomainsFunction, getInterestsOfUserFunction, getLanguagesByUserFunction, getLanguagesFunction, getQualificationsFunction, getQualificationsOfUserFunction, getSkillsOfUserFunction, getWorkExperienceFunction } from "../models/metadata.js";
+import { createCodingLanguageFunction, createInterestFunction, createLanguageFunction, createQualificationFunction, createSkillFunction, createWorkExperienceFunction, getCodingLanguagesFunction, getDomainsFunction, getInterestsOfUserFunction, getLanguagesByUserFunction, getLanguagesFunction, getQualificationsFunction, getQualificationsOfUserFunction, getSkillsOfUserFunction, getWorkExperienceFunction,createDomainFunction } from "../models/metadata.js";
 
 export const createInterest = async (req, res) => {
   // use the create interst function in the metadata model to create interest
@@ -236,3 +236,17 @@ export const getQualificationsOfUser = async (req, res) => {
     res.status(500).json({error:"Failed to fetch qualifications"});
   }
 };
+
+export const createDomain = async(req,res) => {
+  const{name} = req.body;
+  console.log("Logged in user",req.user);
+  if(!name)
+    return res.status(400).json({error :"Domain name is required"});
+
+  try{
+    const result = await createDomainFunction(name);
+    res.status(201).json({message:"Domain added successfully"});
+  }catch(err){
+    res.status(500).json({ error: "Failed to add Domain", details: err.message });
+  }
+}

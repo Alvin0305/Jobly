@@ -1,15 +1,14 @@
 import axios from "./axiosInstance";
 
-const BASE_URL = "http://localhost:5000";
+//const BASE_URL = "http://localhost:5000";
 
 // Create a new job (for employer)
 export const createJob = async (jobData,token) => {
-  const res = await axios.post(`${BASE_URL}/api/job`, jobData  ,{
+  return await axios.post(`/api/job`, jobData  ,{
     headers:{
       Authorization:`Bearer ${token}`,
     }
   });
-  return res.data;
 };
 
 // Get details of a single job by ID
@@ -70,7 +69,7 @@ export const markJobAsFilled = async (jobId) => {
 
 export const uploadJobImages = async(formData,token) => {
 
-  const response = await axios.post(`${BASE_URL}/api/job/upload`, formData, {
+  const response = await axios.post(`/api/job/upload`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${token}`,

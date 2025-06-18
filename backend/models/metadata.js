@@ -364,3 +364,12 @@ export const getCodingLanguagesOfUserFunction = async (user_id) => {
   );
   return rows;
 };
+
+export const createDomainFunction = async (name) => {
+  const{rows} = await pool.query(
+    `insert into domains (name) values ($1) returning *`,
+    [name]
+  );
+  console.log(rows[0]);
+  return rows[0];
+}

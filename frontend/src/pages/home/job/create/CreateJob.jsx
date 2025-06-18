@@ -3,7 +3,7 @@ import {
   createJob,
   uploadJobImages, // ✅ correctly imported
 } from "../../../../services/jobService.js";
-import { getAllDomains } from "../../../../services/metadataService.js";
+import { getAllDomains ,createDomain} from "../../../../services/metadataService.js";
 import "../create/createjob.css";
 
 const CreateJob = () => {
@@ -24,31 +24,43 @@ const CreateJob = () => {
       .catch((err) => console.error("Failed to load skills", err));
   }, []);
 
-  const toggleSkills = (skill) => {
+  const toggleSkills = (skillName) => {
     setSelectedSkills((prev) =>
-      prev.includes(skill)
-        ? prev.filter((s) => s !== skill)
-        : [...prev, skill]
+      prev.includes(skillName)
+        ? prev.filter((s) => s !== skillName)
+        : [...prev, skillName]
     );
   };
 
-  const handleAddSkill = () => {
+  const handleAddSkill = async () => {
     const skill = newSkill.trim().toUpperCase();
-    if (skill && !skills.includes(skill)) {
-      setSkills([...skills, skill]);
-      setSelectedSkills([...selectedSkills, skill]);
+    const token = localStorage.getItem("token");
+    if (!skill || selectedSkills.includes(skill)) {
+     alert("Inavlid or duplicate skill");
+     return;
     }
-    setNewSkill("");
-    setAddingSkill(false);
+   try{
+    const res = await createDomain(skill,token);
+    const newDomain = res.domain || {id:res.id,name:skill};
+
+    setSkills ((prev) => [...prev, newDomain]);
+    setSelectedSkills((prev) =>[...prev, newDomain.name]);
+   }catch(err) {
+    console.error("Failed to add new skill",err);
+    alert("Error adding skill");
+   }
+   setNewSkill("");
+   setAddingSkill(false);
   };
 
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImageFile(file); // ✅ store actual image file
+    const files = Array.from(e.target.files);
+    setImageFile(files); // ✅ now an array
+  
+    if (files.length > 0) {
       const reader = new FileReader();
       reader.onloadend = () => setPreviewImage(reader.result);
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(files[0]); // preview first image
     }
   };
 
@@ -71,13 +83,17 @@ const CreateJob = () => {
       }
 
         const response = await uploadJobImages(formData, token); // ✅ correct function
-        imageUrls = response.uploaded.map((img) => img.file_url); // extract Cloudinary URLs
+        imageUrls = response;// extract Cloudinary URLs
       } catch (uploadErr) {
         console.error("Image upload failed", uploadErr);
         alert("Image upload failed.");
         return;
       }
     }
+    const skillids = selectedSkills.map(skillName => {
+      const match = skills.find(s => s.name === skillName);
+      return match?.id ? parseInt(match.id) : undefined;
+    }).filter(id => id!== undefined);
 
     const payload = {
       title: caption,
@@ -85,13 +101,16 @@ const CreateJob = () => {
       description,
       salary: parseInt(salary),
       required_experience: 0,
-      skills_required: selectedSkills,
+      skills_required: skillids,
       image_urls: imageUrls,
     };
 
     try {
       const response = await createJob(payload, token);
+      console.log("Axios response:",response);
+      console.log("Status code:",response?.status);
       if (response?.status === 201) {
+        console.log("JOb posted successsfully");
         alert("Job posted successfully!");
         // Optionally reset fields here
       }
@@ -116,6 +135,7 @@ const CreateJob = () => {
             id="imageUpload"
             type="file"
             accept="image/*"
+            multiple
             onChange={handleImageUpload}
             className="file-input"
           />
@@ -153,13 +173,13 @@ const CreateJob = () => {
         <div className="skills-list">
           {skills.map((skill) => (
             <button
-              key={skill}
+              key={skill.id}
               className={`skill-tag ${
-                selectedSkills.includes(skill) ? "active" : ""
+                selectedSkills.includes(skill.name) ? "active" : ""
               }`}
-              onClick={() => toggleSkills(skill)}
+              onClick={() => toggleSkills(skill.name)}
             >
-              {skill}
+              {skill.name}
             </button>
           ))}
           {addingSkill ? (

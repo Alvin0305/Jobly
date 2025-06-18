@@ -1,11 +1,19 @@
-import { createSkill } from "../../../backend/controllers/metdataController";
-import axios from "./axiosInstance";
-const BASE_URL = "http://localhost:5000";
-export const getAllDomains = () => {
-     const res = axios.get(`${BASE_URL}/api/metadata/domain`);
+// import { createSkill } from "../../../backend/controllers/metdataController";
+ import axios from "./axiosInstance";
+
+export const getAllDomains =async () => {
+     const res = await axios.get(`/api/metadata/domain`);
      return res.data;
 };
 
-export cosnt createSkill = () =>{
-     xonst res = axios.post()
+export const createDomain = async (name,token) =>{
+     const res = await axios.post(`/api/metadata/domain`,
+          {name},
+          {
+               headers: {
+                    Authorization:`Bearer ${token}`,
+               }
+          }
+     );
+     return res.data;
 }

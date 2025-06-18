@@ -1,7 +1,9 @@
 // check the ../models/job.js and ../routes/jobRoutes.js file for the name of parameters required
 import { createJobFunction ,getJobByIdFunction,deleteJobFunction,getJobsCreatedByEmployerFunction,getJobsForEmployeeFunction,getInterestedEmployeesFunction,addEmployeeToInterestedFunction,selectEmployeeForJobFunction,getSelectedEmployeesForJobFunction,markJobAsFilledFunction} from "../models/job.js";
 export const createJob = async (req, res) => {
-  // use create job function in the job model to create a job
+  // use create job function in the job model to create a 
+  console.log("Job payloads",req.body);
+  console.log("Employer id",req.user?.id);
   try{
     const {
        title,
