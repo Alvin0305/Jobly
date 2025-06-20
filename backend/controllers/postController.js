@@ -4,10 +4,10 @@ import {
   getPostByIdFunction,
   deletePostFunction,
   getPostsByUserFunction,
-  getPostsInFeedFunction,searchPostFunction
-
+  getPostsInFeedFunction,
+  searchPostFunction,
 } from "../models/post.js";
-import { getCommentsFunction } from "../models/comment.js";
+import { addCommentFunction, getCommentsFunction } from "../models/comment.js";
 
 export const createPost = async (req, res) => {
   try {
@@ -97,13 +97,29 @@ export const getComments = async (req, res) => {
   }
 };
 
+export const addComment = async (req, res) => {
+  const user_id = req.user.id;
+  const { comment } = req.body;
+  const post_id = req.params.id;
+  try {
+    const newComment = await addCommentFunction(post_id, user_id, comment);
+    if (!newComment)
+      return res.status(400).json({ error: "failed to add comment" });
+    return res.status(200).json(newComment);
+  } catch (err) {
+    console.log("Error adding comment");
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 export const getPostsInFeed = async (req, res) => {
   // use the get posts in feed function in the post model to generate the feed for the given user
+  const { offset, limit } = req.query;
   console.log("here");
   try {
     const user_id = parseInt(req.params.id, 10);
     if (isNaN(user_id)) return res.status(400).json({ error: "Invalid user" });
-    const posts = await getPostsInFeedFunction(user_id);
+    const posts = await getPostsInFeedFunction(user_id, limit, offset);
     return res.status(200).json(posts);
   } catch (err) {
     console.log("Error fetching details");
@@ -111,15 +127,16 @@ export const getPostsInFeed = async (req, res) => {
   }
 };
 
-export const searchPost = async(req,res) => {
-  try{
+export const searchPost = async (req, res) => {
+  const { limit, offset } = req.query;
+  try {
     const domain_name = req.query.domain;
-    if(!domain_name) return req.status(400).json({error:"Daomin name required"})
-    const posts = await searchPostFunction(domain_name);
+    if (!domain_name)
+      return res.status(400).json({ error: "Domain name required" });
+    const posts = await searchPostFunction(domain_name, limit, offset);
     return res.status(200).json(posts);
-  }catch(err) {
-    console.error("Error searching posts by domain",err)
-    res.status(500).json({error:"Internal server error"});
+  } catch (err) {
+    console.error("Error searching posts by domain", err);
+    res.status(500).json({ error: "Internal server error" });
   }
-
-}
+};

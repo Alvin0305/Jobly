@@ -87,6 +87,7 @@ const AppRoutes = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/about" element={<AboutYouPage />} />
+            <Route path={`/post/:id`} element={<ViewPost />} />
             <Route path="/home" element={<HomePage />}>
               <Route index element={<Navigate to="feed" />} />
               <Route path="feed" element={<Feed />} />

@@ -15,6 +15,7 @@ import {
   commentPost,
   likePost,
   sendConnectionRequest,
+  unlikePost,
 } from "./socketControllers/notificationController.js";
 
 export const configureSockets = (io) => {
@@ -50,8 +51,15 @@ export const configureSockets = (io) => {
     socket.on("create_job", createJob);
     socket.on("reply_to_job", replyJob);
 
-    socket.on("like_post", likePost);
-    socket.on("comment_post", commentPost);
+    socket.on("like_post", (user_id, post_id) =>
+      likePost(user_id, post_id, io)
+    );
+    socket.on("unlike_post", (user_id, post_id) =>
+      unlikePost(user_id, post_id, io)
+    );
+    socket.on("comment_post", async (user_id, post_id, comment) =>
+      commentPost(user_id, post_id, comment, io)
+    );
     socket.on("send_connection_request", sendConnectionRequest);
   });
 };

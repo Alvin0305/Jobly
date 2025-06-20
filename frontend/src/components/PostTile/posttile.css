@@ -67,3 +67,7 @@
   line-height: 1.2;
   text-overflow: ellipsis;
 }
+
+.liked-icon * {
+  fill: white;
+}
