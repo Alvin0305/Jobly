@@ -1,0 +1,15 @@
+.feed-bubble {
+  border: 1px solid var(--color-primary);
+  padding: 6px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.selected-feed-bubble {
+  background-color: var(--color-primary);
+}
+
+.feed-bubble-text {
+  font-size: 0.75rem;
+  font-weight: lighter;
+}

@@ -1,8 +1,55 @@
-.feed {
+.feed-page {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 10px;
+}
+
+.feed-filter-div {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 10px;
+}
+
+.feed-domains {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.feed-search-bar {
+  align-self: flex-start;
+  display: flex;
   align-items: center;
-  justify-content: center;
+  background-color: var(--color-field);
+  padding: 10px 20px;
+  border-radius: 5px;
+  min-width: 400px;
+}
+
+.feed-search-input {
+  background-color: transparent;
+  border: none;
+  color: var(--color-border);
+  flex: 1;
+}
+
+.feed-search-icon * {
+  color: var(--color-border);
+}
+
+.feed-search-input:focus {
+  outline: none;
+}
+
+.feed {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
   width: 100%;
 }

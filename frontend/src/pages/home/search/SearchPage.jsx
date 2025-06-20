@@ -16,8 +16,8 @@ const SearchPage = () => {
     const fetchDomains = async () => {
       try {
         const response = await getAllDomains();
-        console.log(response.data.domains);
-        setDomains(response.data.domains);
+        console.log(response);
+        setDomains(response.domains);
       } catch (err) {
         console.error(err);
       }
