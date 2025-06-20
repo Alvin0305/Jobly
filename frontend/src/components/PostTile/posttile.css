@@ -8,18 +8,19 @@
   height: var(--post-tile-height);
   display: flex;
   align-items: center;
-  /* padding: 10px; */
   flex-direction: column;
   gap: 10px;
   box-sizing: border-box;
+  flex: 1 1 auto;
+
   max-width: var(--post-max-width);
   min-width: var(--post-min-width);
-  flex: 1;
 }
 
 .post-tile-image {
   border-radius: 5px;
   object-fit: cover;
+
   min-width: 200px;
   height: auto;
   width: 100%;
@@ -30,6 +31,7 @@
 .post-tile-blog-div {
   background-color: var(--color-primary);
   flex-grow: 1;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -9,6 +9,11 @@ import {
   insertPostLike,
   reqExists,
 } from "../models/notification.js";
+import {
+  addFriendFunction,
+  findUserById,
+  unFriendFunction,
+} from "../models/user.js";
 
 export const likePost = async (user_id, post_id, io) => {
   // insert to post like table
@@ -130,7 +135,7 @@ export const commentPost = async (user_id, post_id, content, io) => {
 export const sendConnectionRequest = async (sender_id, receiver_id, io) => {
   // add to notifications
   // emit reveive_connection_request to send a notification to the receiver
-
+  console.log("sending connection", sender_id, receiver_id);
   try {
     const alreadyFrnds = await alreadyFollowing(sender_id, receiver_id);
     const alreadyReq = await reqExists(sender_id, receiver_id);
@@ -139,20 +144,64 @@ export const sendConnectionRequest = async (sender_id, receiver_id, io) => {
       return;
     }
 
-    const sender = await getUserName(user_id);
+    const sender = await getUserName(sender_id);
     const reqContent = `${sender.firstname} sent a friend request`;
+    const receiver = await findUserById(receiver_id);
+    const addFriend = await addFriendFunction(sender_id, receiver_id);
 
     const notification = await insertConnectionNotification({
       sender_id,
       receiver_id,
       content: reqContent,
-      type: "Friend-request",
+      type: "Friends-Request",
     });
 
-    io.to(`user_${owner.owner_id}`).emit("requested_friend_connection", {
+    io.to(`user_${receiver_id}`).emit("requested_friend_connection", {
       notification,
     });
+    io.to(`user_${sender_id}`).emit("friend_connection_sent", {
+      receiver,
+    });
     console.log("Friend request sent successfully");
+  } catch (err) {
+    console.error("Error in sendConnectionRequest : ", err);
+  }
+  // i.e., io.to(`user_${receiverId}`).emit("receive_connection", {
+  //  sender_id, ... other fields that might be needed in front end to show in the notification
+  // });
+};
+
+export const sendDisconnectionRequest = async (sender_id, receiver_id, io) => {
+  // add to notifications
+  // emit reveive_connection_request to send a notification to the receiver
+  console.log("sending disconnection", sender_id, receiver_id);
+  try {
+    // const alreadyFrnds = await alreadyFollowing(sender_id, receiver_id);
+    // const alreadyReq = await reqExists(sender_id, receiver_id);
+    // if (!alreadyFrnds || !alreadyReq) {
+    //   console.log("Not already friends");
+    //   return;
+    // }
+
+    const sender = await getUserName(sender_id);
+    const reqContent = `${sender.firstname} sent a disconnection request`;
+    const receiver = await findUserById(receiver_id);
+    const addFriend = await unFriendFunction(sender_id, receiver_id);
+
+    const notification = await insertConnectionNotification({
+      sender_id,
+      receiver_id,
+      content: reqContent,
+      type: "Friends-Request",
+    });
+
+    io.to(`user_${receiver_id}`).emit("requested_unfriend_connection", {
+      notification,
+    });
+    io.to(`user_${sender_id}`).emit("friend_disconnection_sent", {
+      receiver,
+    });
+    console.log("UnFriend request sent successfully");
   } catch (err) {
     console.error("Error in sendConnectionRequest : ", err);
   }

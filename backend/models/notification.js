@@ -73,7 +73,7 @@ export const insertComment = async ({ post_id, user_id, content }) => {
 export const reqExists = async (requestor_id, acceptor_id) => {
   const { rows } = await pool.query(
     `SELECT 1 FROM requests 
-        WHERE requestor_id = $1 AND acceptor_id = $2 AND status='pending'`,
+        WHERE requestor_id = $1 AND acceptor_id = $2 AND status='Pending'`,
     [requestor_id, acceptor_id]
   );
   return rows.length > 0;

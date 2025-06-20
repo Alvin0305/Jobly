@@ -15,6 +15,7 @@ import {
   commentPost,
   likePost,
   sendConnectionRequest,
+  sendDisconnectionRequest,
   unlikePost,
 } from "./socketControllers/notificationController.js";
 
@@ -60,6 +61,11 @@ export const configureSockets = (io) => {
     socket.on("comment_post", async (user_id, post_id, comment) =>
       commentPost(user_id, post_id, comment, io)
     );
-    socket.on("send_connection_request", sendConnectionRequest);
+    socket.on("send_connection_request", (sender_id, receiver_id) =>
+      sendConnectionRequest(sender_id, receiver_id, io)
+    );
+    socket.on("send_disconnection_request", (sender_id, receiver_id) =>
+      sendDisconnectionRequest(sender_id, receiver_id, io)
+    );
   });
 };

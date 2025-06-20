@@ -33,3 +33,11 @@
 .custom-icon * {
   color: black;
 }
+
+.search-page-users {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  width: 100%;
+}

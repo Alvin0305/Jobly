@@ -3,21 +3,35 @@ import { Icon } from "@iconify/react";
 import "./search.css";
 import Bubble from "../../../components/Bubble/Bubble";
 import { getAllDomains } from "../../../services/metadataService";
+import FeedBubble from "../../../components/FeedBubble/FeedBubble";
+import { getUserFollowers, searchUsers } from "../../../services/userService";
+import { useUser } from "../../../contexts/userContext";
+import UserTile from "../../../components/UserTile/UserTile";
+import socket from "../../../socket";
 
 const SearchPage = () => {
   const [searchValue, setSearchValue] = useState("");
   const iconSize = 32;
+  const { user } = useUser();
 
   const [selectedUserFilter, setSelectedUserFilter] = useState("All");
   const [domains, setDomains] = useState([]);
-  const [selectedDomains, setSelectedDomains] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [friends, setFriends] = useState([]);
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     const fetchDomains = async () => {
       try {
-        const response = await getAllDomains();
-        console.log(response);
-        setDomains(response.domains);
+        const [domainResponse, friendResponse] = await Promise.all([
+          getAllDomains(),
+          getUserFollowers(user.token),
+        ]);
+        console.log(domainResponse);
+        console.log(friendResponse.data.followers);
+        setDomains(domainResponse.domains);
+        setFriends(friendResponse.data.followers);
       } catch (err) {
         console.error(err);
       }
@@ -26,14 +40,45 @@ const SearchPage = () => {
   }, []);
 
   useEffect(() => {
+    const handleRequestSent = ({ receiver }) => {
+      console.log("request sent to", receiver);
+      setFriends((prev) => [...prev, receiver]);
+    };
+    socket.on("friend_connection_sent", handleRequestSent);
+
+    const handleRequestUnSent = ({ receiver }) => {
+      console.log("request unsent to", receiver);
+      setFriends((prev) => prev.filter((p) => p.id !== receiver.id));
+    };
+    socket.on("friend_disconnection_sent", handleRequestUnSent);
+
+    return () => {
+      socket.off("friend_connection_sent", handleRequestSent);
+    };
+  }, []);
+
+  useEffect(() => {
     const refetchPosts = async () => {
+      const isEmployee =
+        selectedUserFilter === "All"
+          ? null
+          : selectedUserFilter === "Employees"
+          ? true
+          : false;
       try {
+        const response = await searchUsers(
+          user.token,
+          selectedTags,
+          isEmployee
+        );
+        console.log(response.data.users);
+        setUsers(response.data?.users?.filter((u) => u.id !== user.id));
       } catch (err) {
         console.error(err);
       }
     };
     refetchPosts();
-  }, [selectedDomains]);
+  }, [selectedUserFilter, selectedTags]);
 
   return (
     <div className="search-page gap-10">
@@ -66,28 +111,21 @@ const SearchPage = () => {
         )}
       </div>
       <div className="flex gap-10 self-start">
-        <Bubble
+        <FeedBubble
           name="All"
           selected={selectedUserFilter === "All"}
           onClick={() => {
             setSelectedUserFilter("All");
           }}
         />
-        <Bubble
-          name="Posts"
-          selected={selectedUserFilter === "Posts"}
-          onClick={() => {
-            setSelectedUserFilter("Posts");
-          }}
-        />
-        <Bubble
+        <FeedBubble
           name="Employees"
           selected={selectedUserFilter === "Employees"}
           onClick={() => {
             setSelectedUserFilter("Employees");
           }}
         />
-        <Bubble
+        <FeedBubble
           name="Employers"
           selected={selectedUserFilter === "Employers"}
           onClick={() => {
@@ -95,21 +133,39 @@ const SearchPage = () => {
           }}
         />
       </div>
-      <div className="flex gap-10 wrap">
-        {domains.map((domain) => (
-          <Bubble
-            key={domain.id}
-            name={domain.name}
-            selected={selectedDomains.includes(domain)}
-            onClick={() => {
-              if (!selectedDomains.includes(domain)) {
-                setSelectedDomains((prev) => [...prev, domain]);
-              } else {
-                setSelectedDomains((prev) =>
-                  prev.filter((d) => d.id !== domain.id)
-                );
-              }
-            }}
+      <div
+        className="flex width-100 align-center space-between pointer"
+        onClick={() => setShowFilters(!showFilters)}
+      >
+        <h2 className="m0">Filters</h2>
+        <Icon icon="lucide:chevron-down" width={32} height={32} />
+      </div>
+      {showFilters && (
+        <div className="flex gap-10 wrap">
+          {domains.map((domain) => (
+            <FeedBubble
+              key={domain.id}
+              name={domain.name}
+              selected={selectedTags.includes(domain.name)}
+              onClick={() => {
+                if (!selectedTags.includes(domain.name)) {
+                  setSelectedTags((prev) => [...prev, domain.name]);
+                } else {
+                  setSelectedTags((prev) =>
+                    prev.filter((d) => d !== domain.name)
+                  );
+                }
+              }}
+            />
+          ))}
+        </div>
+      )}
+      <div className="search-page-users">
+        {users?.map((user) => (
+          <UserTile
+            user={user}
+            key={user.id}
+            isFriend={friends.some((f) => f.id === user.id)}
           />
         ))}
       </div>
