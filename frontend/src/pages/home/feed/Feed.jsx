@@ -22,7 +22,7 @@ const Feed = () => {
   const [selectedPostData, setSelectedPostData] = useState(null);
   const [newCommentValue, setNewCommentValue] = useState("");
   const [comments, setComments] = useState([]);
-  const [pageNumber, setPageNumber] = useState(1);
+  const [pageNumber, setPageNumber] = useState(0);
   const [domainPageNumber, setDomainPageNumber] = useState(1);
 
   useEffect(() => {

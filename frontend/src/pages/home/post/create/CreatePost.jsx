@@ -7,6 +7,7 @@ import { useUser } from "../../../../contexts/userContext";
 import { useNavigate } from "react-router-dom";
 import FeedBubble from "../../../../components/FeedBubble/FeedBubble";
 import PostTile from "../../../../components/PostTile/PostTile";
+import { toast } from "react-toastify";
 
 const CreatePost = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -17,6 +18,7 @@ const CreatePost = () => {
   const [selectedDomains, setSelectedDomains] = useState([]);
   const [selectedOption, setSelectedOption] = useState("Images");
   const { user } = useUser();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const iconSize = 32;
@@ -36,6 +38,11 @@ const CreatePost = () => {
 
   const handlePost = async (e) => {
     e.preventDefault();
+    if (!selectedDomains.length) {
+      toast.warn("Add atleast one domain");
+      return;
+    }
+    setLoading(true);
     const domain_ids = [];
     for (const domain of selectedDomains) {
       domain_ids.push(domain.id);
@@ -71,6 +78,8 @@ const CreatePost = () => {
       navigate("/home");
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -209,6 +218,11 @@ const CreatePost = () => {
             : description}
         </h6>
       </div>
+      {loading && (
+        <div className="loading-overlay">
+          <div className="loading-spinner"></div>
+        </div>
+      )}
     </form>
   );
 };
