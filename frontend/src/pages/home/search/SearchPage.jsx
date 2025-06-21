@@ -4,7 +4,11 @@ import "./search.css";
 import Bubble from "../../../components/Bubble/Bubble";
 import { getAllDomains } from "../../../services/metadataService";
 import FeedBubble from "../../../components/FeedBubble/FeedBubble";
-import { getUserFollowers, searchUsers } from "../../../services/userService";
+import {
+  getUserFollowers,
+  getUserFollowing,
+  searchUsers,
+} from "../../../services/userService";
 import { useUser } from "../../../contexts/userContext";
 import UserTile from "../../../components/UserTile/UserTile";
 import socket from "../../../socket";
@@ -13,6 +17,7 @@ const SearchPage = () => {
   const [searchValue, setSearchValue] = useState("");
   const iconSize = 32;
   const { user } = useUser();
+  const pageSize = 10;
 
   const [selectedUserFilter, setSelectedUserFilter] = useState("All");
   const [domains, setDomains] = useState([]);
@@ -20,18 +25,19 @@ const SearchPage = () => {
   const [users, setUsers] = useState([]);
   const [friends, setFriends] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [pageNumber, setPageNumber] = useState(1);
 
   useEffect(() => {
     const fetchDomains = async () => {
       try {
         const [domainResponse, friendResponse] = await Promise.all([
           getAllDomains(),
-          getUserFollowers(user.token),
+          getUserFollowing(user.token),
         ]);
         console.log(domainResponse);
-        console.log(friendResponse.data.followers);
+        console.log(friendResponse.data);
         setDomains(domainResponse.domains);
-        setFriends(friendResponse.data.followers);
+        setFriends(friendResponse.data);
       } catch (err) {
         console.error(err);
       }
@@ -69,16 +75,47 @@ const SearchPage = () => {
         const response = await searchUsers(
           user.token,
           selectedTags,
-          isEmployee
+          isEmployee,
+          searchValue.trim() ? searchValue.trim() : null,
+          pageSize,
+          0
         );
         console.log(response.data.users);
         setUsers(response.data?.users?.filter((u) => u.id !== user.id));
+        setPageNumber(1);
       } catch (err) {
         console.error(err);
       }
     };
     refetchPosts();
-  }, [selectedUserFilter, selectedTags]);
+  }, [selectedUserFilter, selectedTags, searchValue]);
+
+  const handleViewMore = async () => {
+    const isEmployee =
+      selectedUserFilter === "All"
+        ? null
+        : selectedUserFilter === "Employees"
+        ? true
+        : false;
+    try {
+      const response = await searchUsers(
+        user.token,
+        selectedTags,
+        isEmployee,
+        searchValue.trim() ? searchValue.trim() : null,
+        pageSize,
+        pageSize * pageNumber
+      );
+      console.log(response.data.users);
+      setUsers((prev) => [
+        ...prev,
+        ...response.data?.users?.filter((u) => u.id !== user.id),
+      ]);
+      setPageNumber((prev) => prev + 1);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="search-page gap-10">
@@ -169,6 +206,9 @@ const SearchPage = () => {
           />
         ))}
       </div>
+      <button onClick={handleViewMore} className="search-view-more-button">
+        View More...
+      </button>
     </div>
   );
 };

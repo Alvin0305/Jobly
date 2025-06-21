@@ -106,12 +106,15 @@ export const getUserNotifications = async (req, res) => {
 export const searchUsers = async (req, res) => {
   //use the search user function in the user model to get the search result for users
   const { searchValue, tags, isEmployee } = req.body;
+  const { limit, offset } = req.query;
 
   try {
     const users = await searchUsersFunctions(
       searchValue || "",
       Array.isArray(tags) ? tags : [],
-      typeof isEmployee === "boolean" ? isEmployee : null
+      typeof isEmployee === "boolean" ? isEmployee : null,
+      offset,
+      limit
     );
     res.status(200).json({ users });
   } catch (err) {

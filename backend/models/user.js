@@ -267,8 +267,8 @@ export const searchUsersFunctions = async (
   searchValue = "",
   tags = [],
   isEmployee = null,
-  page = 1,
-  pageSize = 10
+  offset = 0,
+  limit = 10
 ) => {
   const client = await pool.connect();
   try {
@@ -316,10 +316,8 @@ export const searchUsersFunctions = async (
     // === 4. Sorting ===
     query += ` ORDER BY u.firstname, u.lastname`;
 
-    // === 5. Pagination ===
-    const offset = (page - 1) * pageSize;
     query += ` LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
-    values.push(pageSize, offset);
+    values.push(limit, offset);
 
     const result = await client.query(query, values);
     return result.rows;
@@ -337,7 +335,7 @@ export const addFriendFunction = async (sender_id, receiver_id) => {
         friends (follower_id, following_id) 
         VALUES ($1, $2)
         RETURNING *`,
-    [receiver_id, sender_id]
+    [sender_id, receiver_id]
   );
   console.log(rows[0]);
   return rows[0];
@@ -348,7 +346,7 @@ export const unFriendFunction = async (sender_id, receiver_id) => {
     `DELETE FROM friends
         WHERE follower_id = $1 AND following_id = $2
         RETURNING *`,
-    [receiver_id, sender_id]
+    [sender_id, receiver_id]
   );
   console.log(rows[0]);
   return rows[0];

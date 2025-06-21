@@ -41,3 +41,14 @@
   align-items: flex-start;
   width: 100%;
 }
+
+.search-view-more-button {
+  background-color: transparent;
+  align-self: flex-start;
+  border: none;
+  cursor: pointer;
+}
+
+.search-view-more-button:hover {
+  transform: scale(1.05);
+}
