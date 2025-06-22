@@ -7,6 +7,7 @@ import {
   getUserNotifications,
   searchUsers,
   updateUser,
+  userPrivacy
 } from "../controllers/userController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 import upload from "../middlewares/multer.js";
@@ -26,6 +27,7 @@ router.get("/mutual/:id", protect, getMutualFriends);
 router.get("/notification/:id", protect, getUserNotifications);
 
 router.put("/:id", protect, updateUser);
+router.put("/privacy",protect,userPrivacy);
 
 router.delete("/:id", protect, deleteUser);
 

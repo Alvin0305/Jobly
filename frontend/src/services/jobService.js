@@ -57,7 +57,7 @@ export const selectEmployeeForJob = async (jobId, employeeId) => {
 
 // Get selected employees for a job
 export const getSelectedEmployeesForJob = async (jobId) => {
-  const res = await axios.get(`${BASE_URL}/api/job/${jobId}/selected`);
+  const res = await axios.get(`/api/job/${jobId}/selected`);
   return res.data;
 };
 

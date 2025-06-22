@@ -1,4 +1,4 @@
-import { deleteUserFunction, getMutualFriendsFunction, getUserFollowersFunction, getUserFollowingFunction, getUserNotificationsFunction, searchUsersFunctions, updateUserFunction } from "../models/user.js";
+import { deleteUserFunction, getMutualFriendsFunction, getUserFollowersFunction, getUserFollowingFunction, getUserNotificationsFunction, searchUsersFunctions, updateUserFunction,userPrivacyFunction } from "../models/user.js";
 
 export const getUserFollowing = async (req, res) => {
   // use the get user following function in the user model to get the users who follow the given user
@@ -109,3 +109,25 @@ export const searchUsers = async (req, res) => {
     res.status(500).json({ error: 'Search failed' });
   }
 };
+
+export const userPrivacy = async(req,res) => {
+ 
+  try{
+    const user_id = req.user.id;
+    if(!user_id) {
+      return res
+      .status(401)
+      .json({ error: "Unauthorized: user_id missing from token" });
+    }
+    const privateResult = await userPrivacyFunction(user_id);
+    return res.status(200).json({
+      message:"Privacy setting updated",
+      is_private:privacyResult.is_private
+    })
+
+  }catch(err) {
+    console.error("Error in user privacy",err);
+    return res.status(500).json({error:"INternal server error"});
+  }
+
+}

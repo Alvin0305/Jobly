@@ -284,3 +284,26 @@ export const searchUsersFunctions = async (searchValue = '', tags = [], isEmploy
   }
 };
 
+export const userPrivacyFunction = async(user_id) =>{
+  try{
+    const res = await pool.query (
+      `select is-private from users where id = $1`,
+      [user_id]
+    )
+    if(result.rows.length === 0) {
+      throw new Error('User not found');
+    }
+    const currentPrivacy = result.rows[0].is_private;
+    const updatedPrivacy = !currentPrivacy;
+
+    await pool.query(
+      `update users set is_private = $1 where id = $2`,
+      [updatedPrivacy,user_id]
+    )
+    return {success: true, is_private:updatedPrivacy};
+  }catch(err) {
+    console.error('Eroor updating privacy:',err)
+    throw err;
+  }
+}
+

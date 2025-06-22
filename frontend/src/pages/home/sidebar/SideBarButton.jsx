@@ -27,6 +27,7 @@ const SideBarButton = ({ name, iconName }) => {
       Notifications: "/home/notifications",
       Chats: "/chat",
       Profile: "/home/profile/user/view",
+      Settings:"/home/settings"
     };
 
     navigate(pathMap[name] || "/home");

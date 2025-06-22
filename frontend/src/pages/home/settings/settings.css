@@ -1,0 +1,49 @@
+.settings-container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 30px;
+  border-radius: 16px;
+  background-color:var(--color-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.settings-heading {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #333;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 10px;
+}
+
+.settings-section {
+  margin-top: 30px;
+}
+
+.settings-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: #444;
+}
+
+.privacy-btn {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.privacy-btn:hover {
+  background-color: #0056b3;
+}
+
+.privacy-status {
+  margin-top: 15px;
+  font-size: 1.1rem;
+  color: #333;
+}
