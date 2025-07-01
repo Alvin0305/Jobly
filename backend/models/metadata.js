@@ -8,6 +8,14 @@ export const getDomainsFunction = async () => {
   return rows;
 }
 
+export const createDomainFunction = async (name) => {
+  const {rows} = await pool.query(
+    `INSERT INTO domains (name) VALUES ($1) RETURNING *`,[name]
+  );
+  console.log(rows[0]);
+  return rows[0];
+}
+
 export const createInterestFunction = async (user_id, name) => {
   // insert a new domain into the domain table
   // update the user interest table, add this interst to it
@@ -197,7 +205,7 @@ export const getWorkExperienceFunction = async (user_id) => {
 
 }
 
-export const createJobDetails = async(user_id,company_name,designation,location) => {
+export const createJobDetailsFunction = async(user_id,company_name,designation,location) => {
   try{
     let res = await pool.query(
       `INSERT INTO work_experience
@@ -215,7 +223,7 @@ export const createJobDetails = async(user_id,company_name,designation,location)
   }
 };
 
-export const getJobDetails = async (user_id) => {
+export const getJobDetailsFunction = async (user_id) => {
   console.log(user_id);
   const {rows} = await pool.query (
     `SELECT id, company_name, designation,  location
@@ -225,15 +233,16 @@ export const getJobDetails = async (user_id) => {
   return rows;
 };
 
-export const createDescription = async (user_id, description) => {
+export const createDescriptionFunction = async (user_id, description) => {
   try{
     const res = await pool.query(
-      `INSERT INTO work_experience (user_id, description)
-      VALUES ($1,$2)
-      RETURNING id`,
+      `INSERT INTO user_descriptions (user_id, description)
+       VALUES ($1, $2)
+       ON CONFLICT (user_id)
+       DO UPDATE SET description = EXCLUDED.description
+       RETURNING id`,
       [user_id, description]
     );
-
     return {success:true, experience_id: res.rows[0].id, message:"Description added successfully"};
 
   }catch(err){
@@ -242,11 +251,11 @@ export const createDescription = async (user_id, description) => {
   }
 };
 
-export const getDescription = async (user_id) => {
+export const getDescriptionFunction = async (user_id) => {
   console.log(user_id);
   const {rows} = await pool.query (
     `SELECT id, description
-    FROM work_experience WHERE user_id = $1`,
+    FROM user_descriptions WHERE user_id = $1`,
     [user_id]
   );
   return rows;

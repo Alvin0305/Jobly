@@ -1,4 +1,4 @@
-import { createCodingLanguageFunction, createInterestFunction, createLanguageFunction, createQualificationFunction, createSkillFunction, createWorkExperienceFunction, getCodingLanguagesFunction, getDomainsFunction, getInterestsOfUserFunction, getLanguagesByUserFunction, getLanguagesFunction, getQualificationsFunction, getQualificationsOfUserFunction, getSkillsOfUserFunction, getWorkExperienceFunction } from "../models/metadata.js";
+import { createCodingLanguageFunction, createDescriptionFunction, createDomainFunction, createInterestFunction, createJobDetailsFunction, createLanguageFunction, createQualificationFunction, createSkillFunction, createWorkExperienceFunction, getCodingLanguagesFunction, getDescriptionFunction, getDomainsFunction, getInterestsOfUserFunction, getJobDetailsFunction, getLanguagesByUserFunction, getLanguagesFunction, getQualificationsFunction, getQualificationsOfUserFunction, getSkillsOfUserFunction, getWorkExperienceFunction } from "../models/metadata.js";
 
 export const createInterest = async (req, res) => {
   // use the create interst function in the metadata model to create interest
@@ -28,6 +28,22 @@ export const getDomains = async (req, res) => {
     res.status(500).json({error:"Failed to fetch domains",details:err.message});
   }
 };
+
+export const createDomains = async (req,res) => {
+  const {name} = req.body;
+  // const user_id = req.user?.id;
+  console.log("Logged-in user:", req.user);
+
+  if(!name)
+    return res.status(400).json({error :"Domain name is required"});
+
+  try{
+    const result = await createDomainFunction(name);
+    res.status(201).json({message:"Domain added successfully"});
+  }catch(err){
+    res.status(500).json({ error: "Failed to add Domain", details: err.message });
+  }
+}
 
 export const getInterestsOfUser = async (req, res) => {
   // use the get interest of user function to get all the interests of the user
@@ -126,7 +142,7 @@ export const getLanguagesOfUser = async (req, res) => {
 };
 
 export const createWorkExperience = async (req, res) => {
-  const user_id = req.params.id || req.user?.id;
+  const user_id = req.params?.id || req.user?.id;
   const {company_name, designation, start_date, end_date, location } = req.body;
 
   const result = await createWorkExperienceFunction(user_id, company_name, designation, start_date, end_date, location);
@@ -144,9 +160,55 @@ export const getWorkExperience = async (req, res) => {
     const exp = await getWorkExperienceFunction(user_id);
     res.status(200).json({exp});
   }catch(err){
-    console.log("getjdhf u")
-    console.log(err.stack)
     res.status(500).json({error:"Failed to fetch work experience"});
+  }
+}
+
+export const createJobDetails = async (req, res) => {
+  const user_id = req.params?.id || req.user?.id;
+  const {company_name,designation,location} = req.body;
+  
+  const result = await createJobDetailsFunction(user_id, company_name,designation,location);
+
+  if(result.success)
+    res.status(201).json(result);
+  else
+    res.status(500).json(result);
+}
+
+export const getJobDetails = async (req,res) => {
+  const user_id = req.params?.id || req.user?.id;
+
+  try{
+    const exp = await getJobDetailsFunction(user_id);
+    res.status(200).json({exp});
+  }catch(err){
+    console.log(err.stack)
+    res.status(500).json({error:"Failed to fetch job details"});
+  }
+}
+
+export const createDescription = async (req,res) => {
+  const user_id = req.params?.id || req.user?.id;
+  const {description} = req.body;
+  
+  const result = await createDescriptionFunction(user_id, description);
+
+  if(result.success)
+    res.status(201).json(result);
+  else
+    res.status(500).json(result);
+}
+
+export const getDescription  = async(req,res) => {
+  const user_id = req.params?.id || req.user?.id;
+
+  try{
+    const exp = await getDescriptionFunction(user_id);
+    res.status(200).json({exp});
+  }catch(err){
+    console.log(err.stack)
+    res.status(500).json({error:"Failed to fetch job details"});
   }
 }
 

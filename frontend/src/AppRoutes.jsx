@@ -97,7 +97,7 @@ const AppRoutes = () => {
               <Route path="notifications" element={<Notifications />} />
               <Route path="post/create" element={<CreatePost />} />
               <Route path="post/view" element={<ViewPost />} />
-              <Route path="profile/other" element={<OtherProfile />} />
+              <Route path="profile/other/:id" element={<OtherProfile />} />
               <Route path="profile/user/edit" element={<EditProfile />} />
               <Route path="profile/user/view" element={<ViewProfile />} />
               <Route path="search" element={<SearchPage />} />
