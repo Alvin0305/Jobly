@@ -1,0 +1,172 @@
+.post-container {
+  padding: 20px;
+  background-color: #121212;
+  border-radius: 12px;
+  max-width: 800px;
+  margin: auto;
+  color: white;
+  font-family: "Inter", sans-serif;
+}
+
+.input-section {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  align-items: flex-start;
+}
+
+.image-upload-box {
+  width: 270px;
+  height: 270px;
+  border: 2px dashed #555;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #1e1e1e;
+  transition: 0.3s ease;
+}
+
+.upload-label {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.plus-icon {
+  font-size: 2.5rem;
+  color: #888;
+}
+
+.file-input {
+  display: none;
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.text-inputs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.text-inputs input {
+  background-color: #1f1f1f;
+  border: 1px solid #333;
+  padding: 10px;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 100%;
+
+
+}
+.text-inputs textarea {
+  background-color: #1f1f1f;
+  border: 1px solid #333;
+  padding: 10px;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 100%;
+  height:130px;
+}
+
+.skills-section {
+  margin-top: 20px;
+}
+
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.skill-tag {
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.skill-tag.active {
+  background-color: #4caf50;
+  border-color: #4caf50;
+  color: #fff;
+}
+
+.add-skill-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.add-skill-input {
+  padding: 6px;
+  background: #1f1f1f;
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: white;
+}
+
+.add-button,
+.cancel-button {
+  background: #333;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.preview-section {
+  margin-top: 20px;
+}
+
+.preview-box {
+  display: flex;
+  justify-content: space-between;
+  background: #1a1a1a;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  height:270px;
+
+}
+
+.preview-left,
+.preview-right {
+  flex: 1;
+  text-align: center;
+  color: #ccc;
+}
+
+.post-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.post-button:hover {
+  background-color: #43a047;
+}

@@ -2,8 +2,9 @@
 @import "./styles/styles.css";
 @import "./styles/utils.css";
 @import "./styles/variables.css";
-
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 @font-face {
   font-family: "AndikaNewBasicRegular";
   src: url("/fonts/andika/AndikaNewBasic-R.ttf") format("truetype");

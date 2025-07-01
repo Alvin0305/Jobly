@@ -24,6 +24,7 @@ const SideBar = () => {
         <SideBarButton name="Notifications" iconName="lucide:bell" />
         <SideBarButton name="Chats" iconName="lucide:mail" />
         <SideBarButton name="Profile" iconName="lucide:user" />
+        <SideBarButton name="Settings" iconName="lucide:settings" />
       </div>
       <div>
         <SideBarButton name="Log Out" iconName="tabler:logout" />

@@ -22,11 +22,11 @@ const maxUploadCount = 5;
 router.post("/", protect, createJob);
 router.delete("/:id", protect, deleteJob);
 router.get("/:id", protect, getJobById);
-router.get("/employer/:id", protect, getJobsCreatedByEmployer);
-router.get("/employee/:id", protect, getJobsForEmployee);
+router.get("/employer", protect, getJobsCreatedByEmployer);
+router.get("/employee", protect, getJobsForEmployee);
 router.get("/interested/:id", protect, getInterestedEmployees);
 router.get("/selected/:id", protect, getSelectedEmployeesForJob);
-router.post("/interested/:id", protect, addEmployeeToInterested);
+router.post("/:id/interested", protect, addEmployeeToInterested);
 router.post("/select/:id", protect, selectEmployeeForJob);
 router.patch("/:id", markJobAsFilled);
 // make sure the key value being based is images not image

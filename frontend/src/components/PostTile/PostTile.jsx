@@ -1,85 +1,93 @@
 import React, { useEffect, useState } from "react";
 import { getPostById } from "../../services/postService";
-import { useTab } from "../../contexts/tabContext";
 import { Icon } from "@iconify/react";
 import "./posttile.css";
 import { useUser } from "../../contexts/userContext";
+import { useNavigate } from "react-router-dom";
+import socket from "../../socket";
+import { toast } from "react-toastify";
 
-const PostTile = ({ postData }) => {
-  const [post, setPost] = useState(null);
-  const {user} = useUser();
-  const { setTab } = useTab();
-  const token = user?.token;
-  useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const response = await getPostById(postData.id, token);
-        setPost(response.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchPost();
-  }, [postData]);
+const PostTile = ({ postData, onClick }) => {
+  const { user } = useUser();
 
   const iconSize = 24;
 
-  const handleLike = () => {};
-  const handleComment = () => {};
-  const handleShare = () => {};
-
-  const handleViewPost = () => {
-    setTab("View Post");
+  const handleLike = (e) => {
+    e.stopPropagation();
+    socket.emit("like_post", user.id, postData.id);
   };
 
-  const shiftContentToRight = Math.random() < 0.5;
+  const handleUnlike = (e) => {
+    e.stopPropagation();
+    console.log("unliking");
+    socket.emit("unlike_post", user.id, postData.id);
+  };
 
-  if (!post) return <div></div>;
+  const handleShare = (e) => {
+    e.stopPropagation();
+    const postLink = `${window.location.origin}/post/${postData.id}`;
+    navigator.clipboard
+      .writeText(postLink)
+      .then(() => {
+        toast.success("post link copied to clipboard");
+      })
+      .catch((err) => {
+        toast.error("failed to copy link to clipboard");
+      });
+  };
+
+  if (!postData)
+    return (
+      <div className="loading-post-tile">
+        <div className="loading-post-tile-image-div">
+          <Icon icon="lucide:image" width={100} height={100} />
+        </div>
+        <div className="loading-post-tile-subdiv"></div>
+      </div>
+    );
 
   return (
-    <div className="post-tile" onClick={handleViewPost}>
-      <div
-        className={`post-left-div ${
-          shiftContentToRight && "post-left-div-moved-right"
-        }`}
-      >
-        <h2 className="post-description">{post.description}</h2>
-        <div className="post-options">
-          <button className="post-action-button" onClick={handleLike}>
-            <Icon icon="lucide:heart" width={iconSize} height={iconSize} />
-          </button>
-          <button className="post-action-button" onClick={handleComment}>
-            <Icon
-              icon="material-symbols:comment-outline"
-              width={iconSize}
-              height={iconSize}
-            />
-          </button>
-          <button className="post-action-button" onClick={handleShare}>
-            <Icon
-              icon="material-symbols:share"
-              width={iconSize}
-              height={iconSize}
-            />
-          </button>
+    <div className="post-tile" onClick={onClick}>
+      {postData?.image_urls?.length ? (
+        <img src={postData?.image_urls?.[0]} className="post-tile-image" />
+      ) : (
+        <div className="post-tile-blog-div">
+          <h6 className="post-tile-blog">
+            {postData?.blog?.substring(0, 250) + "..."}
+          </h6>
         </div>
+      )}
+      <div className="post-tile-actions">
+        <Icon
+          icon="lucide:heart"
+          height={iconSize}
+          width={iconSize}
+          className={`post-tile-icon ${
+            postData?.liked_by_user ? "liked-icon" : ""
+          }`}
+          onClick={
+            !postData?.liked_by_user
+              ? (e) => handleLike(e)
+              : (e) => handleUnlike(e)
+          }
+        />
+        <Icon
+          icon="material-symbols:comment-outline"
+          height={iconSize}
+          width={iconSize}
+          className="post-tile-icon"
+        />
+        <Icon
+          icon="material-symbols:share"
+          height={iconSize}
+          width={iconSize}
+          className="post-tile-icon"
+          onClick={(e) => handleShare(e)}
+        />
       </div>
-      <div className="post-right-div">
-        {post.image_urls.length ? (
-          <div className="post-images">
-            {post.image_urls.map((image, index) => (
-              <img
-                src={image}
-                alt="Post Image"
-                key={index}
-                className="post-image"
-              />
-            ))}
-          </div>
-        ) : (
-          <h4 className="post-blog">{post.blog}</h4>
-        )}
-      </div>
+      <h6 className="post-tile-description">
+        {postData?.description?.substring(0, 50) + "..."}
+      </h6>
     </div>
   );
 };

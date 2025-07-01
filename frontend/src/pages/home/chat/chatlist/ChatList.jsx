@@ -119,6 +119,8 @@ const ChatList = () => {
     console.log(chatlist);
   }, [chatlist]);
 
+  if (!chatlist) return <div>Loading...</div>;
+
   return (
     <div className="chat-list">
       <div className="chat-list-search-bar">

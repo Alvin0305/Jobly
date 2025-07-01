@@ -266,17 +266,17 @@ export const getUserNotificationsFunction = async (user_id) => {
 export const searchUsersFunctions = async (
   searchValue = "",
   tags = [],
-  isEmployee = null
+  isEmployee = null,
+  offset = 0,
+  limit = 10
 ) => {
-  // get the users based on the searchValue, skills (tags) and whether they are
-  // looking for an employee or employer or both
   const client = await pool.connect();
   try {
     let query = `
-      SELECT DISTINCT u.id, u.firstname, u.lastname, u.headline, u.image, u.role
+      SELECT DISTINCT u.*
       FROM users u
-      LEFT JOIN user_interests ui ON u.id = ui.user_id
-      LEFT JOIN domains d ON ui.interest_id = d.id
+      LEFT JOIN user_skills us ON u.id = us.user_id
+      LEFT JOIN domains d ON us.skill_id = d.id
       WHERE u.is_active = true
     `;
 
@@ -303,17 +303,21 @@ export const searchUsersFunctions = async (
       paramIndex++;
     }
 
-    // === 3. Skills/tags filter ===
+    // === 3. Tags filter ===
     if (tags.length > 0) {
       const tagConditions = tags.map(
         (_, i) => `LOWER(d.name) = $${paramIndex + i}`
       );
       query += ` AND (${tagConditions.join(" OR ")})`;
       values.push(...tags.map((t) => t.toLowerCase()));
+      paramIndex += tags.length;
     }
 
-    // === 4. Sort ===
+    // === 4. Sorting ===
     query += ` ORDER BY u.firstname, u.lastname`;
+
+    query += ` LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
+    values.push(limit, offset);
 
     const result = await client.query(query, values);
     return result.rows;
@@ -325,12 +329,25 @@ export const searchUsersFunctions = async (
   }
 };
 
-export const getUserByIdFunction = async (id) => {
+export const addFriendFunction = async (sender_id, receiver_id) => {
   const { rows } = await pool.query(
-    `SELECT id, firstname, lastname, email, image, headline, summary, role, college, school, is_private 
-     FROM users WHERE id = $1`,
-    [id]
+    `INSERT INTO 
+        friends (follower_id, following_id) 
+        VALUES ($1, $2)
+        RETURNING *`,
+    [sender_id, receiver_id]
   );
-  console.log(rows);
+  console.log(rows[0]);
+  return rows[0];
+};
+
+export const unFriendFunction = async (sender_id, receiver_id) => {
+  const { rows } = await pool.query(
+    `DELETE FROM friends
+        WHERE follower_id = $1 AND following_id = $2
+        RETURNING *`,
+    [sender_id, receiver_id]
+  );
+  console.log(rows[0]);
   return rows[0];
 };
