@@ -15,9 +15,9 @@ import { uploadUserAvatar } from "../controllers/uploadController.js";
 
 const router = express.Router();
 
-router.get("/followers", protect, getUserFollowers); // for logged in user
-router.get("/following", protect, getUserFollowing); // for logged in user
-router.get("/mutual", protect, getMutualFriends);
+// router.get("/followers", protect, getUserFollowers); // for logged in user
+// router.get("/following", protect, getUserFollowing); // for logged in user
+// router.get("/mutual", protect, getMutualFriends);
 
 router.get("/followers/:id", protect, getUserFollowers); // for any user
 router.get("/following/:id", protect, getUserFollowing); // for any user

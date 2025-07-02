@@ -6,7 +6,7 @@ import {
   getUserNotificationsFunction,
   searchUsersFunctions,
   updateUserFunction,
-  getUserByIdFunction,
+  findUserById,
 } from "../models/user.js";
 
 export const getUserFollowing = async (req, res) => {
@@ -127,7 +127,7 @@ export const searchUsers = async (req, res) => {
 export const getUserById = async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10);
-    const user = await getUserByIdFunction(id);
+    const user = await findUserById(id);
 
     if (!user) return res.status(404).json({ error: "user not found" });
 
