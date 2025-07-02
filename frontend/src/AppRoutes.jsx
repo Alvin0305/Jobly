@@ -34,6 +34,7 @@ import { ChatListProvider } from "./contexts/chatlistContext";
 import socket from "./socket";
 import Dashboard from "./pages/home/notifications/Dashboard";
 import NotificationRequestsWrapper from "./pages/home/notifications/requests/NotificationRequestWrapper";
+import InterestedEmployee from "./pages/home/notifications/requests/employer/InterestedEmployee";
 const AppRoutes = () => {
   const { user } = useUser();
 
@@ -102,6 +103,7 @@ const AppRoutes = () => {
              <Route path="requests" element={<NotificationRequestsWrapper />} />
              <Route path="alerts" element={<Notifications />} />
              </Route>
+             <Route path="employer/interested/:id" element={<InterestedEmployee />}/>
               <Route path="post/create" element={<CreatePost />} />
               <Route path="post/view" element={<ViewPost />} />
               <Route path="profile/other/:id" element={<OtherProfile />} />

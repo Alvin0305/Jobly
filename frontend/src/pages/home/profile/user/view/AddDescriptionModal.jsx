@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./AddDescriptionModal.css"; // Import the CSS
+//import "./AddDescriptionModal.css"; // Import the CSS
 
 const AddDescriptionModal = ({ user, setDesc }) => {
   const [showModal, setShowModal] = useState(false);

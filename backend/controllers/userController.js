@@ -7,7 +7,6 @@ import {
   getUserNotificationsFunction,
   searchUsersFunctions,
   updateUserFunction,
-  getUserByIdFunction,
 } from "../models/user.js";
 
 export const getUserFollowing = async (req, res) => {
