@@ -1,5 +1,6 @@
 import {
   deleteUserFunction,
+  findUserById,
   getMutualFriendsFunction,
   getUserFollowersFunction,
   getUserFollowingFunction,
@@ -8,6 +9,7 @@ import {
   updateUserFunction,
   findUserById,
   getSuggestedFriends,
+  // getUserByIdFunction,
 } from "../models/user.js";
 
 export const getUserFollowing = async (req, res) => {
