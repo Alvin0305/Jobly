@@ -87,6 +87,7 @@ const AppRoutes = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/about" element={<AboutYouPage />} />
+            <Route path={`/post/:id`} element={<ViewPost />} />
             <Route path="/home" element={<HomePage />}>
               <Route index element={<Navigate to="feed" />} />
               <Route path="feed" element={<Feed />} />
@@ -97,7 +98,7 @@ const AppRoutes = () => {
               <Route path="notifications" element={<Notifications />} />
               <Route path="post/create" element={<CreatePost />} />
               <Route path="post/view" element={<ViewPost />} />
-              <Route path="profile/other" element={<OtherProfile />} />
+              <Route path="profile/other/:id" element={<OtherProfile />} />
               <Route path="profile/user/edit" element={<EditProfile />} />
               <Route path="profile/user/view" element={<ViewProfile />} />
               <Route path="search" element={<SearchPage />} />

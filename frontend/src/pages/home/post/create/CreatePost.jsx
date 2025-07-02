@@ -2,10 +2,12 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import React, { useEffect, useState } from "react";
 import "./createpost.css";
 import { getAllDomains } from "../../../../services/metadataService";
-import Bubble from "../../../../components/Bubble/Bubble";
 import { createPost, uploadPostImages } from "../../../../services/postService";
 import { useUser } from "../../../../contexts/userContext";
 import { useNavigate } from "react-router-dom";
+import FeedBubble from "../../../../components/FeedBubble/FeedBubble";
+import PostTile from "../../../../components/PostTile/PostTile";
+import { toast } from "react-toastify";
 
 const CreatePost = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -16,6 +18,7 @@ const CreatePost = () => {
   const [selectedDomains, setSelectedDomains] = useState([]);
   const [selectedOption, setSelectedOption] = useState("Images");
   const { user } = useUser();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const iconSize = 32;
@@ -24,8 +27,8 @@ const CreatePost = () => {
     const fetchDomains = async () => {
       try {
         const response = await getAllDomains();
-        console.log(response.data.domains);
-        setDomains(response.data.domains);
+        console.log(response.domains);
+        setDomains(response.domains);
       } catch (err) {
         console.error(err);
       }
@@ -35,6 +38,11 @@ const CreatePost = () => {
 
   const handlePost = async (e) => {
     e.preventDefault();
+    if (!selectedDomains.length) {
+      toast.warn("Add atleast one domain");
+      return;
+    }
+    setLoading(true);
     const domain_ids = [];
     for (const domain of selectedDomains) {
       domain_ids.push(domain.id);
@@ -70,6 +78,8 @@ const CreatePost = () => {
       navigate("/home");
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -153,7 +163,7 @@ const CreatePost = () => {
       <div className="create-post-domains">
         {showDomains &&
           domains.map((domain) => (
-            <Bubble
+            <FeedBubble
               key={domain.id}
               name={domain.name}
               selected={selectedDomains.includes(domain)}
@@ -169,52 +179,50 @@ const CreatePost = () => {
       </div>
 
       <h2 className="m0">Preview</h2>
-      <div className="create-post-preview">
-        <div className="create-post-preview-left-div">
-          <h3 className="create-post-preview-placeholder">
-            {description?.length ? description : "Post Description"}
-          </h3>
-          <div className="create-post-preview-actions">
-            <Icon icon="lucide:heart" width={iconSize} height={iconSize} />
-            <Icon
-              icon="material-symbols:comment-outline"
-              width={iconSize}
-              height={iconSize}
-            />
-            <Icon
-              icon="material-symbols:share"
-              width={iconSize}
-              height={iconSize}
-            />
+      <div className="post-tile">
+        {selectedFiles?.length ? (
+          <img
+            src={URL.createObjectURL(selectedFiles[0])}
+            className="post-tile-image"
+          />
+        ) : (
+          <div className="post-tile-blog-div">
+            <h6 className="post-tile-blog">
+              {blog.length > 250 ? blog?.substring(0, 250) + "..." : blog}
+            </h6>
           </div>
+        )}
+        <div className="post-tile-actions">
+          <Icon
+            icon="lucide:heart"
+            height={iconSize}
+            width={iconSize}
+            className={`post-tile-icon`}
+          />
+          <Icon
+            icon="material-symbols:comment-outline"
+            height={iconSize}
+            width={iconSize}
+            className="post-tile-icon"
+          />
+          <Icon
+            icon="material-symbols:share"
+            height={iconSize}
+            width={iconSize}
+            className="post-tile-icon"
+          />
         </div>
-        <div className="create-post-preview-right-div">
-          {!selectedFiles.length && !blog.length ? (
-            <h1 className="create-post-preview-placeholder">Blog / Image</h1>
-          ) : (
-            ""
-          )}
-          {selectedFiles.length ? (
-            <div className="create-post-images-preview">
-              {selectedFiles.map((file, index) => (
-                <img
-                  key={index}
-                  src={URL.createObjectURL(file)}
-                  alt="Post Image"
-                  className="create-post-preview-image"
-                />
-              ))}
-            </div>
-          ) : (
-            ""
-          )}
-          {blog.length ? (
-            <h6 className="create-post-blog-preview">{blog}</h6>
-          ) : (
-            ""
-          )}
-        </div>
+        <h6 className="post-tile-description">
+          {description.length > 50
+            ? description?.substring(0, 50) + "..."
+            : description}
+        </h6>
       </div>
+      {loading && (
+        <div className="loading-overlay">
+          <div className="loading-spinner"></div>
+        </div>
+      )}
     </form>
   );
 };

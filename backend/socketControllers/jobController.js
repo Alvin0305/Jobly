@@ -32,7 +32,7 @@ export const createJob = async (jobData) => {
   const placeholders = skills_required.map((_, i) => `$${i + 1}`).join(", ");
   const result = await client.query(
     `select distinct user_id from user_domains where domain_id in (${placeholders})`,
-    skills_reqquired
+    skills_required
   )
   client.release();
   const employeeIds= result.rows.map((row) => row.user_id)

@@ -29,8 +29,14 @@ create  table work_experience (
     designation varchar(255) not null,
     start_date date,
     end_date date, -- NULL if still working
-    description text,
     location varchar(255)
+);
+
+CREATE TABLE user_descriptions (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    description TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 create type statuses as enum('Accepted', 'Pending', 'Rejected');

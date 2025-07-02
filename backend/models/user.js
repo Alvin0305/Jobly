@@ -61,7 +61,7 @@ export const markUserAsOffline = async (user_id) => {
 
 export const getUserFollowersFunction = async (user_id) => {
   // get all the followers of the user with given id from the friendlist table
-  const {rows} = await pool.query(
+  const { rows } = await pool.query(
     `SELECT u.* FROM friends f
     JOIN users u ON f.follower_id = u.id
     WHERE f.following_id = $1`,
@@ -86,7 +86,7 @@ export const getUserFollowingFunction = async (user_id) => {
 export const getMutualFriendsFunction = async (user_id) => {
   // get all the mutual friends of the user with given id
   // add the number of mutual friends count also in the result
-  const {rows} = await pool.query(
+  const { rows } = await pool.query(
     `SELECT u.*, COUNT(*) OVER() AS mutual_count
     FROM users u
     JOIN friends f1 ON f1.following_id = u.id
@@ -100,13 +100,22 @@ export const getMutualFriendsFunction = async (user_id) => {
 export const updateUserFunction = async (user_id, userData) => {
   const client = await pool.connect();
   try {
-    await client.query('BEGIN');
+    await client.query("BEGIN");
 
     // === 1. Update base user fields ===
     const fields = [
-      'firstname', 'lastname', 'email', 'password_hash',
-      'headline', 'summary', 'image', 'school',
-      'college', 'is_private', 'role', 'is_active'
+      "firstname",
+      "lastname",
+      "email",
+      "password_hash",
+      "headline",
+      "summary",
+      "image",
+      "school",
+      "college",
+      "is_private",
+      "role",
+      "is_active",
     ];
     const updates = [];
     const values = [];
@@ -122,22 +131,30 @@ export const updateUserFunction = async (user_id, userData) => {
 
     if (updates.length > 0) {
       await client.query(
-        `UPDATE users SET ${updates.join(', ')} WHERE id = $${i}`,
+        `UPDATE users SET ${updates.join(", ")} WHERE id = $${i}`,
         [...values, user_id]
       );
     }
 
     // === 2. Helper functions ===
     const getOrInsert = async (table, name) => {
-      const res = await client.query(`SELECT id FROM ${table} WHERE name = $1`, [name]);
+      const res = await client.query(
+        `SELECT id FROM ${table} WHERE name = $1`,
+        [name]
+      );
       if (res.rows.length > 0) return res.rows[0].id;
 
-      const insertRes = await client.query(`INSERT INTO ${table} (name) VALUES ($1) RETURNING id`, [name]);
+      const insertRes = await client.query(
+        `INSERT INTO ${table} (name) VALUES ($1) RETURNING id`,
+        [name]
+      );
       return insertRes.rows[0].id;
     };
 
     const resetAndAssociate = async (linkTable, columnName, table, items) => {
-      await client.query(`DELETE FROM ${linkTable} WHERE user_id = $1`, [user_id]);
+      await client.query(`DELETE FROM ${linkTable} WHERE user_id = $1`, [
+        user_id,
+      ]);
       for (const name of items) {
         const id = await getOrInsert(table, name);
         await client.query(
@@ -149,49 +166,67 @@ export const updateUserFunction = async (user_id, userData) => {
 
     // === 3. Related Arrays (languages, qualifications, interests, coding_languages) ===
     if (Array.isArray(userData.languages)) {
-      await resetAndAssociate('user_languages', 'language_id', 'languages', userData.languages);
+      await resetAndAssociate(
+        "user_languages",
+        "language_id",
+        "languages",
+        userData.languages
+      );
     }
 
     if (Array.isArray(userData.qualifications)) {
-      await resetAndAssociate('user_qualifications', 'qualification_id', 'qualifications', userData.qualifications);
+      await resetAndAssociate(
+        "user_qualifications",
+        "qualification_id",
+        "qualifications",
+        userData.qualifications
+      );
     }
 
     if (Array.isArray(userData.interests)) {
-      await resetAndAssociate('user_interests', 'interest_id', 'domains', userData.interests);
+      await resetAndAssociate(
+        "user_interests",
+        "interest_id",
+        "domains",
+        userData.interests
+      );
     }
 
     if (Array.isArray(userData.coding_languages)) {
-      await resetAndAssociate('user_coding_languages', 'coding_language_id', 'coding_languages', userData.coding_languages);
+      await resetAndAssociate(
+        "user_coding_languages",
+        "coding_language_id",
+        "coding_languages",
+        userData.coding_languages
+      );
     }
 
-    await client.query('COMMIT');
+    await client.query("COMMIT");
   } catch (err) {
-    await client.query('ROLLBACK');
-    console.error('Error updating user:', err);
+    await client.query("ROLLBACK");
+    console.error("Error updating user:", err);
     throw err;
   } finally {
     client.release();
   }
 };
 
-
 // If the user variable contain a new language, add the language into the user language table.
-  // If the language is not in the languages table, add it to the languages table first
-
+// If the language is not in the languages table, add it to the languages table first
 
 export const deleteUserFunction = async (user_id) => {
   // delete the user from the users table
   const client = await pool.connect();
 
-  try{
-    await client.query('BEGIN');
-    await client.query('DELETE FROM users WHERE id = $1',[user_id]);
-    await client.query('COMMIT');
-  }catch(err){
+  try {
+    await client.query("BEGIN");
+    await client.query("DELETE FROM users WHERE id = $1", [user_id]);
+    await client.query("COMMIT");
+  } catch (err) {
     await client.query("ROLLBACK");
-    console.error('Error deleting user : ',err);
+    console.error("Error deleting user : ", err);
     throw err;
-  }finally{
+  } finally {
     client.release();
   }
 };
@@ -221,31 +256,35 @@ export const getUserNotificationsFunction = async (user_id) => {
     );
     return result.rows;
   } catch (err) {
-    console.error('Error fetching notifications:', err);
+    console.error("Error fetching notifications:", err);
     throw err;
   } finally {
     client.release();
   }
 };
 
-export const searchUsersFunctions = async (searchValue = '', tags = [], isEmployee = null) => {
-  // get the users based on the searchValue, skills (tags) and whether they are
-  // looking for an employee or employer or both
+export const searchUsersFunctions = async (
+  searchValue = "",
+  tags = [],
+  isEmployee = null,
+  offset = 0,
+  limit = 10
+) => {
   const client = await pool.connect();
   try {
     let query = `
-      SELECT DISTINCT u.id, u.firstname, u.lastname, u.headline, u.image, u.role
+      SELECT DISTINCT u.*
       FROM users u
-      LEFT JOIN user_interests ui ON u.id = ui.user_id
-      LEFT JOIN domains d ON ui.interest_id = d.id
+      LEFT JOIN user_skills us ON u.id = us.user_id
+      LEFT JOIN domains d ON us.skill_id = d.id
       WHERE u.is_active = true
     `;
-    
+
     const values = [];
     let paramIndex = 1;
 
     // === 1. Text search ===
-    if (searchValue.trim() !== '') {
+    if (searchValue.trim() !== "") {
       const keyword = `%${searchValue.toLowerCase()}%`;
       query += ` AND (
         LOWER(u.firstname) LIKE $${paramIndex}
@@ -260,50 +299,55 @@ export const searchUsersFunctions = async (searchValue = '', tags = [], isEmploy
     // === 2. Role filter ===
     if (isEmployee !== null) {
       query += ` AND u.role = $${paramIndex}`;
-      values.push(isEmployee ? 'Employee' : 'Employer');
+      values.push(isEmployee ? "Employee" : "Employer");
       paramIndex++;
     }
 
-    // === 3. Skills/tags filter ===
+    // === 3. Tags filter ===
     if (tags.length > 0) {
-      const tagConditions = tags.map((_, i) => `LOWER(d.name) = $${paramIndex + i}`);
-      query += ` AND (${tagConditions.join(' OR ')})`;
-      values.push(...tags.map(t => t.toLowerCase()));
+      const tagConditions = tags.map(
+        (_, i) => `LOWER(d.name) = $${paramIndex + i}`
+      );
+      query += ` AND (${tagConditions.join(" OR ")})`;
+      values.push(...tags.map((t) => t.toLowerCase()));
+      paramIndex += tags.length;
     }
 
-    // === 4. Sort ===
+    // === 4. Sorting ===
     query += ` ORDER BY u.firstname, u.lastname`;
+
+    query += ` LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
+    values.push(limit, offset);
 
     const result = await client.query(query, values);
     return result.rows;
   } catch (err) {
-    console.error('Error in searchUsersFunctions:', err);
+    console.error("Error in searchUsersFunctions:", err);
     throw err;
   } finally {
     client.release();
   }
 };
 
-export const userPrivacyFunction = async(user_id) =>{
-  try{
-    const res = await pool.query (
-      `select is-private from users where id = $1`,
-      [user_id]
-    )
-    if(result.rows.length === 0) {
-      throw new Error('User not found');
-    }
-    const currentPrivacy = result.rows[0].is_private;
-    const updatedPrivacy = !currentPrivacy;
+export const addFriendFunction = async (sender_id, receiver_id) => {
+  const { rows } = await pool.query(
+    `INSERT INTO 
+        friends (follower_id, following_id) 
+        VALUES ($1, $2)
+        RETURNING *`,
+    [sender_id, receiver_id]
+  );
+  console.log(rows[0]);
+  return rows[0];
+};
 
-    await pool.query(
-      `update users set is_private = $1 where id = $2`,
-      [updatedPrivacy,user_id]
-    )
-    return {success: true, is_private:updatedPrivacy};
-  }catch(err) {
-    console.error('Eroor updating privacy:',err)
-    throw err;
-  }
-}
-
+export const unFriendFunction = async (sender_id, receiver_id) => {
+  const { rows } = await pool.query(
+    `DELETE FROM friends
+        WHERE follower_id = $1 AND following_id = $2
+        RETURNING *`,
+    [sender_id, receiver_id]
+  );
+  console.log(rows[0]);
+  return rows[0];
+};
