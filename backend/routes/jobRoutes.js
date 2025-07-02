@@ -21,9 +21,10 @@ const maxUploadCount = 5;
 
 router.post("/", protect, createJob);
 router.delete("/:id", protect, deleteJob);
+router.get("/employee", protect, getJobsForEmployee);
 router.get("/:id", protect, getJobById);
 router.get("/employer", protect, getJobsCreatedByEmployer);
-router.get("/employee", protect, getJobsForEmployee);
+
 router.get("/interested/:id", protect, getInterestedEmployees);
 router.get("/selected/:id", protect, getSelectedEmployeesForJob);
 router.post("/:id/interested", protect, addEmployeeToInterested);

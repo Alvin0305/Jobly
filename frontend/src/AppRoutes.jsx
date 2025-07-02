@@ -18,6 +18,7 @@ import CreateJob from "./pages/home/job/create/CreateJob";
 import SelectedCandidates from "./pages/home/job/selected_candidates/SelectedCandidates";
 import ViewJob from "./pages/home/job/view/ViewJob";
 import Notifications from "./pages/home/notifications/Notifications";
+//import Dashboard from "./pages/home/notifications/Dashboard.jsx"
 import CreatePost from "./pages/home/post/create/CreatePost";
 import ViewPost from "./pages/home/post/view/ViewPost";
 import OtherProfile from "./pages/home/profile/other/OtherProfile";
@@ -31,7 +32,8 @@ import Feed from "./pages/home/feed/Feed";
 import { ChatProvider } from "./contexts/chatContext";
 import { ChatListProvider } from "./contexts/chatlistContext";
 import socket from "./socket";
-
+import Dashboard from "./pages/home/notifications/Dashboard";
+import NotificationRequestsWrapper from "./pages/home/notifications/requests/NotificationRequestWrapper";
 const AppRoutes = () => {
   const { user } = useUser();
 
@@ -94,8 +96,12 @@ const AppRoutes = () => {
               <Route path="connections" element={<Connections />} />
               <Route path="job/create" element={<CreateJob />} />
               <Route path="job/selected" element={<SelectedCandidates />} />
-              <Route path="job/view" element={<ViewJob />} />
-              <Route path="notifications" element={<Notifications />} />
+              <Route path="job/view/:id" element={<ViewJob />} />
+              <Route path="notifications" element={<Dashboard />}>
+              <Route index element={<Navigate to="requests" />} />
+             <Route path="requests" element={<NotificationRequestsWrapper />} />
+             <Route path="alerts" element={<Notifications />} />
+             </Route>
               <Route path="post/create" element={<CreatePost />} />
               <Route path="post/view" element={<ViewPost />} />
               <Route path="profile/other/:id" element={<OtherProfile />} />

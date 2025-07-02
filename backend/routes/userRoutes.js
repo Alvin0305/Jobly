@@ -23,9 +23,10 @@ router.get("/followers/:id", protect, getUserFollowers); // for any user
 router.get("/following/:id", protect, getUserFollowing); // for any user
 router.get("/mutual/:id", protect, getMutualFriends);
 
-router.get("/notification/:id", protect, getUserNotifications);
+router.get("/notification", protect, getUserNotifications);
 
-router.put("/:id", protect, updateUser);
+
+router.put("/update-user", protect, updateUser);
 
 
 router.delete("/:id", protect, deleteUser);

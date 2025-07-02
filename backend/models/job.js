@@ -110,16 +110,28 @@ export const getJobsCreatedByEmployerFunction = async (employer_id) => {
 };
 
 export const getJobsForEmployeeFunction = async (employee_id) => {
-  // get all the jobs with skills matching with the skills of the employee
   try {
     const result = await pool.query(
       `
-      SELECT DISTINCT j.*
+      SELECT 
+        j.*, 
+        u.firstname, 
+        u.lastname, 
+        u.image AS employer_image,
+        ARRAY_AGG(s.name) AS job_skills,
+        exists (
+          select 1
+          from job_interested_users i
+          where i.job_id = j.id and i.user_id = $1
+        ) as is_interested
       FROM jobs j
       JOIN job_skills js ON j.id = js.job_id
+      JOIN domains s ON js.skill_id = s.id
+      JOIN users u ON j.posted_by = u.id
       WHERE js.skill_id IN (
         SELECT skill_id FROM user_skills WHERE user_id = $1
       )
+      GROUP BY j.id, u.firstname, u.lastname, u.image
       ORDER BY j.time DESC
       `,
       [employee_id]
@@ -130,6 +142,7 @@ export const getJobsForEmployeeFunction = async (employee_id) => {
     throw err;
   }
 };
+
 
 export const getInterestedEmployeesFunction = async (job_id) => {
   // get all the employees who are interested in the job from the job interest table
@@ -152,14 +165,14 @@ export const addEmployeeToInterestedFunction = async (employee_id, job_id) => {
   // insert the given employee into the job interest table
   try{
     const result = await pool.query(
-      `INSERT INTO job_interested_users (job_id, user_id) VALUES ($2, $1) RETURNING *`,
+      `INSERT INTO job_interested_users (job_id, user_id) VALUES ($2, $1) on conflict do nothing RETURNING *`,
       [employee_id, job_id]
     );
-    return result.rows[0];
+    return result.rows[0] || {message:'Already interested'};
   }catch(err){
     console.error("Error adding interested jobs for employee:", err);
     throw err;
-  }
+  } 
 };
 
 export const selectEmployeeForJobFunction = async (job_id, employee_id) => {

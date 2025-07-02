@@ -27,15 +27,16 @@ export const getUserFollowing = (token) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  export const userPrivacy = async(token) =>{
-    
-       const res = await axios.put(
-        '/api/user/privacy',{},
-        {
-          headers: {
-            Authorization:`Bearer ${token}`
-          }
+  export const updateUser = async(token,userData) => {
+    const res = await axios.put(
+      '/api/user/update-user',
+      userData,
+      {
+        headers: {
+          Authorization:`Bearer ${token}`,
         }
-      )
-      return res.data;
-    }
+      }
+    ) 
+    return res.data;
+  }
+  
