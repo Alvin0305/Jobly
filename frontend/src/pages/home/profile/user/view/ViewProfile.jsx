@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./viewprofile.css";
+//import "./viewprofile.css";
 import axios from "axios";
 import AddDescriptionModal from "./AddDescriptionModal.jsx";
 

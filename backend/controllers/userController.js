@@ -1,4 +1,3 @@
-
 import {
   deleteUserFunction,
   getMutualFriendsFunction,
@@ -136,24 +135,21 @@ export const getUserById = async (req, res) => {
   }
 };
 
-export const userPrivacy = async(req,res) => {
- 
-  try{
+export const userPrivacy = async (req, res) => {
+  try {
     const user_id = req.user.id;
-    if(!user_id) {
+    if (!user_id) {
       return res
-      .status(401)
-      .json({ error: "Unauthorized: user_id missing from token" });
+        .status(401)
+        .json({ error: "Unauthorized: user_id missing from token" });
     }
     const privateResult = await userPrivacyFunction(user_id);
     return res.status(200).json({
-      message:"Privacy setting updated",
-      is_private:privacyResult.is_private
-    })
-
-  }catch(err) {
-    console.error("Error in user privacy",err);
-    return res.status(500).json({error:"INternal server error"});
+      message: "Privacy setting updated",
+      is_private: privacyResult.is_private,
+    });
+  } catch (err) {
+    console.error("Error in user privacy", err);
+    return res.status(500).json({ error: "INternal server error" });
   }
-
-}
+};
