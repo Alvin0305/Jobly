@@ -12,8 +12,12 @@ export const createJob = async (jobData,token) => {
 };
 
 // Get details of a single job by ID
-export const getJobById = async (jobId) => {
-  const res = await axios.get(`${BASE_URL}/api/job/${jobId}`);
+export const getJobById = async (jobId,token) => {
+  const res = await axios.get(`/api/job/${jobId}`,{
+    headers: {
+      Authorization:`Bearer ${token}`,
+    }
+  });
   return res.data;
 };
 
@@ -30,8 +34,13 @@ export const getJobsCreatedByEmployer = async () => {
 };
 
 // Get all jobs shown to the logged-in employee
-export const getJobsForEmployee = async () => {
-  const res = await axios.get(`${BASE_URL}/api/job/employee`);
+export const getJobsForEmployee = async (token) => {
+  const res = await axios.get(`/api/job/employee`,{
+    headers:{
+      Authorization:`Bearer ${token}`,
+    }
+  });
+  console.log("came");
   return res.data;
 };
 
@@ -42,8 +51,13 @@ export const getInterestedEmployees = async (jobId) => {
 };
 
 // Add current employee to the interested list of a job
-export const addEmployeeToInterested = async (jobId) => {
-  const res = await axios.post(`${BASE_URL}/api/job/${jobId}/interested`);
+export const addEmployeeToInterested = async (jobId,token) => {
+  const res = await axios.post(`/api/job/${jobId}/interested`,{},
+    {
+    headers: {
+      Authorization:`Bearer ${token}`,
+    }
+  });
   return res.data;
 };
 

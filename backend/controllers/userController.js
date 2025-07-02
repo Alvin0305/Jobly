@@ -60,7 +60,7 @@ export const getMutualFriends = async (req, res) => {
 export const updateUser = async (req, res) => {
   // use the update user function in the user model to update the user
 
-  const userId = parseInt(req.params.id, 10);
+  const userId = req.user.id;
   const userData = req.body;
 
   try {
@@ -89,10 +89,7 @@ export const deleteUser = async (req, res) => {
 
 export const getUserNotifications = async (req, res) => {
   // use the get user notification function in the user model to get the notifications of the user
-  const userId = parseInt(req.params.id, 10);
-  if (isNaN(userId)) {
-    return res.status(400).json({ error: "Invalid user ID" });
-  }
+  const userId = req.user.id;
 
   try {
     const notifications = await getUserNotificationsFunction(userId);

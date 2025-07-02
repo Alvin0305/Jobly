@@ -43,7 +43,7 @@ export const getJobById = async (req, res) => {
   // use the get job by id function in the job model to get all details of the job
   try{
     const job_id = parseInt(req.params.id,10);
-    if(isNaN(job_id)) return res.status(400).json({error:'Invald job_id'});
+    if(isNaN(job_id)) return res.status(400).json({error:'Invaldi job_id'});
     const jobDetails = await getJobByIdFunction(job_id);
     res.status(200).json(jobDetails);
   }catch(err) {
@@ -56,7 +56,7 @@ export const deleteJob = async (req, res) => {
   // use the delete job function in the job model to delete a job
   try{
     const job_id = parseInt(req.params.id,10);
-    if(isNaN(job_id)) return res.status(400).json({error:'Invald job_id'});
+    if(isNaN(job_id)) return res.status(400).json({error:'Invalde job_id'});
     const jobs = await deleteJobFunction(job_id);
     res.status(200).json({message:'Job deleted successfully'});
   }catch(err) {
@@ -81,7 +81,8 @@ export const getJobsCreatedByEmployer = async (req, res) => {
 export const getJobsForEmployee = async (req, res) => {
   // use the get jobs for employee function in the job model to get the jobs for the employee
   try{
-    const user_id = req.user.id
+    console.log("Req.user",req.user)
+    const user_id = req.user.id;
     const posts = await getJobsForEmployeeFunction(user_id);
     return res.status(200).json(posts);
   }catch(err) {
@@ -95,7 +96,7 @@ export const getInterestedEmployees = async (req, res) => {
   // use the get interested employees function in the job model to get the intersted employees in the job
   try{
     const job_id = parseInt(req.params.id,10);
-    if(isNaN(job_id)) return res.status(400).json({error:'Invald job_id'});
+    if(isNaN(job_id)) return res.status(400).json({error:'Invalid job_id'});
     const jobDetails = await getInterestedEmployeesFunction(job_id);
     res.status(200).json(jobDetails);
   }catch(err) {
@@ -109,7 +110,7 @@ export const addEmployeeToInterested = async (req, res) => {
   // use the add employee to interested function in the job model to add an employee to interested
   try {
     const job_id = parseInt(req.params.id, 10);
-    const { employee_id } = req.user.id;
+    const  employee_id  = req.user.id;
 
     if (!job_id || !employee_id) {
       return res.status(400).json({ error: "job_id and employee_id are required" });

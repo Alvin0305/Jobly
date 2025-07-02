@@ -26,3 +26,17 @@ export const getUserFollowing = (token) =>
   axios.get(`api/user/following`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+
+  export const updateUser = async(token,userData) => {
+    const res = await axios.put(
+      '/api/user/update-user',
+      userData,
+      {
+        headers: {
+          Authorization:`Bearer ${token}`,
+        }
+      }
+    ) 
+    return res.data;
+  }
+  
