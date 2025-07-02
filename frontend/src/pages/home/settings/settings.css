@@ -1,49 +1,56 @@
-.settings-container {
+.settings-page {
   max-width: 600px;
-  margin: 50px auto;
-  padding: 30px;
-  border-radius: 16px;
-  background-color:var(--color-primary);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 40px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
-
-.settings-heading {
+.settings-page h2 {
   text-align: center;
-  font-size: 2rem;
-  margin-bottom: 20px;
-  color: #333;
-  border-bottom: 2px solid #ccc;
-  padding-bottom: 10px;
+  margin-bottom: 10px;
 }
 
-.settings-section {
-  margin-top: 30px;
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
 }
 
-.settings-section h2 {
-  font-size: 1.5rem;
-  margin-bottom: 15px;
-  color: #444;
+.setting-item label {
+  font-weight: bold;
 }
 
-.privacy-btn {
-  padding: 10px 20px;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: none;
-  background-color: #007bff;
-  color: white;
+.setting-item button,
+.setting-item select {
+  padding: 5px 10px;
+  border: 1px solid #999;
+  border-radius: 5px;
   cursor: pointer;
-  transition: 0.3s ease;
+  background-color: var(--color-primary);
 }
 
-.privacy-btn:hover {
-  background-color: #0056b3;
+/* 🆕 About section styling */
+.about-section {
+  text-align: left;
+  line-height: 1.6;
+  background-color: rgba(255, 255, 255, 0.03);
+  padding: 10px;
+  border-radius: 8px;
 }
 
-.privacy-status {
-  margin-top: 15px;
-  font-size: 1.1rem;
-  color: #333;
+.about-section h3 {
+  margin-bottom: 8px;
+}
+
+.about-section ul {
+  padding-left: 20px;
+}
+
+.about-section ul li {
+  margin-bottom: 10px;
 }
