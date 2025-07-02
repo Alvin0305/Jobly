@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getUserNotifications } from "../../../services/notificationService";
 import { useUser } from "../../../contexts/userContext";
+import socket from "../../../socket";
 import './notifications.css'
 const Notifications = ({ }) => {
   const [notifications, setNotifications] = useState([]);
@@ -29,6 +30,19 @@ const Notifications = ({ }) => {
     if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
     return `${Math.floor(diff / 86400)}d ago`;
   };
+  const handleAccept = (senderId) => {
+    socket.emit("accept_friend_request", {
+      sender_id: senderId,
+      receiver_id: user.id,
+    });
+  };
+
+  const handleReject = (senderId) => {
+    socket.emit("reject_friend_request", {
+      sender_id: senderId,
+      receiver_id: user.id,
+    });
+  };
 
   return (
     <div className="notification-container">
@@ -51,17 +65,23 @@ const Notifications = ({ }) => {
               <p className="comment-text">"{n.content}"</p>
             )}
           </div>
-          <div className="notification-actions">
-            {["like", "comment"].includes(n.type) && (
-              <img
-                className="post-img"
-                src={`https://your-cdn.com/posts/${n.post_id}.jpg`}
-                alt="Post"
-              />
-              
+
+          {n.type === "Friends-Request" && (
+            <div className="notification-actions">
+              <button className="accept-btn" onClick={() => handleAccept(n.sender_id)}>Accept</button>
+              <button className="reject-btn" onClick={() => handleReject(n.sender_id)}>Reject</button>
+            </div>
+          )}
+
+          {["like", "comment"].includes(n.type) && (
+            <img
+              className="post-img"
+              src={`https://your-cdn.com/posts/${n.post_id}.jpg`}
+              alt="Post"
+            />
             )}
           </div>
-        </div>
+      
       ))}
     </div>
   );

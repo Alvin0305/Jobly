@@ -28,8 +28,12 @@ export const deleteJob = async (jobId) => {
 };
 
 // Get all jobs created by the logged-in employer
-export const getJobsCreatedByEmployer = async () => {
-  const res = await axios.get(`${BASE_URL}/api/job/employer`);
+export const getJobsCreatedByEmployer = async (token) => {
+  const res = await axios.get(`/api/job/employer`,{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  });
   return res.data;
 };
 
@@ -45,8 +49,13 @@ export const getJobsForEmployee = async (token) => {
 };
 
 // Get interested employees for a job
-export const getInterestedEmployees = async (jobId) => {
-  const res = await axios.get(`${BASE_URL}/api/job/${jobId}/interested`);
+export const getInterestedEmployees = async (jobId,token) => {
+  const res = await axios.get(`/api/job/interested/${jobId}`,{
+    headers:{
+      Authorization:`Bearer ${token}`,
+    }
+  });
+  console.log("DATA HERE",res.data);
   return res.data;
 };
 
