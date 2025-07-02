@@ -209,3 +209,53 @@ export const sendDisconnectionRequest = async (sender_id, receiver_id, io) => {
   //  sender_id, ... other fields that might be needed in front end to show in the notification
   // });
 };
+
+export const sendFriendAccept = async (sender_id, receiver_id) => {
+  try {
+    const receiver = await getUserName(receiver_id);
+    const content = `${receiver.firstname} accepted your friend request`;
+
+    const notification = await insertNotification({
+      sender_id: receiver_id,
+      receiver_id: sender_id,
+      content,
+      type: "Friend-Accept",
+    });
+
+    io.to(`user_${sender_id}`).emit("friend_request_accepted", {
+      notification,
+      sender: {
+        id: receiver_id,
+        firstname: receiver.firstname,
+      },
+    });
+    console.log(`Friend accept notification send to user ${sender_id}`);
+  } catch (err) {
+    console.error("Error in sendFriendAccept:", err);
+  }
+};
+
+export const sendFriendReject = async (sender_id, receiver_id) => {
+  try {
+    const receiver = await getUserName(receiver_id);
+    const content = `${receiver.firstname} rejected your friend request`;
+
+    const notification = await insertNotification({
+      sender_id: receiver_id,
+      receiver_id: sender_id,
+      content,
+      type: "Friend-Reject",
+    });
+
+    io.to(`user_${sender_id}`).emit("friend_request_rejected", {
+      notification,
+      sender: {
+        id: receiver_id,
+        firstname: receiver.firstname,
+      },
+    });
+    console.log(`Friend reject notification sent to user ${sender_id}`);
+  } catch (err) {
+    console.error("Error in sendFriendReject :", err);
+  }
+};

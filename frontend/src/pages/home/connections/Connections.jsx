@@ -21,7 +21,7 @@ const Connections = () => {
           );
         else if (active === "Following")
           res = await axios.get(
-            `${import.meta.env.VITE_API_URL}/api/users/following`
+            `${import.meta.env.VITE_API_URL}/api/user/following`
           );
         // else if (active === "Suggestions")
         //   res = await axios.get(

@@ -101,3 +101,28 @@ export const insertConnectionNotification = async ({
   );
   return rows[0];
 };
+
+export const acceptFriendRequest = async (sender_id, receiver_id) => {
+  try {
+    await pool.query(
+      `INSERT INTO friends (follower_id, following_id)
+      VALUES ($1, $2)
+      ON CONFLICT DO NOTHING`,
+      [receiver_id, sender_id]
+    );
+  } catch (err) {
+    throw new Error("Error accepting friend request: " + err.message);
+  }
+};
+
+export const rejectFriendRequest = async (sender_id, receiver_id) => {
+  try {
+    await pool.query(
+      `DELETE FROM friends
+      WHERE follower_id = $1 AND following_id= $2`,
+      [sender_id, receiver_id]
+    );
+  } catch (err) {
+    throw new Error("Error rejecting friend request: " + err.message);
+  }
+};
