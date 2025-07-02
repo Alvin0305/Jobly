@@ -228,3 +228,5 @@ create table login_logs (
 	ip_address varchar(50),
     status login_status default 'Success' not null
 );
+
+alter table job_accepted_users add column email_sent boolean default false;

@@ -65,7 +65,7 @@ export const replyJob = async (employee_id, job_id) => {
       [job_id]
     )
     if(result.rows.length == 0) throw new Error("Job not found");
-    const employerId = result.rows[0].posed_by;
+    const employerId = result.rows[0].posted_by;
      // send a replyd_to_job signal to the employer.
   
   // and send the signal to him

@@ -1,3 +1,4 @@
+
 import {
   deleteUserFunction,
   getMutualFriendsFunction,
@@ -61,7 +62,7 @@ export const getMutualFriends = async (req, res) => {
 export const updateUser = async (req, res) => {
   // use the update user function in the user model to update the user
 
-  const userId = parseInt(req.params.id, 10);
+  const userId = req.user.id;
   const userData = req.body;
 
   try {
@@ -90,10 +91,7 @@ export const deleteUser = async (req, res) => {
 
 export const getUserNotifications = async (req, res) => {
   // use the get user notification function in the user model to get the notifications of the user
-  const userId = parseInt(req.params.id, 10);
-  if (isNaN(userId)) {
-    return res.status(400).json({ error: "Invalid user ID" });
-  }
+  const userId = req.user.id;
 
   try {
     const notifications = await getUserNotificationsFunction(userId);
@@ -137,3 +135,25 @@ export const getUserById = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch other user's details" });
   }
 };
+
+export const userPrivacy = async(req,res) => {
+ 
+  try{
+    const user_id = req.user.id;
+    if(!user_id) {
+      return res
+      .status(401)
+      .json({ error: "Unauthorized: user_id missing from token" });
+    }
+    const privateResult = await userPrivacyFunction(user_id);
+    return res.status(200).json({
+      message:"Privacy setting updated",
+      is_private:privacyResult.is_private
+    })
+
+  }catch(err) {
+    console.error("Error in user privacy",err);
+    return res.status(500).json({error:"INternal server error"});
+  }
+
+}
