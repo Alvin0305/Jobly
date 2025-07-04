@@ -8,6 +8,7 @@ import {
   searchUsers,
   updateUser,
   getUserById,
+  suggestFriends,
 } from "../controllers/userController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 import upload from "../middlewares/multer.js";
@@ -15,9 +16,10 @@ import { uploadUserAvatar } from "../controllers/uploadController.js";
 
 const router = express.Router();
 
-// router.get("/followers", protect, getUserFollowers); // for logged in user
-// router.get("/following", protect, getUserFollowing); // for logged in user
+router.get("/followers", protect, getUserFollowers); // for logged in user
+router.get("/following", protect, getUserFollowing); // for logged in user
 // router.get("/mutual", protect, getMutualFriends);
+router.get("/suggestions", protect, suggestFriends);
 
 router.get("/followers/:id", protect, getUserFollowers); // for any user
 router.get("/following/:id", protect, getUserFollowing); // for any user
@@ -25,9 +27,7 @@ router.get("/mutual/:id", protect, getMutualFriends);
 
 router.get("/notification", protect, getUserNotifications);
 
-
 router.put("/update-user", protect, updateUser);
-
 
 router.delete("/:id", protect, deleteUser);
 

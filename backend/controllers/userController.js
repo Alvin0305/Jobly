@@ -7,6 +7,7 @@ import {
   searchUsersFunctions,
   updateUserFunction,
   findUserById,
+  getSuggestedFriends,
 } from "../models/user.js";
 
 export const getUserFollowing = async (req, res) => {
@@ -146,10 +147,22 @@ export const userPrivacy = async (req, res) => {
     const privateResult = await userPrivacyFunction(user_id);
     return res.status(200).json({
       message: "Privacy setting updated",
-      is_private: privacyResult.is_private,
+      is_private: privateResult.is_private,
     });
   } catch (err) {
     console.error("Error in user privacy", err);
     return res.status(500).json({ error: "INternal server error" });
+  }
+};
+
+export const suggestFriends = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const result = await getSuggestedFriends(userId);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error("Error suggesting friends:", err.message);
+    res.status(500).json({ error: "Failed to fetch suggestions" });
   }
 };

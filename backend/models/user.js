@@ -351,3 +351,18 @@ export const unFriendFunction = async (sender_id, receiver_id) => {
   console.log(rows[0]);
   return rows[0];
 };
+
+export const getSuggestedFriends = async (userId) => {
+  const query = `
+    SELECT DISTINCT u.id, u.firstname, u.lastname, u.image
+    FROM users u
+    JOIN friends f1 ON u.id = f1.following_id
+    JOIN friends f2 ON f1.follower_id = f2.following_id
+    WHERE f2.follower_id = $1
+      AND u.id != $1
+      AND u.id NOT IN (
+        SELECT following_id FROM friends WHERE follower_id = $1
+      );
+  `;
+  return await pool.query(query, [userId]);
+};

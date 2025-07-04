@@ -14,24 +14,42 @@ const Connections = () => {
     const fetchUsers = async () => {
       setLoading(true);
       try {
+        const token = localStorage.getItem("token");
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
         let res;
         if (active === "Followers")
           res = await axios.get(
-            `${import.meta.env.VITE_API_URL}/api/user/followers`
+            `${import.meta.env.VITE_API_URL}/api/user/followers`,
+            config
           );
         else if (active === "Following")
           res = await axios.get(
-            `${import.meta.env.VITE_API_URL}/api/user/following`
+            `${import.meta.env.VITE_API_URL}/api/user/following`,
+            config
           );
-        // else if (active === "Suggestions")
-        //   res = await axios.get(
-        //     `${import.meta.env.VITE_API_URL}/api/user/following`
-        //   ); // change this by adding suggestons fn
+        else if (active === "Suggestions")
+          res = await axios.get(
+            `${import.meta.env.VITE_API_URL}/api/user/suggestions`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
 
-        const data = res.data.followers || res.data.following || [];
+        const data =
+          res.data.followers ||
+          res.data.following ||
+          res.data.suggestions ||
+          [];
         setUsers(data);
       } catch (err) {
-        console.error("Error fetching users:", err);
+        console.error(
+          "Error fetching users:",
+          err.response?.data || err.message
+        );
         setUsers([]);
       } finally {
         setLoading(false);

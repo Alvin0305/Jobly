@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-//import "./viewprofile.css";
+import "./viewprofile.css";
 import axios from "axios";
 import AddDescriptionModal from "./AddDescriptionModal.jsx";
 
@@ -314,7 +314,6 @@ const ViewProfile = () => {
         {!desc && <AddDescriptionModal user={user} setDesc={setDesc} />}
         <div className="infoRow">
           <label>Graduation</label>
-          <span className="edit-icon">✏️</span>
           <div>
             {(qualification?.length ?? 0) === 0 ? (
               <div>
@@ -351,7 +350,6 @@ const ViewProfile = () => {
 
         <div className="infoRow">
           <label>Experience</label>
-          <span className="edit-icon">✏️</span>
           <h3>
             {user?.role === "Employee" ? "Work Experience" : "Job Details"}
           </h3>

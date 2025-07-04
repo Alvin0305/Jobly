@@ -8,6 +8,9 @@ import {
   createQualificationFunction,
   createSkillFunction,
   createWorkExperienceFunction,
+  deleteInterestFunction,
+  deleteQualFunction,
+  deleteSkillFunction,
   getCodingLanguagesFunction,
   getDescriptionFunction,
   getDomainsFunction,
@@ -19,6 +22,10 @@ import {
   getQualificationsOfUserFunction,
   getSkillsOfUserFunction,
   getWorkExperienceFunction,
+  updateInterestFunction,
+  updateQualFunction,
+  updateSkillFunction,
+  updateWorkExpFunction,
 } from "../models/metadata.js";
 
 export const createInterest = async (req, res) => {
@@ -33,12 +40,10 @@ export const createInterest = async (req, res) => {
 
   try {
     const result = await createInterestFunction(user_id, name);
-    res
-      .status(201)
-      .json({
-        message: "Interest added successfully",
-        interest_id: result.interest_id,
-      });
+    res.status(201).json({
+      message: "Interest added successfully",
+      interest_id: result.interest_id,
+    });
   } catch (err) {
     res
       .status(500)
@@ -213,6 +218,39 @@ export const getWorkExperience = async (req, res) => {
   }
 };
 
+export const updateWorkExp = async (req, res) => {
+  const { exp_id } = req.params;
+  const { company_name, designation, location, start_date, end_date } =
+    req.body;
+
+  if (!exp_id) return res.status(400).json({ error: "exp id is not found" });
+
+  if (!company_name || !designation || !location)
+    return res.status(400).json({ error: "Fields are empty" });
+
+  try {
+    const result = await updateWorkExpFunction(
+      company_name,
+      designation,
+      location,
+      start_date,
+      end_date,
+      exp_id
+    );
+
+    if (result.rowCount === 0)
+      return res.status(404).json({ error: "Work experience not found" });
+
+    res.status(200).json({
+      message: "Work experience updated successfully",
+      updated: result.rows[0],
+    });
+  } catch (err) {
+    console.error("Error updating work experience:", err.message);
+    res.status(500).json({ error: "Failed to update work experience" });
+  }
+};
+
 export const createJobDetails = async (req, res) => {
   const user_id = req.params?.id || req.user?.id;
   const { company_name, designation, location } = req.body;
@@ -354,6 +392,138 @@ export const getQualificationsOfUser = async (req, res) => {
     res.status(200).json({ qualifications });
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch qualifications" });
+  }
+};
+
+export const updateQual = async (req, res) => {
+  const { qualification_id, qualification } = req.body;
+
+  if (!qualification_id || !qualification) {
+    return res.status(400).json({ error: "Missing fields" });
+  }
+
+  try {
+    const result = await updateQualFunction(qualification_id, qualification);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Qualification not found" });
+    }
+
+    res.status(200).json({
+      message: "Qualification updated",
+      qualification: result.rows[0],
+    });
+  } catch (err) {
+    console.error("Error updating qualification:", err.message);
+    res.status(500).json({ error: "Failed to update qualification" });
+  }
+};
+
+export const deleteQual = async (req, res) => {
+  const { quaid } = req.body;
+  if (!quaid)
+    return res.status(400).json({ error: "Qualification ID is required" });
+
+  try {
+    const result = await deleteQualFunction(quaid);
+
+    if (result.rowCount == 0)
+      return res.status(404).json({ error: "Qualification not found" });
+
+    res.status(200).json({ message: "Qualification deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting qualification:", err.message);
+    res.status(500).json({ error: "Failed to delete qualification" });
+  }
+};
+
+export const updateSkill = async (req, res) => {
+  const { skill_id, skill } = req.body;
+
+  if (!skill_id || !skill) {
+    return res.status(400).json({ error: "Missing fields" });
+  }
+
+  try {
+    const result = await updateSkillFunction(skill_id, skill);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Skill not found" });
+    }
+
+    res.status(200).json({
+      message: "skill updated",
+      skill: result.rows[0],
+    });
+  } catch (err) {
+    console.error("Error updating skill:", err.message);
+    res.status(500).json({ error: "Failed to update skill" });
+  }
+};
+
+export const deleteSkill = async (req, res) => {
+  const { user_id, skillid } = req.body;
+
+  if (!user_id) return res.status(400).json({ error: "user ID is required" });
+  if (!skillid) return res.status(400).json({ error: "Skill ID is required" });
+
+  try {
+    const result = await deleteSkillFunction(user_id, skillid);
+
+    if (result.rowCount == 0)
+      return res.status(404).json({ error: "Skill not found" });
+
+    res.status(200).json({ message: "Skill deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting skill:", err.message);
+    res.status(500).json({ error: "Failed to delete skill" });
+  }
+};
+
+export const updateInterest = async (req, res) => {
+  const { interest_id, interest } = req.body;
+
+  if (!interest_id || !interest) {
+    return res.status(400).json({ error: "Missing fields" });
+  }
+
+  try {
+    const result = await updateInterestFunction(interest_id, interest);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Interest not found" });
+    }
+
+    res.status(200).json({
+      message: "interest updated",
+      interest: result.rows[0],
+    });
+  } catch (err) {
+    console.error("Error updating interest:", err.message);
+    res.status(500).json({ error: "Failed to update interest" });
+  }
+};
+
+export const deleteInterest = async (req, res) => {
+  const { user_id, interest_id } = req.body;
+
+  console.log("Received for deletion:", { user_id, interest_id });
+
+  if (!user_id) return res.status(400).json({ error: "user ID is required" });
+
+  if (!interest_id)
+    return res.status(400).json({ error: "Interest ID is required" });
+
+  try {
+    const result = await deleteInterestFunction(user_id, interest_id);
+
+    if (result.rowCount == 0)
+      return res.status(404).json({ error: "Interest not found" });
+
+    res.status(200).json({ message: "Interest deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting interest:", err.message);
+    res.status(500).json({ error: "Failed to delete interest" });
   }
 };
 

@@ -203,6 +203,29 @@ export const getWorkExperienceFunction = async (user_id) => {
   return rows;
 };
 
+export const updateWorkExpFunction = async (
+  company_name,
+  designation,
+  location,
+  start_date,
+  end_date,
+  exp_id
+) => {
+  const query = `UPDATE work_experience 
+                SET company_name = $1, designation = $2,location = $3, start_date = $4, end_date = $5 
+                WHERE id = $6 RETURNING *;`;
+  const values = [
+    company_name,
+    designation,
+    location,
+    start_date,
+    end_date,
+    exp_id,
+  ];
+
+  return await pool.query(query, values);
+};
+
 export const createJobDetailsFunction = async (
   user_id,
   company_name,
@@ -330,6 +353,42 @@ export const getQualificationsOfUserFunction = async (user_id) => {
     [user_id]
   );
   return rows;
+};
+
+export const updateQualFunction = async (qualificationId, newName) => {
+  const query = `UPDATE qualifications SET name = $1 WHERE id = $2 RETURNING *`;
+  return await pool.query(query, [newName, qualificationId]);
+};
+
+export const deleteQualFunction = async (quaId) => {
+  return await pool.query(
+    `DELETE FROM qualifications WHERE id = $1 RETURNING *`,
+    [quaId]
+  );
+};
+
+export const updateSkillFunction = async (skillId, newName) => {
+  const query = `UPDATE domains SET name = $1 WHERE id = $2 RETURNING *`;
+  return await pool.query(query, [newName, skillId]);
+};
+
+export const deleteSkillFunction = async (userId, skillId) => {
+  return await pool.query(
+    `DELETE FROM user_skills WHERE user_id = $1 AND skill_id = $2 RETURNING *`,
+    [userId, skillId]
+  );
+};
+
+export const updateInterestFunction = async (interestId, newName) => {
+  const query = `UPDATE domains SET name = $1 WHERE id = $2 RETURNING *`;
+  return await pool.query(query, [newName, interestId]);
+};
+
+export const deleteInterestFunction = async (userId, interestId) => {
+  return await pool.query(
+    `DELETE FROM user_interests WHERE user_id = $1 AND interest_id = $2 RETURNING *`,
+    [userId, interestId]
+  );
 };
 
 export const createCodingLanguageFunction = async (user_id, codlang) => {

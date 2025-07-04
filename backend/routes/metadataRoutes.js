@@ -22,6 +22,13 @@ import {
   getSkillsOfUser,
   getWorkExperience,
   createDomain,
+  updateQual,
+  deleteQual,
+  updateSkill,
+  deleteSkill,
+  updateInterest,
+  deleteInterest,
+  updateWorkExp,
 } from "../controllers/metdataController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 
@@ -45,22 +52,22 @@ router.get("/codinglanguage/:id", protect, getCodingLanguagesOfUser);
 router.get("/language/:id", protect, getLanguagesOfUser);
 router.get("/qualification/:id", protect, getQualificationsOfUser);
 
-// router.post("/decription/:id", protect, createDescription);
-// router.get("/description/:id", protect, getDescription);
+router.put("/qualification/:id", protect, updateQual);
+router.put("/skill/:id", protect, updateSkill);
+router.put("/interest/:id", protect, updateInterest);
 
-router.post("/workexperience/:id", protect, createWorkExperience); // only for employee
-router.get("/workexperience/:id", protect, getWorkExperience);
+router.delete("/qualification", protect, deleteQual);
+router.delete("/skill", protect, deleteSkill);
+router.delete("/interest", protect, deleteInterest);
+
 router.post("/domain", protect, createDomain);
-// router.put("/workexperience/:id",protect,)
-
-// router.post("/jobdetails/:id", protect, createJobDetails); // for employer -> only company, designation, location
-// router.get("/jobdetails/:id", protect, getJobDetails);
 
 router.post("/description/:id", protect, createDescription);
 router.get("/description/:id", protect, getDescription);
 
 router.post("/workexperience/:id", protect, createWorkExperience); // only for employee
 router.get("/workexperience/:id", protect, getWorkExperience);
+router.put("/workexperience/:id", protect, updateWorkExp);
 
 router.post("/jobdetails/:id", protect, createJobDetails); // for employer -> only company, designation, location
 router.get("/jobdetails/:id", protect, getJobDetails);
