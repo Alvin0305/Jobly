@@ -3,12 +3,13 @@ import { useParams } from "react-router-dom";
 import { getInterestedEmployees } from "../../../../../services/jobService";
 import './interestedemployees.css';
 import { useUser } from "../../../../../contexts/userContext";
-
+import socket from "../../../../../socket";
 const InterestedEmployee = () => {
   const { id } = useParams();
   const [interestedEmployees, setInterestedEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useUser();
+  const[accepted,setAccept] = useState([]);
 
   useEffect(() => {
     const fetchInterestedEmployees = async () => {
@@ -26,13 +27,20 @@ const InterestedEmployee = () => {
   }, [id, user]);
 
   const handleAccept = (employeeId) => {
-    // TODO: Add backend call to accept the employee
-    console.log("Accepted employee:", employeeId, "for job:", id);
-  };
+    if (!user || !user.id) {
+      console.warn("User or user.is not available");
+      return;
+    }
 
-  const handleReject = (employeeId) => {
-    // TODO: Add backend call to reject the employee
-    console.log("Rejected employee:", employeeId, "for job:", id);
+    console.log("Accepted employee:", employeeId, "for job:", id);
+  
+    socket.emit("accept_job_request", {
+      employerId: user._id,
+      jobId: id,           
+      employeeId: employeeId
+    });
+    setAccept(prev =>[...prev,employeeId]);
+    
   };
 
   return (
@@ -59,13 +67,7 @@ const InterestedEmployee = () => {
                     className="accept-btn"
                     onClick={() => handleAccept(emp.id)}
                   >
-                    Accept
-                  </button>
-                  <button
-                    className="reject-btn"
-                    onClick={() => handleReject(emp.id)}
-                  >
-                    Reject
+                  {accepted.includes(emp.id)?"Accepted":"Accept"}
                   </button>
                 </div>
               </div>

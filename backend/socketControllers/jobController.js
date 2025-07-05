@@ -1,5 +1,6 @@
-import { createJobFunction, addEmployeeToInterestedFunction } from "../models/job.js";
+import { createJobFunction, addEmployeeToInterestedFunction,selectEmployeeForJobFunction } from "../models/job.js";
 import pool from "../db.js";
+import { insertNotification } from "../models/notification.js";
 export const createJob = async (jobData) => {
   const{
     employer_id,
@@ -55,7 +56,7 @@ export const createJob = async (jobData) => {
 
 };
 
-export const replyJob = async (employee_id, job_id) => {
+export const replyJob = async (employee_id, job_id,io) => {
   // insert into job reply
   try{
     const reply = await addEmployeeToInterestedFunction(employee_id,job_id);
@@ -82,4 +83,31 @@ export const replyJob = async (employee_id, job_id) => {
   throw err;
 }
   
+};
+
+export const JobRequestAccept = async (job_id, employee_id, employer_id, io) => {
+  try {
+    // Insert into accepted table
+    await selectEmployeeForJobFunction(job_id, employee_id);
+
+    // Create notification
+    await insertNotification({
+      sender_id: employer_id,
+      receiver_id: employee_id,
+      content: 'You have been accepted for the job.',
+      post_id: job_id,
+      type: 'Job-Accepted'
+    });
+
+    // Emit socket to employee
+    io.to(`user_${employee_id}`).emit('job-accepted', {
+      job_id,
+      message: 'You have been accepted for the job!'
+    });
+
+    console.log(` Job accepted: Employee ${employee_id} notified`);
+  } catch (error) {
+    console.error('JobRequestAccept error:', error);
+    throw error;
+  }
 };
