@@ -43,6 +43,11 @@ const Notifications = ({ }) => {
       receiver_id: user.id,
     });
   };
+  useEffect(() => {
+    const jobaccept = () =>{
+
+    }
+  })
 
   return (
     <div className="notification-container">
@@ -80,9 +85,12 @@ const Notifications = ({ }) => {
               alt="Post"
             />
             )}
+            
           </div>
+          
       
       ))}
+     
     </div>
   );
 };

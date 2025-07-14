@@ -3,8 +3,13 @@ import {
   createJob,
   uploadJobImages, // ✅ correctly imported
 } from "../../../../services/jobService.js";
-import { getAllDomains ,createDomain} from "../../../../services/metadataService.js";
+import {
+  getAllDomains,
+  createDomain,
+} from "../../../../services/metadataService.js";
 import "../create/createjob.css";
+import socket from "../../../../socket/index.js";
+import { useUser } from "../../../../contexts/userContext.jsx";
 
 const CreateJob = () => {
   const [caption, setCaption] = useState("");
@@ -36,33 +41,36 @@ const CreateJob = () => {
     const skill = newSkill.trim().toUpperCase();
     const token = localStorage.getItem("token");
     if (!skill || selectedSkills.includes(skill)) {
-     alert("Inavlid or duplicate skill");
-     return;
+      alert("Inavlid or duplicate skill");
+      return;
     }
-   try{
-    const res = await createDomain(skill,token);
-    const newDomain = res.domain || {id:res.id,name:skill};
+    try {
+      const res = await createDomain(skill, token);
+      const newDomain = res.domain || { id: res.id, name: skill };
 
-    setSkills ((prev) => [...prev, newDomain]);
-    setSelectedSkills((prev) =>[...prev, newDomain.name]);
-   }catch(err) {
-    console.error("Failed to add new skill",err);
-    alert("Error adding skill");
-   }
-   setNewSkill("");
-   setAddingSkill(false);
+      setSkills((prev) => [...prev, newDomain]);
+      setSelectedSkills((prev) => [...prev, newDomain.name]);
+    } catch (err) {
+      console.error("Failed to add new skill", err);
+      alert("Error adding skill");
+    }
+    setNewSkill("");
+    setAddingSkill(false);
   };
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
+    console.log(e.target.files);
     setImageFile(files); // ✅ now an array
-  
-    if (files.length > 0) {
-      const reader = new FileReader();
-      reader.onloadend = () => setPreviewImage(reader.result);
-      reader.readAsDataURL(files[0]); // preview first image
-    }
+
+    // if (files.length > 0) {
+    //   const reader = new FileReader();
+    //   reader.onloadend = () => setPreviewImage(reader.result);
+    //   reader.readAsDataURL(files[0]); // preview first image
+    // }
   };
+
+  const { user } = useUser();
 
   const handlePostJob = async () => {
     const token = localStorage.getItem("token");
@@ -76,24 +84,28 @@ const CreateJob = () => {
     if (imageFile && imageFile.length > 0) {
       try {
         const formData = new FormData(); // ✅ prepare FormData for upload
-      //  formData.append("images", imageFile); // multer expects field name as 'images'
-      //append all the images using for loop
-      for(let i=0;i<imageFile.length;i++){
-        formData.append("images",imageFile[i]);
-      }
-
+        //  formData.append("images", imageFile); // multer expects field name as 'images'
+        //append all the images using for loop
+        for (let i = 0; i < imageFile.length; i++) {
+          formData.append("images", imageFile[i]);
+        }
+        console.log("upload started");
         const response = await uploadJobImages(formData, token); // ✅ correct function
-        imageUrls = response;// extract Cloudinary URLs
+        console.log("upload completed");
+        console.log(response.data);
+        imageUrls = response; // extract Cloudinary URLs
       } catch (uploadErr) {
         console.error("Image upload failed", uploadErr);
         alert("Image upload failed.");
         return;
       }
     }
-    const skillids = selectedSkills.map(skillName => {
-      const match = skills.find(s => s.name === skillName);
-      return match?.id ? parseInt(match.id) : undefined;
-    }).filter(id => id!== undefined);
+    const skillids = selectedSkills
+      .map((skillName) => {
+        const match = skills.find((s) => s.name === skillName);
+        return match?.id ? parseInt(match.id) : undefined;
+      })
+      .filter((id) => id !== undefined);
 
     const payload = {
       title: caption,
@@ -103,17 +115,19 @@ const CreateJob = () => {
       required_experience: 0,
       skills_required: skillids,
       image_urls: imageUrls,
+      employer_id: user.id,
     };
 
     try {
-      const response = await createJob(payload, token);
-      console.log("Axios response:",response);
-      console.log("Status code:",response?.status);
-      if (response?.status === 201) {
-        console.log("JOb posted successsfully");
-        alert("Job posted successfully!");
-        // Optionally reset fields here
-      }
+      //const response = await createJob(payload, token);
+      // console.log("Axios response:",response);
+      // console.log("Status code:",response?.status);
+      // if (response?.status === 201) {
+      //   console.log("JOb posted successsfully");
+      //   alert("Job posted successfully!");
+      //   // Optionally reset fields here
+      // }
+      socket.emit("create_job", payload);
     } catch (error) {
       console.error("Error posting job:", error.response?.data || error);
       alert("Failed to post job.");

@@ -230,3 +230,4 @@ create table login_logs (
 );
 
 alter table job_accepted_users add column email_sent boolean default false;
+alter table jobs add column is_accept default boolean false;

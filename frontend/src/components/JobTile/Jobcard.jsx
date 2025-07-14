@@ -2,28 +2,16 @@ import React from "react";
 import "./jobcard.css";
 import { useNavigate } from "react-router-dom";
 //import FeedBubble from '../FeedBubble/FeedBubble';
-const Jobcard = ({
-  jobId,
-  employer_name,
-  employer_image,
-  title,
-  desc,
-  salary,
-  status,
-  onMarkInterested,
-  job_skills = [],
-}) => {
+const Jobcard = ({ jobId, employer_name, employer_image, title, desc, salary, status,acceptedStatus, onMarkInterested,job_skills=[]}) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
     navigate(`/home/job/view/${jobId}`);
-  };
+
+  }
   return (
-    <div
-      className="job-card"
-      onClick={handleCardClick}
-      style={{ cursor: "pointer" }}
-    >
+    <div className="job-card" onClick={handleCardClick} style={{ cursor:"pointer"}}>
+     
       <div className="job-header">
         <img
           src={employer_image || "girl.png"}
@@ -42,9 +30,11 @@ const Jobcard = ({
           </span>
         ))}
       </div>
+       
 
       <div className="footer">
-        {status === "Interested" ? (
+        
+        {status === 'Interested' ? (
           <p className="interested">✔ Interested</p>
         ) : (
           <button
@@ -57,6 +47,9 @@ const Jobcard = ({
             Mark as Interested
           </button>
         )}
+      <p className={acceptedStatus === "Accepted" ? "Accepted":"Pending"}>
+        {acceptedStatus === "Accepted"? "Accepted":"Pending"}
+      </p>
 
         {salary && <div className="salary">₹{salary.toLocaleString()}</div>}
       </div>

@@ -78,6 +78,10 @@
     border-radius: 5px;
     font-weight: bold;
   }
+  .accepted {
+    color:green;
+    font-weight:bold;
+  }
   .interest-btn {
     color:black;
     background-color:-var(--color-primary)
