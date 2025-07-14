@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./editprofile.css";
 import axios from "axios";
+import { useUser } from "../../../../../contexts/userContext";
+import {
+  updateUser,
+  uploadUserAvatar,
+} from "../../../../../services/userService";
+import AddDescriptionModal from "../view/AddDescriptionModal";
 
 const EditProfile = () => {
   const [user, setUser] = useState(null);
@@ -10,8 +16,11 @@ const EditProfile = () => {
   const [skill, setSkill] = useState([]);
   const [desc, setDesc] = useState("");
   const [post, setPost] = useState([]);
+  const { user: userData } = useUser();
 
   useEffect(() => {
+    console.log("user in edit profile: ", userData);
+
     const fetchUserAndDetails = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -23,8 +32,9 @@ const EditProfile = () => {
             },
           }
         );
-        const userData = res.data;
-        setUser(userData);
+        // const userData = res.data;
+        console.log(userData);
+        setUser((prevUser) => ({ ...prevUser, ...userData }));
 
         const endpoint =
           userData.role === "Employee"
@@ -54,7 +64,7 @@ const EditProfile = () => {
             }
           );
           console.log(des.data);
-          setDesc(des.data.exp?.description || "");
+          setDesc(des.data.exp?.[0]?.description || "");
         } catch (err) {
           console.error(
             "Error fetching description:",
@@ -141,6 +151,23 @@ const EditProfile = () => {
   }, []);
 
   if (!user) return <p>Loading user profile...</p>;
+
+  const handleImage = async (file) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    console.log(userData.token);
+    try {
+      console.log("uploading  profile image");
+      const response = await uploadUserAvatar(formData);
+      console.log("profile updated");
+      console.log(response.data);
+      await updateUser(userData.token, {
+        image: response.data.file_url,
+      });
+    } catch (err) {
+      console.log("error: ", err);
+    }
+  };
 
   const handleEditQualification = async (qualId, oldName) => {
     const token = localStorage.getItem("token");
@@ -384,7 +411,13 @@ const EditProfile = () => {
       <div className="innerbox">
         <h3>HII {user.firstname.toUpperCase()},</h3>
         <div className="detailsBox">
-          <img src="./avatar.png" className="profilePic" />
+          <label htmlFor="profilePic">Profile Image</label>
+          <input
+            type="file"
+            id="profilePic"
+            style={{ display: "none" }}
+            onChange={(e) => handleImage(e.target.files[0])}
+          />
           <h2 className="name">
             {user.firstname} {user.lastname}
           </h2>
@@ -396,7 +429,8 @@ const EditProfile = () => {
       <div className="info">
         <h3>Description</h3>
         <p>{desc}</p>
-        {/* {!desc && <AddDescriptionModal user={user} setDesc={setDesc} />} */}
+        <AddDescriptionModal user={user} setDesc={setDesc} />
+
         <div className="infoRow">
           <label>Graduation</label>
           <div>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-//import "./AddDescriptionModal.css"; // Import the CSS
+import "./AddDescriptionModal.css"; // Import the CSS
 
 const AddDescriptionModal = ({ user, setDesc }) => {
   const [showModal, setShowModal] = useState(false);
@@ -8,7 +8,7 @@ const AddDescriptionModal = ({ user, setDesc }) => {
 
   const handleAddDescription = async () => {
     const token = localStorage.getItem("token");
-    console.log("token",token);
+    console.log("token", token);
 
     if (!description.trim()) {
       alert("Description is required");
@@ -30,15 +30,20 @@ const AddDescriptionModal = ({ user, setDesc }) => {
       setShowModal(false);
       console.log("Description added");
     } catch (err) {
-      console.log("Failed to add description", err.response?.data || err.message);
-      alert("Error: " + (err.response?.data?.error || "Failed to add description"));
+      console.log(
+        "Failed to add description",
+        err.response?.data || err.message
+      );
+      alert(
+        "Error: " + (err.response?.data?.error || "Failed to add description")
+      );
     }
   };
 
   return (
     <>
       <button className="add-btn" onClick={() => setShowModal(true)}>
-        Add Description
+        Edit description
       </button>
 
       {showModal && (
@@ -52,7 +57,10 @@ const AddDescriptionModal = ({ user, setDesc }) => {
               placeholder="Write your paragraph here..."
             />
             <div className="modal-actions">
-              <button className="cancel-btn" onClick={() => setShowModal(false)}>
+              <button
+                className="cancel-btn"
+                onClick={() => setShowModal(false)}
+              >
                 Cancel
               </button>
               <button className="submit-btn" onClick={handleAddDescription}>

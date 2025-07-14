@@ -282,14 +282,34 @@ export const createDescription = async (req, res) => {
   const user_id = req.params?.id || req.user?.id;
   const { description } = req.body;
 
-  const result = await createDescriptionFunction(user_id, description);
+  if (!user_id || !description || !description.trim()) {
+    return res.status(400).json({
+      success: false,
+      message: "User ID and non-empty description are required",
+    });
+  }
 
-  if (result.success) res.status(201).json(result);
-  else res.status(500).json(result);
+  try {
+    const result = await createDescriptionFunction(user_id, description);
+
+    if (result.success) {
+      res.status(201).json(result);
+    } else {
+      res.status(500).json(result);
+    }
+  } catch (err) {
+    console.error("createDescription controller error:", err.message);
+    res.status(500).json({
+      success: false,
+      message: "Unexpected server error",
+      error: err.message,
+    });
+  }
 };
 
 export const getDescription = async (req, res) => {
   const user_id = req.params?.id || req.user?.id;
+  console.log(user_id);
 
   try {
     const exp = await getDescriptionFunction(user_id);

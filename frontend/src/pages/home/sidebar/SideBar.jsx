@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SideBarButton from "./SideBarButton";
 import "./sidebar.css";
 import { useUser } from "../../../contexts/userContext";
 
 const SideBar = () => {
   const { user } = useUser();
+
+  useEffect(() => {
+    console.log("user in sidebar", user);
+  }, []);
 
   return (
     <div className="sidebar">

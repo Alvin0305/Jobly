@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import UserTile from "../../../components/UserTile/UserTile";
 import axios from "axios";
+import { uploadUserAvatar } from "../../../services/userService";
+import socket from "../../../socket";
+import { useUser } from "../../../contexts/userContext";
 // import AuthContext from
 
 const Connections = () => {
   const [active, setActive] = useState("Followers");
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useUser();
 
   const tabs = ["Followers", "Following", "Suggestions"];
 

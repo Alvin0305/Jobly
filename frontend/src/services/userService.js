@@ -27,16 +27,16 @@ export const getUserFollowing = (token) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  export const updateUser = async(token,userData) => {
-    const res = await axios.put(
-      '/api/user/update-user',
-      userData,
-      {
-        headers: {
-          Authorization:`Bearer ${token}`,
-        }
-      }
-    ) 
-    return res.data;
-  }
-  
+export const updateUser = async (token, userData) => {
+  const res = await axios.put("/api/user/update-user", userData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+};
+
+export const uploadUserAvatar = async (formData) =>
+  await axios.post(`/api/user/upload`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
