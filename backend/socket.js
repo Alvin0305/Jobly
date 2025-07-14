@@ -67,5 +67,10 @@ export const configureSockets = (io) => {
     socket.on("send_disconnection_request", (sender_id, receiver_id) =>
       sendDisconnectionRequest(sender_id, receiver_id, io)
     );
+
+    socket.on("hello_world", ({ name1, name2, id }) => {
+      console.log("hello world", name1, name2);
+      io.to(`user_${id}`).emit("hello", { name: "don" });
+    });
   });
 };
