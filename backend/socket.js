@@ -10,7 +10,11 @@ import {
   unpinMessage,
   updateMessage,
 } from "./socketControllers/chatController.js";
-import { createJob, replyJob } from "./socketControllers/jobController.js";
+import {
+  createJob,
+  replyJob,
+  JobRequestAccept,
+} from "./socketControllers/jobController.js";
 import {
   commentPost,
   likePost,
@@ -50,7 +54,9 @@ export const configureSockets = (io) => {
     socket.on("disconnect", () => disconnect());
 
     socket.on("create_job", createJob);
-    socket.on("reply_to_job", replyJob);
+    socket.on("reply_to_job", ({ jobId, employeeId }) => {
+      replyJob(employeeId, jobId, io);
+    });
 
     socket.on("like_post", (user_id, post_id) =>
       likePost(user_id, post_id, io)
@@ -67,10 +73,8 @@ export const configureSockets = (io) => {
     socket.on("send_disconnection_request", (sender_id, receiver_id) =>
       sendDisconnectionRequest(sender_id, receiver_id, io)
     );
-
-    socket.on("hello_world", ({ name1, name2, id }) => {
-      console.log("hello world", name1, name2);
-      io.to(`user_${id}`).emit("hello", { name: "don" });
+    socket.on("job-accepted", ({ employerId, jobId, employeeId }) => {
+      JobRequestAccept(employerId, jobId, employeeId, io);
     });
   });
 };
