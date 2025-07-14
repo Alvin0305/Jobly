@@ -49,8 +49,9 @@ export const configureSockets = (io) => {
     );
     socket.on("disconnect", () => disconnect());
 
-    socket.on("create_job", createJob);
+    socket.on("create_job", (jobData) => createJob(jobData, io));
     socket.on("reply_to_job",({jobId,employeeId}) =>{replyJob(employeeId,jobId,io)});
+    socket.on("accepted_job_requests",({employerId,jobId,employeeId}) =>{JobRequestAccept(jobId,employeeId,employerId,io)})
 
     socket.on("like_post", (user_id, post_id) =>
       likePost(user_id, post_id, io)
@@ -67,8 +68,6 @@ export const configureSockets = (io) => {
     socket.on("send_disconnection_request", (sender_id, receiver_id) =>
       sendDisconnectionRequest(sender_id, receiver_id, io)
     );
-    socket.on("job-accepted", ({ employerId, jobId, employeeId }) => {
-      JobRequestAccept(employerId, jobId, employeeId, io);
-    });
+    
   });
 };
