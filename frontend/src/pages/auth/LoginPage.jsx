@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-import picture from "../../assets/office.jpg";
 import { useUser } from "../../contexts/userContext";
 import socket from "../../socket";
 
@@ -68,7 +67,7 @@ const LoginPage = () => {
         pauseOnHover
       />
       <div style={styles.imageSection}>
-        <img src={picture} />
+        <img src="./office.jpg" />
 
         <div style={styles.formOverlay}>
           <div style={styles.loginCard}>
@@ -162,11 +161,15 @@ const styles = {
     position: "relative",
     overflow: "hidden",
     fontFamily: "system-ui, -apple-system, sans-serif",
+    boxSizing: "border-box",
   },
   imageSection: {
-    position: "relative",
-    width: "100%",
-    height: "100%",
+    // position: "absolute",
+    // width: "100%",
+    // height: "100%",
+    // objectFit: "contain",
+    // top: "0",
+    // left: "0",
   },
   formOverlay: {
     position: "absolute",

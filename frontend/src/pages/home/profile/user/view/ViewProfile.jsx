@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./viewprofile.css";
 import axios from "axios";
 import { useUser } from "../../../../../contexts/userContext";
+import { useNavigate } from "react-router-dom";
 
 const ViewProfile = () => {
   // const [user, setUser] = useState(null);
@@ -12,6 +13,11 @@ const ViewProfile = () => {
   const [desc, setDesc] = useState("");
   const [post, setPost] = useState([]);
   const { user, setUser } = useUser();
+  const navigate = useNavigate();
+
+  const handleEdit = () => {
+    navigate("/home/profile/user/edit");
+  };
 
   useEffect(() => {
     const fetchUserAndDetails = async () => {
@@ -151,6 +157,7 @@ const ViewProfile = () => {
     <div className="outerbox">
       <div className="innerbox">
         <h3>Hi! {user.firstname.toUpperCase()},</h3>
+
         <div className="detailsBox">
           <img
             src={user?.image ? user.image : "/girl.png"}
@@ -158,26 +165,20 @@ const ViewProfile = () => {
             className="profile-image"
           />
 
-          {/* <label htmlFor="profilePic">Profile Image</label>
-          <input
-            type="file"
-            id="profilePic"
-            style={{ display: "none" }}
-            onChange={(e) => handleImage(e.target.files[0])}
-          /> */}
           <h2 className="name">
             {user.firstname} {user.lastname}
           </h2>
           <p className="email">{user.email}</p>
           <p className="role">{user.role}</p>
+          <button onClick={() => handleEdit()}>✏️</button>
         </div>
       </div>
 
-      <div className="info">
+      <div className="infoRow grid-row">
         <h3>Description</h3>
         <p>{desc}</p>
 
-        <div className="infoRow">
+        <div className="infoRow grid-card">
           <label>Graduation</label>
           <div>
             {(qualification?.length ?? 0) === 0 ? (
@@ -194,7 +195,7 @@ const ViewProfile = () => {
           </div>
         </div>
 
-        <div className="infoRow">
+        <div className="infoRow grid-card">
           <label>Posts</label>
           <div>
             {(post?.length ?? 0) === 0 ? (
@@ -214,7 +215,7 @@ const ViewProfile = () => {
           </div>
         </div>
 
-        <div className="infoRow">
+        <div className="infoRow grid-card">
           <label>Experience</label>
           <h3>
             {user?.role === "Employee" ? "Work Experience" : "Job Details"}
@@ -240,7 +241,7 @@ const ViewProfile = () => {
           )}
         </div>
 
-        <div className="infoRow">
+        <div className="infoRow grid-card">
           <label>Skills</label>
           <div>
             {skill.map((item, i) => (
@@ -251,7 +252,7 @@ const ViewProfile = () => {
           </div>
         </div>
 
-        <div className="infoRow">
+        <div className="infoRow grid-card">
           <label>Interests</label>
           <div>
             {interest.map((item, i) => (

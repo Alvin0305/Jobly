@@ -25,7 +25,7 @@ import OtherProfile from "./pages/home/profile/other/OtherProfile";
 import EditProfile from "./pages/home/profile/user/edit/EditProfile";
 import ViewProfile from "./pages/home/profile/user/view/ViewProfile";
 import SearchPage from "./pages/home/search/SearchPage";
-import Settings from "./pages/home/settings/Settings"
+import Settings from "./pages/home/settings/Settings";
 import HomePage from "./pages/home/HomePage";
 import NotFound from "./pages/others/NotFound/NotFound";
 import Feed from "./pages/home/feed/Feed";
@@ -99,11 +99,17 @@ const AppRoutes = () => {
               <Route path="job/selected" element={<SelectedCandidates />} />
               <Route path="job/view/:id" element={<ViewJob />} />
               <Route path="notifications" element={<Dashboard />}>
-              <Route index element={<Navigate to="requests" />} />
-             <Route path="requests" element={<NotificationRequestsWrapper />} />
-             <Route path="alerts" element={<Notifications />} />
-             </Route>
-             <Route path="employer/interested/:id" element={<InterestedEmployee />}/>
+                <Route index element={<Navigate to="requests" />} />
+                <Route
+                  path="requests"
+                  element={<NotificationRequestsWrapper />}
+                />
+                <Route path="alerts" element={<Notifications />} />
+              </Route>
+              <Route
+                path="employer/interested/:id"
+                element={<InterestedEmployee />}
+              />
               <Route path="post/create" element={<CreatePost />} />
               <Route path="post/view" element={<ViewPost />} />
               <Route path="profile/other/:id" element={<OtherProfile />} />
@@ -112,7 +118,7 @@ const AppRoutes = () => {
               <Route path="search" element={<SearchPage />} />
               <Route path="settings" element={<Settings />} />
             </Route>
-           
+
             <Route
               path="/chat"
               element={
