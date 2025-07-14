@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getInterestedEmployees } from "../../../../../services/jobService";
-import './interestedemployees.css';
+import "./interestedemployees.css";
 import { useUser } from "../../../../../contexts/userContext";
 import socket from "../../../../../socket";
 const InterestedEmployee = () => {
@@ -9,7 +9,7 @@ const InterestedEmployee = () => {
   const [interestedEmployees, setInterestedEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useUser();
-  const[accepted,setAccept] = useState([]);
+  const [accepted, setAccept] = useState([]);
 
   useEffect(() => {
     const fetchInterestedEmployees = async () => {
@@ -26,6 +26,19 @@ const InterestedEmployee = () => {
     if (id && user?.token) fetchInterestedEmployees();
   }, [id, user]);
 
+  useEffect(() => {
+    console.log(interestedEmployees);
+    const handleReplydToJob = ({ job_id, id: employee_id, message }) => {
+      console.log("someone replyed to job", job_id, employee_id, message);
+      // re render the tiles using the data got
+    };
+    socket.on("replyd_to_job", handleReplydToJob);
+
+    return () => {
+      socket.off("replyd_to_job", handleReplydToJob);
+    };
+  }, []);
+
   const handleAccept = (employeeId) => {
     if (!user || !user.id) {
       console.warn("User or user.is not available");
@@ -33,14 +46,13 @@ const InterestedEmployee = () => {
     }
 
     console.log("Accepted employee:", employeeId, "for job:", id);
-  
+
     socket.emit("accept_job_request", {
       employerId: user._id,
-      jobId: id,           
-      employeeId: employeeId
+      jobId: id,
+      employeeId: employeeId,
     });
-    setAccept(prev =>[...prev,employeeId]);
-    
+    setAccept((prev) => [...prev, employeeId]);
   };
 
   return (
@@ -60,14 +72,16 @@ const InterestedEmployee = () => {
                 className="employee-avatar"
               />
               <div className="employee-info">
-                <h3>{emp.firstname} {emp.lastname}</h3>
+                <h3>
+                  {emp.firstname} {emp.lastname}
+                </h3>
                 <p>Email: {emp.email}</p>
                 <div className="action-buttons">
                   <button
                     className="accept-btn"
                     onClick={() => handleAccept(emp.id)}
                   >
-                  {accepted.includes(emp.id)?"Accepted":"Accept"}
+                    {accepted.includes(emp.id) ? "Accepted" : "Accept"}
                   </button>
                 </div>
               </div>

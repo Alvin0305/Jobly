@@ -10,7 +10,7 @@ const SelectedCandidates = () => {
   useEffect(() => {
     const fetchCandidates = async () => {
       try {
-        const jobId = localStorage.getItem("selectedJobId"); 
+        const jobId = localStorage.getItem("selectedJobId");
         const res = await getSelectedEmployeesForJob(jobId);
         setCandidates(res.candidates || []);
       } catch (error) {
@@ -30,9 +30,15 @@ const SelectedCandidates = () => {
       </h2>
 
       <div className="toggle-options">
-        <label><input type="radio" name="filter" defaultChecked /> All</label>
-        <label><input type="radio" name="filter" /> Already sent</label>
-        <label><input type="radio" name="filter" /> Send Email</label>
+        <label>
+          <input type="radio" name="filter" defaultChecked /> All
+        </label>
+        <label>
+          <input type="radio" name="filter" /> Already sent
+        </label>
+        <label>
+          <input type="radio" name="filter" /> Send Email
+        </label>
       </div>
 
       {loading ? (
@@ -50,7 +56,9 @@ const SelectedCandidates = () => {
                   className="avatar"
                 />
                 <div>
-                  <h3>{candidate.name} <FaCheckCircle className="verified" /></h3>
+                  <h3>
+                    {candidate.name} <FaCheckCircle className="verified" />
+                  </h3>
                   <p>{candidate.role}</p>
                   <div className="skills">
                     {candidate.skills.map((skill, i) => (
@@ -63,7 +71,8 @@ const SelectedCandidates = () => {
               <div className="right-section">
                 <p>{candidate.company}</p>
                 <button className={candidate.sent ? "btn sent" : "btn already"}>
-                  <FaEnvelope /> {candidate.sent ? "Sent Email" : "Already sent"}
+                  <FaEnvelope />{" "}
+                  {candidate.sent ? "Sent Email" : "Already sent"}
                 </button>
               </div>
             </div>

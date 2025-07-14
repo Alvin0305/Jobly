@@ -74,10 +74,10 @@ export const getUserFollowingFunction = async (user_id) => {
   // get all the users who follows the given user from the friendlist table
 
   const { rows } = await pool.query(
-    `SELECT users.*
-    FROM friends
-    JOIN users ON friends.following_id = users.id
-    WHERE friends.follower_id = $1`,
+    `SELECT u.* FROM friends f
+    JOIN users u 
+    ON f.following_id = u.id
+    WHERE f.follower_id = $1`,
     [user_id]
   );
   return rows;
@@ -354,7 +354,7 @@ export const unFriendFunction = async (sender_id, receiver_id) => {
 
 export const getSuggestedFriends = async (userId) => {
   const query = `
-    SELECT DISTINCT u.id, u.firstname, u.lastname, u.image
+    SELECT DISTINCT u.*
     FROM users u
     JOIN friends f1 ON u.id = f1.following_id
     JOIN friends f2 ON f1.follower_id = f2.following_id

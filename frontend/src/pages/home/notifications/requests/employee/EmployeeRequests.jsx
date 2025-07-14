@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import Jobcard from "../../../../../components/JobTile/Jobcard.jsx";
-import { getJobsForEmployee, addEmployeeToInterested } from '../../../../../services/jobService';
+import {
+  getJobsForEmployee,
+  addEmployeeToInterested,
+} from "../../../../../services/jobService";
 import { useUser } from "../../../../../contexts/userContext.jsx";
 import socket from "../../../../../socket";
-import './employeerequests.css';
+import "./employeerequests.css";
 
 const EmployeeRequests = () => {
   const [jobs, setJobs] = useState([]);
@@ -15,14 +18,14 @@ const EmployeeRequests = () => {
       const res = await getJobsForEmployee(user.token);
       console.log("API RESPONSE:", res);
 
-      const enrichedJobs = res.map(job => ({
+      const enrichedJobs = res.map((job) => ({
         ...job,
-        status: job.is_interested ? 'Interested' : 'Not interested',
+        status: job.is_interested ? "Interested" : "Not interested",
       }));
 
       setJobs(enrichedJobs);
     } catch (err) {
-      console.error('Error fetching jobs:', err);
+      console.error("Error fetching jobs:", err);
     } finally {
       setLoading(false);
     }
@@ -33,9 +36,9 @@ const EmployeeRequests = () => {
       await addEmployeeToInterested(jobId, user.token);
 
       // Update job status locally
-      setJobs(prevJobs =>
-        prevJobs.map(job =>
-          job.id === jobId ? { ...job, status: 'Interested' } : job
+      setJobs((prevJobs) =>
+        prevJobs.map((job) =>
+          job.id === jobId ? { ...job, status: "Interested" } : job
         )
       );
 
@@ -43,13 +46,13 @@ const EmployeeRequests = () => {
       if (socket.connected) {
         socket.emit("reply_to_job", {
           jobId,
-          employeeId: user.id
+          employeeId: user.id,
         });
       } else {
         console.warn("⚠️ Socket not connected");
       }
     } catch (err) {
-      console.error('Failed to mark interest:', err);
+      console.error("Failed to mark interest:", err);
     }
   };
 
@@ -58,19 +61,19 @@ const EmployeeRequests = () => {
     fetchJobs();
   }, []);
 
-  if (loading) return <div style={{ color: 'white' }}>Loading jobs...</div>;
+  if (loading) return <div style={{ color: "white" }}>Loading jobs...</div>;
 
   return (
     <div className="requests-container">
       {jobs.length === 0 ? (
-        <p style={{ color: 'white' }}>No job requests found.</p>
+        <p style={{ color: "white" }}>No job requests found.</p>
       ) : (
         jobs.map((job) => (
           <Jobcard
             key={job.id}
             jobId={job.id}
             employer_name={`${job.firstname} ${job.lastname}`}
-            employer_image={job.image || '/girl.png'}
+            employer_image={job.image || "/girl.png"}
             title={job.title}
             desc={job.description}
             experience={job.required_experience}
