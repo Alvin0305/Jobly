@@ -10,7 +10,11 @@ import {
   unpinMessage,
   updateMessage,
 } from "./socketControllers/chatController.js";
-import { createJob, replyJob,JobRequestAccept } from "./socketControllers/jobController.js";
+import {
+  createJob,
+  replyJob,
+  JobRequestAccept,
+} from "./socketControllers/jobController.js";
 import {
   commentPost,
   likePost,

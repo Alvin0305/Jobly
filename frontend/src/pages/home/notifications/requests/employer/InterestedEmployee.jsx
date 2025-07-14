@@ -30,6 +30,19 @@ const InterestedEmployee = () => {
     if (id && user?.token) fetchInterestedEmployees();
   }, [id, user]);
 
+  useEffect(() => {
+    console.log(interestedEmployees);
+    const handleReplydToJob = ({ job_id, id: employee_id, message }) => {
+      console.log("someone replyed to job", job_id, employee_id, message);
+      // re render the tiles using the data got
+    };
+    socket.on("replyd_to_job", handleReplydToJob);
+
+    return () => {
+      socket.off("replyd_to_job", handleReplydToJob);
+    };
+  }, []);
+
   const handleAccept = (employeeId) => {
     if (!user || !user.id) {
       console.warn("User or user.is not available");
@@ -38,9 +51,15 @@ const InterestedEmployee = () => {
 
     console.log("Accepted employee:", employeeId, "for job:", id);
 
+<<<<<<< HEAD
     socket.emit("accepted_job_requests", {
       employerId: user.id,
       jobId: Number(id),
+=======
+    socket.emit("accept_job_request", {
+      employerId: user._id,
+      jobId: id,
+>>>>>>> e256927a9bb4ed4f089c54631c9901da181cfead
       employeeId: employeeId,
     });
     setAccept((prev) => [...prev, employeeId]);

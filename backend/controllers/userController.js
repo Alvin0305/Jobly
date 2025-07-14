@@ -1,13 +1,14 @@
 import {
   deleteUserFunction,
+  findUserById,
   getMutualFriendsFunction,
   getUserFollowersFunction,
   getUserFollowingFunction,
   getUserNotificationsFunction,
   searchUsersFunctions,
   updateUserFunction,
-  findUserById,
   getSuggestedFriends,
+  // getUserByIdFunction,
 } from "../models/user.js";
 
 export const getUserFollowing = async (req, res) => {
@@ -16,7 +17,7 @@ export const getUserFollowing = async (req, res) => {
 
   try {
     const following = await getUserFollowingFunction(user_id);
-    res.status(200).json(following);
+    res.status(200).json({ following });
   } catch (err) {
     console.log("Error fetching following: ", err);
     res.status(500).json({ error: "Internal server error" });
@@ -49,10 +50,9 @@ export const getMutualFriends = async (req, res) => {
   try {
     const mutualFrnds = await getMutualFriendsFunction(user_id);
     const mutualCnt = mutualFrnds.length;
+    console.log(mutualFrnds);
 
-    res
-      .status(200)
-      .json({ mutual_count: mutualCnt, mutual_friends: mutualFrnds });
+    res.status(200).json({ suggestions: mutualFrnds });
   } catch (err) {
     console.error("Error fetching mutual friends: ", err.message);
     res.status(500).json({ error: "Failed to fetch mutual friends " });
@@ -160,7 +160,7 @@ export const suggestFriends = async (req, res) => {
 
   try {
     const result = await getSuggestedFriends(userId);
-    res.status(200).json(result.rows);
+    res.status(200).json({ suggestions: result.rows });
   } catch (err) {
     console.error("Error suggesting friends:", err.message);
     res.status(500).json({ error: "Failed to fetch suggestions" });

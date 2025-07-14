@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import UserTile from "../../../components/UserTile/UserTile";
 import axios from "axios";
+import { uploadUserAvatar } from "../../../services/userService";
+import socket from "../../../socket";
+import { useUser } from "../../../contexts/userContext";
 // import AuthContext from
 
 const Connections = () => {
@@ -8,37 +11,46 @@ const Connections = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const { user } = useUser();
+
   const tabs = ["Followers", "Following", "Suggestions"];
+
+  useEffect(() => {
+    console.log(user);
+  }, []);
 
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem("token");
+        const token = user.token;
         const config = {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         };
         let res;
-        if (active === "Followers")
+        if (active === "Followers") {
           res = await axios.get(
             `${import.meta.env.VITE_API_URL}/api/user/followers`,
             config
           );
-        else if (active === "Following")
+          console.log("followers: ", res.data);
+        } else if (active === "Following") {
           res = await axios.get(
             `${import.meta.env.VITE_API_URL}/api/user/following`,
             config
           );
-        else if (active === "Suggestions")
+          console.log("following: ", res.data);
+        } else if (active === "Suggestions") {
           res = await axios.get(
             `${import.meta.env.VITE_API_URL}/api/user/suggestions`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
           );
-
+          console.log("suggestions: ", res.data);
+        }
         const data =
           res.data.followers ||
           res.data.following ||
