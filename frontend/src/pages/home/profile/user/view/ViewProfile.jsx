@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
 import "./viewprofile.css";
 import axios from "axios";
-import AddDescriptionModal from "./AddDescriptionModal.jsx";
+import { useUser } from "../../../../../contexts/userContext";
 
 const ViewProfile = () => {
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
   const [workexp, setWorkexp] = useState([]);
   const [qualification, setQualification] = useState([]);
   const [interest, setInterest] = useState([]);
   const [skill, setSkill] = useState([]);
   const [desc, setDesc] = useState("");
   const [post, setPost] = useState([]);
+  const { user, setUser } = useUser();
 
   useEffect(() => {
     const fetchUserAndDetails = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token = user.token;
+        console.log(user);
         const res = await axios.get(
           `${import.meta.env.VITE_API_URL}/api/auth/profile`,
           {
@@ -25,12 +27,14 @@ const ViewProfile = () => {
           }
         );
         const userData = res.data;
-        setUser(userData);
+        console.log(userData);
+        console.log(user);
+        setUser((prevUser) => ({ ...prevUser, ...userData }));
 
         const endpoint =
-          userData.role === "Employee"
-            ? `/workexperience/${userData.id}`
-            : `/jobdetails/${userData.id}`;
+          user.role === "Employee"
+            ? `/workexperience/${user.id}`
+            : `/jobdetails/${user.id}`;
         const link = `${import.meta.env.VITE_API_URL}/api/metadata${endpoint}`;
 
         try {
@@ -55,7 +59,7 @@ const ViewProfile = () => {
             }
           );
           console.log(des.data);
-          setDesc(des.data.exp?.description || "");
+          setDesc(des.data.exp?.[0]?.description || "");
         } catch (err) {
           console.error(
             "Error fetching description:",
@@ -123,7 +127,7 @@ const ViewProfile = () => {
             }
           );
           console.log("postRes.data:", postRes.data);
-          setPost(postRes.data.posts);
+          setPost(postRes.data);
         } catch (err) {
           console.error(
             "Error fetching post:",
@@ -143,163 +147,24 @@ const ViewProfile = () => {
 
   if (!user) return <p>Loading user profile...</p>;
 
-  const handleAddQualification = async () => {
-    const token = localStorage.getItem("token");
-    const qualificationName = prompt("Enter qualification:")?.trim();
-
-    if (!user || !user.id) {
-      alert("User not loaded yet.");
-      return;
-    }
-
-    if (!qualificationName) return;
-
-    try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/metadata/qualification/${user.id}`,
-        { qualification: qualificationName },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const newQual = {
-        id: res.data.qualification_id,
-        name: qualificationName,
-      };
-      setQualification((prev) => [...(prev || []), newQual]);
-      console.log("Qualification added");
-    } catch (err) {
-      console.log(
-        "Failed to add qualification",
-        err.response?.data || err.message
-      );
-      alert(
-        "Error: " + (err.response?.data?.error || "Failed to add qualification")
-      );
-    }
-  };
-
-  const handleAddInterest = async () => {
-    const token = localStorage.getItem("token");
-    const interestName = prompt("Enter interest :");
-
-    if (!interestName) return;
-
-    try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/metadata/interest/${user.id}`,
-        { name: interestName },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const newInt = { name: interestName };
-      setInterest((prev) => [...(prev || []), newInt]);
-      console.log("Interest added");
-    } catch (err) {
-      console.log("failed to add interest", err.response?.data || err.message);
-      alert(
-        "Error: " + (err.response?.data?.error || "Failed to add interest")
-      );
-    }
-  };
-
-  const handleAddSkill = async () => {
-    const token = localStorage.getItem("token");
-    const skillName = prompt("Enter skill :");
-
-    if (!skillName) return;
-
-    try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/metadata/skill/${user.id}`,
-        { name: skillName },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const newSkill = { name: skillName };
-      setSkill((prev) => [...(prev || []), newSkill]);
-      console.log("Skill added");
-    } catch (err) {
-      console.log("failed to add skill", err.response?.data || err.message);
-      alert("Error: " + (err.response?.data?.error || "Failed to add skill"));
-    }
-  };
-
-  const handleAddExperience = async () => {
-    const token = localStorage.getItem("token");
-    const companyName = prompt("Enter company name:");
-    const designation = prompt("Enter your designation: ");
-    const location = prompt("Enter location: ");
-    // if employee enter start and end dates
-    const startDate = prompt("Enter start date (YYYY-MM-DD):");
-    const endDate = prompt(
-      "Enter end date (YYYY-MM-DD) or leave empty if still working:"
-    );
-
-    if (!companyName || !designation || !location) {
-      alert("Company, designation and location are required");
-      return;
-    }
-
-    try {
-      const endpoint =
-        user.role === "Employee"
-          ? `/workexperience/${user.id}`
-          : `/jobdetails/${user.id}`;
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/metadata${endpoint}`,
-        {
-          company_name: companyName,
-          designation: designation,
-          location: location,
-          start_date: startDate || null,
-          end_date: endDate || null,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const newExp = {
-        id: res.data.experience_id,
-        company_name: companyName,
-        designation: designation,
-        location: location,
-        start_date: startDate || null,
-        end_date: endDate || null,
-      };
-      setWorkexp((prev) => [...prev, newExp]);
-      console.log("Work experience added");
-    } catch (err) {
-      console.log(
-        "failed to add experience",
-        err.response?.data || err.message
-      );
-      alert(
-        "Error: " + (err.response?.data?.error || "Failed to add experience")
-      );
-    }
-  };
-
   return (
     <div className="outerbox">
       <div className="innerbox">
-        <h3>HII {user.firstname.toUpperCase()},</h3>
+        <h3>Hi! {user.firstname.toUpperCase()},</h3>
         <div className="detailsBox">
-          <img src="./avatar.png" className="profilePic" />
+          <img
+            src={user?.image ? user.image : "/girl.png"}
+            alt="Profile"
+            className="profile-image"
+          />
+
+          {/* <label htmlFor="profilePic">Profile Image</label>
+          <input
+            type="file"
+            id="profilePic"
+            style={{ display: "none" }}
+            onChange={(e) => handleImage(e.target.files[0])}
+          /> */}
           <h2 className="name">
             {user.firstname} {user.lastname}
           </h2>
@@ -311,7 +176,7 @@ const ViewProfile = () => {
       <div className="info">
         <h3>Description</h3>
         <p>{desc}</p>
-        {!desc && <AddDescriptionModal user={user} setDesc={setDesc} />}
+
         <div className="infoRow">
           <label>Graduation</label>
           <div>
@@ -327,21 +192,22 @@ const ViewProfile = () => {
               ))
             )}
           </div>
-          <button onClick={handleAddQualification}>Add +</button>
         </div>
 
         <div className="infoRow">
           <label>Posts</label>
-          <span className="edit-icon">✏️</span>
           <div>
             {(post?.length ?? 0) === 0 ? (
               <div>
                 <p>No Records Found</p>
               </div>
             ) : (
-              (post ?? []).map((item, index) => (
+              post.map((item, index) => (
                 <div className="experienceCard" key={index}>
-                  <h4>{item.name}</h4>
+                  <h4>{item.blog || "Untitled Post"}</h4>
+                  <p>
+                    {item.blog?.substring(0, 100) || "No content available."}
+                  </p>
                 </div>
               ))
             )}
@@ -372,7 +238,6 @@ const ViewProfile = () => {
               </div>
             ))
           )}
-          <button onClick={handleAddExperience}>Add +</button>
         </div>
 
         <div className="infoRow">
@@ -383,7 +248,6 @@ const ViewProfile = () => {
                 {item.name}
               </span>
             ))}
-            <button onClick={handleAddSkill}>Add +</button>
           </div>
         </div>
 
@@ -395,7 +259,6 @@ const ViewProfile = () => {
                 {item.name}
               </span>
             ))}
-            <button onClick={handleAddInterest}>Add +</button>
           </div>
         </div>
       </div>
