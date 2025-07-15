@@ -35,9 +35,9 @@ const SearchPage = () => {
           getUserFollowing(user.token),
         ]);
         console.log(domainResponse);
-        console.log(friendResponse.data);
+        console.log(friendResponse.data.following);
         setDomains(domainResponse.domains);
-        setFriends(friendResponse.data);
+        setFriends(friendResponse.data.following);
       } catch (err) {
         console.error(err);
       }

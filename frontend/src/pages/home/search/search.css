@@ -35,9 +35,9 @@
 }
 
 .search-page-users {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
-  flex-wrap: wrap;
   align-items: flex-start;
   width: 100%;
 }

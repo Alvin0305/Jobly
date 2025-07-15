@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getInterestedEmployees, getSelectedEmployeesForJob } from "../../../../../services/jobService";
+import {
+  getInterestedEmployees,
+  getSelectedEmployeesForJob,
+} from "../../../../../services/jobService";
 import "./interestedemployees.css";
 import { useUser } from "../../../../../contexts/userContext";
 import socket from "../../../../../socket";
@@ -14,11 +17,11 @@ const InterestedEmployee = () => {
   useEffect(() => {
     const fetchInterestedEmployees = async () => {
       try {
-        const acc = await getSelectedEmployeesForJob(id,user.token);
-        const acceptedIds = acc?.map(emp => emp.id) || [];
+        const acc = await getSelectedEmployeesForJob(id, user.token);
+        const acceptedIds = acc?.map((emp) => emp.id) || [];
         setAccept(acceptedIds);
         const res = await getInterestedEmployees(id, user.token);
-      
+
         setInterestedEmployees(res || []);
       } catch (err) {
         console.error("Error fetching interested employees:", err);
@@ -51,15 +54,9 @@ const InterestedEmployee = () => {
 
     console.log("Accepted employee:", employeeId, "for job:", id);
 
-<<<<<<< HEAD
-    socket.emit("accepted_job_requests", {
-      employerId: user.id,
-      jobId: Number(id),
-=======
     socket.emit("accept_job_request", {
       employerId: user._id,
       jobId: id,
->>>>>>> e256927a9bb4ed4f089c54631c9901da181cfead
       employeeId: employeeId,
     });
     setAccept((prev) => [...prev, employeeId]);
@@ -69,16 +66,13 @@ const InterestedEmployee = () => {
     const replyJob = ({ job_id, message, employee }) => {
       console.log("notification received", job_id, message);
       console.log(employee);
-      setInterestedEmployees((prev) => [
-        employee,
-        ...prev,
-      ]);
+      setInterestedEmployees((prev) => [employee, ...prev]);
     };
     socket.on("replyd_to_job", replyJob);
 
     return () => {
       socket.off("replyd_to_job", replyJob);
-    }
+    };
   });
   return (
     <div className="interested-employee-page">
