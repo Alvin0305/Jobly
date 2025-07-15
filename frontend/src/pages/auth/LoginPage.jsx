@@ -67,7 +67,7 @@ const LoginPage = () => {
         pauseOnHover
       />
       <div style={styles.imageSection}>
-        <img src="./office.jpg" />
+        <img src="./login_register.jpg" />
 
         <div style={styles.formOverlay}>
           <div style={styles.loginCard}>
