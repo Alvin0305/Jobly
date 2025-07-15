@@ -17,16 +17,17 @@ body {
 
 .outerbox {
   width: 100%;
-  /* padding: 20px; */
   box-sizing: border-box;
+  overflow-y: auto;
+  margin: 16px 0;
 }
 
 .innerbox {
-  /* background-color: var(--card); */
+  background-color: var(--bg);
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 30px;
-  box-shadow: 0 4px 10px var(--shadow);
+  /* box-shadow: 0 4px 10px var(--shadow); */
 }
 
 .innerbox h3 {
@@ -91,19 +92,17 @@ button:hover {
   align-items: stretch;
 }
 
-/* Uniform Card Styling */
 .infoRow.grid-card {
   background-color: var(--card);
-  padding: 20px;
+  padding: 10px;
   border-radius: 12px;
   box-shadow: 0 2px 6px var(--shadow);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 250px;
+  min-height: 50px;
 }
 
-/* Headings inside cards */
 .infoRow label {
   font-weight: bold;
   color: var(--highlight);
@@ -120,7 +119,6 @@ button:hover {
   color: var(--text);
 }
 
-/* Experience Cards, Posts */
 .experienceCard {
   background: #2f2f2f;
   padding: 10px 15px;
