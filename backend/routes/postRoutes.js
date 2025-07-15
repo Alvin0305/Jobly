@@ -22,9 +22,9 @@ router.delete("/", protect, deletePost);
 router.get("/user/:id", protect, getPostsByUser);
 router.get("/feed/:id", protect, getPostsInFeed);
 router.get("/search", protect, searchPost);
-router.get("/:id", getPostById);
 router.get("/comments/:id", protect, getComments);
 router.post("/comments/:id", protect, addComment);
+router.get("/:id", getPostById);
 // make sure the key value being based is images not image
 router.post(
   "/upload",
