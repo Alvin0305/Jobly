@@ -32,7 +32,7 @@ const Jobcard = ({ jobId, employer_name, employer_image, title, desc, salary, st
       </div>
        
 
-      <div className="footer">
+      <div className="footer-req">
         
         {status === 'Interested' ? (
           <p className="interested">✔ Interested</p>
