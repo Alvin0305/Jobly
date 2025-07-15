@@ -80,7 +80,7 @@ const RegisterPage = () => {
         pauseOnHover
       />
       <div style={styles.imageSection}>
-        <img src="./office 1.jpg" style={styles.bgImg} />
+        <img src="./login_register.jpg" style={styles.bgImg} />
 
         <div style={styles.formOverlay}>
           <div style={styles.loginCard}>
