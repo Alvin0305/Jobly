@@ -132,7 +132,7 @@ const OtherProfile = () => {
       <div className="innerbox">
         <h3>HII {user.firstname.toUpperCase()},</h3>
         <div className="detailsBox">
-          <img src="./avatar.png" className="profilePic" />
+          <img src={user.image} className="profile-image" />
           <h2 className="name">
             {user.firstname} {user.lastname}
           </h2>

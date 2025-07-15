@@ -73,7 +73,7 @@ const LoginPage = () => {
       />
 
       <div className="login-card">
-        <h1>Login</h1>
+        <h1>Sign In</h1>
         <p>Welcome Back !!!</p>
 
         <div>
@@ -100,7 +100,7 @@ const LoginPage = () => {
           </div>
 
           <button className="loginbutton" onClick={handleSubmit}>
-            LOGIN
+            SIGN IN
           </button>
 
           <div className="signup-link">

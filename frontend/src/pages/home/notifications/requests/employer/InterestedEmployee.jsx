@@ -76,7 +76,7 @@ const InterestedEmployee = () => {
   });
   return (
     <div className="interested-employee-page">
-      <h2>Interested Employees for Job #{id}</h2>
+      <h2>Interested Employees for Job</h2>
       {loading ? (
         <p>Loading...</p>
       ) : interestedEmployees.length === 0 ? (

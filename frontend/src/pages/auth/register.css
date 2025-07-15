@@ -113,3 +113,13 @@
 .signup-card .login-link a:hover {
   text-decoration: underline;
 }
+
+@media (max-width: 768px) {
+  .name-fields {
+    flex-direction: column;
+  }
+
+  .signup-container {
+    background-image: none;
+  }
+}

@@ -138,3 +138,9 @@
   opacity: 0.9;
   margin-top: 20px;
 }
+
+@media (max-width: 768px) {
+  .about-section {
+    margin: 20px;
+  }
+}

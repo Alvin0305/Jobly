@@ -52,7 +52,7 @@ const ChatBox = () => {
   }, [chat]);
 
   useEffect(() => {
-    endOfChatRef?.current?.scrollIntoView({ behavior: "smooth" });
+    // endOfChatRef?.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   useEffect(() => {
@@ -209,7 +209,7 @@ const ChatBox = () => {
   };
 
   const scrollToBottom = () => {
-    endOfChatRef?.current?.scrollIntoView({ behavior: "smooth" });
+    // endOfChatRef?.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {

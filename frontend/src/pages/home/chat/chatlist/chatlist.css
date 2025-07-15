@@ -53,3 +53,9 @@
   font-size: small;
   color: bisque;
 }
+
+@media (max-width: 768px) {
+  .chat-list {
+    width: 100%;
+  }
+}

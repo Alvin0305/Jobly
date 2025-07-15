@@ -24,7 +24,7 @@ const Chat = () => {
         </div>
       ) : (
         <div className="empty-chat">
-          <h1>SELECT A CHAT TO TALK</h1>
+          <h1 className="m10">SELECT A CHAT TO TALK</h1>
         </div>
       )}
     </div>

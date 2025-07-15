@@ -21,7 +21,9 @@ const UserTile = ({ user, isFriend }) => {
   return (
     <div
       className="user-tile"
-      onClick={() => navigate("/home/profile/other", { state: { user: user } })}
+      onClick={() =>
+        navigate(`/home/profile/other/${user.id}`, { state: { user: user } })
+      }
     >
       <img src={user?.image} alt="Avatar" className="user-tile-avatar" />
       <h2 className="user-tile-name m0">

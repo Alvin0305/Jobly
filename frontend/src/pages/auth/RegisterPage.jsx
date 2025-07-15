@@ -144,7 +144,8 @@ const RegisterPage = () => {
           <button onClick={handleSubmit}>SIGNUP</button>
 
           <div className="login-link">
-            Already have an Account? <Link onClick={handleRegister}>LogIn</Link>
+            Already have an Account?{" "}
+            <Link onClick={handleRegister}>Sign In</Link>
           </div>
         </div>
       </div>
