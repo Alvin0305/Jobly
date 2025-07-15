@@ -1,0 +1,47 @@
+.con {
+  min-height: 100vh;
+  background-color: #1e1e1e;
+  color: white;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.tab {
+  padding: 8px 16px;
+  border-radius: 8px;
+  background-color: transparent;
+  color: white;
+  border: 1px solid #4a4a4a;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.tab:hover,
+.tab.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.loading-text {
+  color: #b0b0b0;
+  margin-top: 12px;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.tile-wrapper {
+  flex: 1 1 calc(33.33% - 16px);
+  min-width: 250px;
+}

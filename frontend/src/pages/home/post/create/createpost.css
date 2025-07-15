@@ -53,6 +53,7 @@
   padding: 10px;
   font-size: large;
   resize: none;
+  height: 200px;
 }
 
 .create-post-blog:focus,
@@ -68,7 +69,7 @@
   box-sizing: border-box;
   border-radius: 5px;
   resize: vertical;
-  min-height: 150px;
+  min-height: 100px;
   padding: 10px;
 }
 
@@ -132,8 +133,9 @@
   cursor: pointer;
 }
 
-.create-post-button:hover {
-  background-color: var(--color-hover);
+.create-post-button:hover,
+.create-post-button:active {
+  background-color: #007bff;
 }
 
 .create-post-show-domains-div {
@@ -160,7 +162,7 @@
 
 .create-post-toggle-slider {
   position: absolute;
-  top: 0;
+  top: 1;
   bottom: 0;
   width: 100px;
   background-color: var(--color-text-area);
@@ -171,7 +173,7 @@
 
 .create-page-toggle {
   position: relative;
-  z-index: 1;
+  /* z-index: 1; */
   width: 100px;
   border: none;
   background-color: transparent;
@@ -182,6 +184,7 @@
 
 .create-page-active-toggle {
   color: white;
+  background-color: #007bff;
 }
 
 .create-post-images-preview {
