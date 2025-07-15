@@ -11,6 +11,7 @@ const SideBarButton = ({ name, iconName }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
+    setTab(name);
     if (name === "Log Out") {
       console.info("here");
       setUser(null);
@@ -27,7 +28,7 @@ const SideBarButton = ({ name, iconName }) => {
       Notifications: "/home/notifications",
       Chats: "/chat",
       Profile: "/home/profile/user/view",
-      Settings:"/home/settings"
+      Settings: "/home/settings",
     };
 
     navigate(pathMap[name] || "/home");
