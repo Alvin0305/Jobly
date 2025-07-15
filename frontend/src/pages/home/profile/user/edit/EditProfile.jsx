@@ -406,6 +406,142 @@ const EditProfile = () => {
     }
   };
 
+  const handleAddExperience = async () => {
+    const token = localStorage.getItem("token");
+    const user_id = user?.id;
+
+    const company_name = prompt("Enter company name:")?.trim();
+    const designation = prompt("Enter designation:")?.trim();
+    const location = prompt("Enter location:")?.trim();
+    const start_date = prompt("Enter start date (YYYY-MM-DD):")?.trim();
+    const end_date = prompt("Enter end date (YYYY-MM-DD):")?.trim();
+
+    if (!company_name || !designation || !location || !start_date) {
+      alert("All fields except end date are required.");
+      return;
+    }
+
+    try {
+      const res = await axios.post(
+        `${
+          import.meta.env.VITE_API_URL
+        }/api/metadata/workexperience/${user_id}`,
+        {
+          company_name,
+          designation,
+          location,
+          start_date,
+          end_date: end_date || null,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const newExp = res.data.newExperience;
+      setWorkexp((prev) => [...prev, newExp]);
+      alert("Work experience added successfully");
+    } catch (err) {
+      console.error(
+        "Failed to add work experience",
+        err.response?.data || err.message
+      );
+      alert("Error adding experience");
+    }
+  };
+
+  const handleAddQualification = async () => {
+    const token = localStorage.getItem("token");
+    const qualificationName = prompt("Enter qualification:")?.trim();
+
+    if (!user || !user.id) {
+      alert("User not loaded yet.");
+      return;
+    }
+
+    if (!qualificationName) return;
+
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/metadata/qualification/${user.id}`,
+        { qualification: qualificationName },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const newQual = { name: qualificationName };
+      setQualification((prev = []) => [...prev, newQual]);
+      console.log("Qualification added");
+    } catch (err) {
+      console.log(
+        "Failed to add qualification",
+        err.response?.data || err.message
+      );
+      alert(
+        "Error: " + (err.response?.data?.error || "Failed to add qualification")
+      );
+    }
+  };
+
+  const handleAddInterest = async () => {
+    const token = localStorage.getItem("token");
+    const interestName = prompt("Enter interest :");
+
+    if (!interestName) return;
+
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/metadata/interest/${user.id}`,
+        { name: interestName },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const newInt = { name: interestName };
+      setInterest((prev = []) => [...prev, newInt]);
+      console.log("Interest added");
+    } catch (err) {
+      console.log("failed to add interest", err.response?.data || err.message);
+      alert(
+        "Error: " + (err.response?.data?.error || "Failed to add interest")
+      );
+    }
+  };
+
+  const handleAddSkill = async () => {
+    const token = localStorage.getItem("token");
+    const skillName = prompt("Enter skill :");
+
+    if (!skillName) return;
+
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/metadata/skill/${user.id}`,
+        { name: skillName },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const newSkill = { name: skillName };
+      setSkill((prev) => [...(prev || []), newSkill]);
+      console.log("Skill added");
+    } catch (err) {
+      console.log("failed to add skill", err.response?.data || err.message);
+      alert("Error: " + (err.response?.data?.error || "Failed to add skill"));
+    }
+  };
+
   return (
     <div className="outerbox">
       <div className="innerbox">
@@ -457,12 +593,12 @@ const EditProfile = () => {
                 </div>
               ))
             )}
+            <button onClick={() => handleAddQualification()}>Add +</button>
           </div>
         </div>
 
         <div className="infoRow">
           <label>Posts</label>
-          <span className="edit-icon">✏️</span>
           <div>
             {(post?.length ?? 0) === 0 ? (
               <div>
@@ -500,19 +636,11 @@ const EditProfile = () => {
                   </>
                 )}
 
-                <button
-                  onClick={() => handleEditExperience(item.id, item.name)}
-                >
-                  ✏️
-                </button>
-                <button
-                  onClick={() => handleDeleteQualification(item.id, item.name)}
-                >
-                  🗑️
-                </button>
+                <button onClick={() => handleEditExperience(item)}>✏️</button>
               </div>
             ))
           )}
+          <button onClick={() => handleAddExperience()}>Add +</button>
         </div>
 
         <div className="infoRow">
@@ -529,6 +657,7 @@ const EditProfile = () => {
                 </button>
               </span>
             ))}
+            <button onClick={() => handleAddSkill()}>Add +</button>
           </div>
         </div>
 
@@ -548,6 +677,7 @@ const EditProfile = () => {
                 </button>
               </span>
             ))}
+            <button onClick={() => handleAddInterest()}>Add +</button>
           </div>
         </div>
       </div>
