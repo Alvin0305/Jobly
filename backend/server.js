@@ -56,11 +56,9 @@ app.use("/api/chat", chatRoutes);
 // --- ADD THIS "catch-all" handler ---
 // This must be the LAST route in your file
 app.get("*", (req, res) => {
-  // IMPORTANT: Adjust the path if your frontend build folder is located elsewhere
+  //          IMPORTANT: Adjust the path if your frontend build folder is located elsewhere
   res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
 });
-// --- END OF ADDITION ---
-
 const PORT = process.env.PORT;
 server.listen(PORT, () => {
   console.log(`Server running on port http://localhost:${PORT}`);
