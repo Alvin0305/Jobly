@@ -7,8 +7,9 @@ export const searchUsers = (
   searchValue,
   limit,
   offset
-) =>
-  axios.post(
+) => {
+  console.log(token);
+  return axios.post(
     `/api/user/search`,
     { tags, isEmployee, searchValue },
     {
@@ -16,6 +17,7 @@ export const searchUsers = (
       params: { limit, offset },
     }
   );
+};
 
 export const getUserFollowers = (token) =>
   axios.get(`api/user/followers`, {

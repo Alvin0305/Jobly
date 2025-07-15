@@ -103,9 +103,12 @@ const ChatList = () => {
     const fetchUsers = async () => {
       try {
         const response = await searchUsers(
-          { searchValue: searchValue.trim() },
-          user?.token
+          user.token,
+          [],
+          null,
+          searchValue.trim()
         );
+
         const output = response.data.users.filter((u) => u.id !== user.id);
         setSearchResult(output);
       } catch (err) {

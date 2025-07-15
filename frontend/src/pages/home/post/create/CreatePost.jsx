@@ -84,7 +84,7 @@ const CreatePost = () => {
 
   return (
     <form className="create-post-page">
-      <div className="flex width-100 space-between">
+      <div className="flex width-100 space-between create-post-top-buttons">
         <div className="create-post-toggle-group">
           <div
             className="create-post-toggle-slider"

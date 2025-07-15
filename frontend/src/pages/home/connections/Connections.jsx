@@ -89,9 +89,7 @@ const Connections = () => {
       ) : (
         <div className="tiles">
           {users.map((user) => (
-            <div className="tile-wrapper" key={user.id}>
-              <UserTile user={user} />
-            </div>
+            <UserTile user={user} />
           ))}
         </div>
       )}
