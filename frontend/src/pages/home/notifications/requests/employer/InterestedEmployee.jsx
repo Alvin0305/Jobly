@@ -54,9 +54,9 @@ const InterestedEmployee = () => {
 
     console.log("Accepted employee:", employeeId, "for job:", id);
 
-    socket.emit("accept_job_request", {
-      employerId: user._id,
-      jobId: id,
+    socket.emit("accepted_job_requests", {
+      employerId: user.id,
+      jobId: Number(id),
       employeeId: employeeId,
     });
     setAccept((prev) => [...prev, employeeId]);

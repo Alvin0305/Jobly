@@ -1,7 +1,28 @@
 .job-info {
   cursor: pointer;
+  margin-bottom:12px;
+}
+.employer-requests {
+  padding: 24px;
 }
 
+.heading {
+  font-size: 24px;
+  color: #fff;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.message {
+  text-align: center;
+  color: #bbb;
+}
+.job-list {
+  display:flex;
+  flex-wrap:wrap;
+  gap:20px;
+  justify-content:center;
+}
 .job-card {
   
   border: 1px solid #ddd;
@@ -21,7 +42,7 @@
 
 .view-btn {
   margin-top: 12px;
-  padding: 8px 14px;
+  padding: 6px 10px;
   background-color: #007bff;
   color: white;
   border: none;
