@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import UserTile from "../../../components/UserTile/UserTile";
 import axios from "axios";
-import { uploadUserAvatar } from "../../../services/userService";
-import socket from "../../../socket";
 import { useUser } from "../../../contexts/userContext";
-// import AuthContext from
+import "./connections.css";
 
 const Connections = () => {
   const [active, setActive] = useState("Followers");
@@ -71,16 +69,12 @@ const Connections = () => {
   }, [active]);
 
   return (
-    <div className="min-h-screen bg-[#1e1e1e] text-white p-4">
-      <div className="flex space-x-4 mb-6">
+    <div className="con">
+      <div className="tabs">
         {tabs.map((tab) => (
           <button
             key={tab}
-            className={`px-4 py-2 rounded-lg ${
-              active === tab
-                ? "bg-[#2e2e2e] text-white"
-                : "bg-[#3a3a3a] text-gray-400"
-            }`}
+            className={`tab ${active === tab ? "active" : ""}`}
             onClick={() => setActive(tab)}
           >
             {tab}
@@ -89,13 +83,15 @@ const Connections = () => {
       </div>
 
       {loading ? (
-        <p className="text-gray-400">Loading {active.toLowerCase()}...</p>
+        <p className="loading-text">Loading {active.toLowerCase()}...</p>
       ) : users.length === 0 ? (
-        <p className="text-gray-400">No {active.toLowerCase()} found.</p>
+        <p className="loading-text">No {active.toLowerCase()} found.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="tiles">
           {users.map((user) => (
-            <UserTile key={user.id} user={user} />
+            <div className="tile-wrapper" key={user.id}>
+              <UserTile user={user} />
+            </div>
           ))}
         </div>
       )}

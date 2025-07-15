@@ -6,7 +6,6 @@ import { createPost, uploadPostImages } from "../../../../services/postService";
 import { useUser } from "../../../../contexts/userContext";
 import { useNavigate } from "react-router-dom";
 import FeedBubble from "../../../../components/FeedBubble/FeedBubble";
-import PostTile from "../../../../components/PostTile/PostTile";
 import { toast } from "react-toastify";
 
 const CreatePost = () => {
@@ -123,29 +122,38 @@ const CreatePost = () => {
       </div>
 
       <div className="create-post-top">
-        <label
-          htmlFor="create-post-image-input"
-          className="create-post-add-image"
-        >
-          <Icon icon="lucide:plus" className="create-post-add-image-button" />
-        </label>
-        <input
-          id="create-post-image-input"
-          type="file"
-          multiple
-          onChange={(e) => setSelectedFiles(Array.from(e.target.files))}
-          style={{ display: "none" }}
-          disabled={selectedOption !== "Images"}
-        />
-        <textarea
-          value={blog}
-          name="blog"
-          placeholder="Blog..."
-          onChange={(e) => setBlog(e.target.value)}
-          className="create-post-blog"
-          disabled={selectedOption !== "Blog"}
-        />
+        {selectedOption === "Images" && (
+          <>
+            <label
+              htmlFor="create-post-image-input"
+              className="create-post-add-image"
+            >
+              <Icon
+                icon="lucide:plus"
+                className="create-post-add-image-button"
+              />
+            </label>
+            <input
+              id="create-post-image-input"
+              type="file"
+              multiple
+              onChange={(e) => setSelectedFiles(Array.from(e.target.files))}
+              style={{ display: "none" }}
+            />
+          </>
+        )}
+
+        {selectedOption === "Blog" && (
+          <textarea
+            value={blog}
+            name="blog"
+            placeholder="Blog..."
+            onChange={(e) => setBlog(e.target.value)}
+            className="create-post-blog"
+          />
+        )}
       </div>
+
       <textarea
         name="blog"
         value={description}
