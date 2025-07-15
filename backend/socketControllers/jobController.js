@@ -5,7 +5,8 @@ import {
 } from "../models/job.js";
 import pool from "../db.js";
 import { insertNotification } from "../models/notification.js";
-export const createJob = async (jobData) => {
+import { findUserById } from "../models/user.js";
+export const createJob = async (jobData, io) => {
   const {
     employer_id,
     title,
@@ -19,7 +20,7 @@ export const createJob = async (jobData) => {
 
   // insert into the job table
   try {
-    const { job_id } = await createJobFunction(
+    const job = await createJobFunction(
       employer_id,
       title,
       company_name,
@@ -62,7 +63,7 @@ export const createJob = async (jobData) => {
 
 export const replyJob = async (employee_id, job_id, io) => {
   // insert into job reply
-  console.log("employee", employee_id, "replied to job", job_id);
+  console.log("employee id and job id in backend", employee_id, job_id);
   try {
     const reply = await addEmployeeToInterestedFunction(employee_id, job_id);
     // get the employer id from the job using the job_id
@@ -76,10 +77,11 @@ export const replyJob = async (employee_id, job_id, io) => {
 
     // and send the signal to him
     // ---- example ------
-    console.log("employer_id", employerId);
+    const employee = await findUserById(employee_id);
+    console.log("employee in backend", employee);
     io.to(`user_${employerId}`).emit("replyd_to_job", {
       job_id,
-      employee_id,
+      employee,
       message: "Someone has shown interest in your job post",
     });
     return { success: true };
@@ -100,13 +102,13 @@ export const JobRequestAccept = async (
     await selectEmployeeForJobFunction(job_id, employee_id);
 
     // Create notification
-    await insertNotification({
-      sender_id: employer_id,
-      receiver_id: employee_id,
-      content: "You have been accepted for the job.",
-      post_id: job_id,
-      type: "Job-Accepted",
-    });
+    // await insertNotification({
+    //   sender_id: employer_id,
+    //   receiver_id: employee_id,
+    //   content: 'You have been accepted for the job.',
+    //   post_id: job_id,
+    //   type: 'Job-Accepted'
+    // });
 
     // Emit socket to employee
     io.to(`user_${employee_id}`).emit("job-accepted", {

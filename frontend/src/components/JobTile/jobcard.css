@@ -66,14 +66,14 @@
     color: #ddd;
   }
   
-  .footer {
+   .footer-req {
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
+  } 
   
   .salary {
-    background-color: #4a55ff;
+   background-color: #4a55ff;
     padding: 0.4rem 0.8rem;
     border-radius: 5px;
     font-weight: bold;

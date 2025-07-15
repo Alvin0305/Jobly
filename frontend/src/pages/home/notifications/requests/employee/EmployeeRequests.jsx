@@ -60,12 +60,7 @@ const EmployeeRequests = () => {
       setJobs((prevJobs) =>
         prevJobs.map((job) => {
           console.log(
-            job.id,
-            job_id,
-            job.id === job_id,
-            job.acceptanceStatus,
-            typeof job.id,
-            typeof job_id
+           job
           );
           return job.id === job_id
             ? { ...job, acceptanceStatus: "Accepted" }
@@ -109,7 +104,7 @@ const EmployeeRequests = () => {
             key={job.id}
             jobId={job.id}
             employer_name={`${job.firstname} ${job.lastname}`}
-            employer_image={job.image || "/girl.png"}
+            employer_image={job.employer_image || "/girl.png"}
             title={job.title}
             desc={job.description}
             experience={job.required_experience}
