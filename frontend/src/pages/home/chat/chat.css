@@ -29,3 +29,9 @@
   height: 50px;
   object-fit: cover;
 }
+
+@media (max-width: 768px) {
+  .chat-page-content {
+    max-width: 100%;
+  }
+}

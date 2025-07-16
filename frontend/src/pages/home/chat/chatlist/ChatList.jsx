@@ -12,7 +12,7 @@ import { useChatList } from "../../../../contexts/chatlistContext";
 import ChatTile from "./ChatTile/ChatTile";
 import { useChat } from "../../../../contexts/chatContext";
 
-const ChatList = () => {
+const ChatList = ({ setCurrentTab }) => {
   const iconSize = 24;
   const { user } = useUser();
   const { chatlist, setChatList } = useChatList();
@@ -172,7 +172,7 @@ const ChatList = () => {
         <div className="chat-list-content width-100">
           <div className="chat-list-known width-100">
             {(chatlist || []).map((chat, index) => (
-              <ChatTile chat={chat} key={index} />
+              <ChatTile chat={chat} key={index} setCurrentTab={setCurrentTab} />
             ))}
             {chatlist.length === 0 && (
               <p className="chat-list-log">No users in Chatlist</p>

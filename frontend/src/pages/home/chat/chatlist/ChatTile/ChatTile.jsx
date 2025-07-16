@@ -2,10 +2,11 @@ import React from "react";
 import "./chattile.css";
 import { useChat } from "../../../../../contexts/chatContext";
 
-const ChatTile = ({ chat }) => {
+const ChatTile = ({ chat, setCurrentTab }) => {
   const { setChat } = useChat();
   const handleClick = () => {
     setChat(chat);
+    setCurrentTab("chatbox");
   };
 
   return (

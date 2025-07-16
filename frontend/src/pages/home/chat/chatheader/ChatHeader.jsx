@@ -4,13 +4,18 @@ import "./chatheader.css";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useNavigate } from "react-router-dom";
 
-const ChatHeader = () => {
+const ChatHeader = ({ setCurrentTab }) => {
   const { chat, setChat } = useChat();
   const iconSize = 32;
   const navigate = useNavigate();
   const handleBack = () => {
     setChat(null);
-    navigate("/home");
+    const width = window.innerWidth;
+    if (width < 768) {
+      setCurrentTab("chatlist");
+    } else {
+      navigate("/home");
+    }
   };
   return (
     <div className="chat-header">
