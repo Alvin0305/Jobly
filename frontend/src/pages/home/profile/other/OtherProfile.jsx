@@ -266,7 +266,7 @@ const OtherProfile = () => {
 
         <div className="infoRow grid-card">
           <label>Skills</label>
-          <div>
+          <div className="skill-container">
             {skill.map((item, i) => (
               <span key={i} className="skill-pill">
                 {item.name}
@@ -277,7 +277,7 @@ const OtherProfile = () => {
 
         <div className="infoRow grid-card">
           <label>Interests</label>
-          <div>
+          <div className="skill-container">
             {interest.map((item, i) => (
               <span key={i} className="skill-pill">
                 {item.name}

@@ -126,7 +126,11 @@ button:hover {
   margin: 8px 0;
   box-shadow: 0 1px 4px var(--shadow);
 }
-
+.skill-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 .skill-pill {
   background: #3a3a3a;
   color: white;
@@ -134,6 +138,8 @@ button:hover {
   border-radius: 20px;
   margin: 4px 6px 4px 0;
   font-size: 13px;
+
+  width: 25%;
 }
 
 .postCard {
