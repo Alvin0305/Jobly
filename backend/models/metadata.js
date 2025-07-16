@@ -268,21 +268,40 @@ export const getJobDetailsFunction = async (user_id) => {
 
 export const createDescriptionFunction = async (user_id, description) => {
   try {
-    const res = await pool.query(
-      `INSERT INTO user_descriptions (user_id, description)
-       VALUES ($1, $2)
-       ON CONFLICT (user_id)
-       DO UPDATE SET description = EXCLUDED.description
-       RETURNING id`,
-      [user_id, description]
+    console.log("user_id: ", user_id);
+    const result = await pool.query(
+      `SELECT * FROM user_descriptions WHERE user_id = $1`,
+      [user_id]
     );
+
+    let res;
+    console.log("prev: ", result);
+    if (result.rowCount) {
+      console.log("updating");
+      res = await pool.query(
+        `UPDATE user_descriptions 
+        SET description = $1 
+        WHERE user_id = $2`,
+        [description, user_id]
+      );
+    } else {
+      console.log("creating");
+      res = await pool.query(
+        `INSERT INTO user_descriptions (user_id, description)
+       VALUES ($1, $2)
+       RETURNING id`,
+        [user_id, description]
+      );
+    }
+
     return {
       success: true,
-      experience_id: res.rows[0].id,
+      experience_id: res?.rows[0]?.id,
       message: "Description added successfully",
     };
   } catch (err) {
-    console.log("createDescription error:", err.message);
+    // console.log("createDescription error:", err.message);
+    console.log(err);
     return {
       success: false,
       message: "Failed to create description",

@@ -1,29 +1,57 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SideBar from "./sidebar/SideBar";
 import { useTab } from "../../contexts/tabContext";
-import { useEffect } from "react";
-import Feed from "./feed/Feed";
-import Connections from "./connections/Connections";
-import CreatePost from "./post/create/CreatePost";
-import SearchPage from "./search/SearchPage";
-import Notifications from "./notifications/Notifications";
-import Chat from "./chat/Chat";
-import ViewProfile from "./profile/user/view/ViewProfile";
+import { Outlet, useLocation } from "react-router-dom";
 import "./home.css";
-import CreateJob from "./job/create/CreateJob";
-import ViewPost from "./post/view/ViewPost";
-import { Outlet } from "react-router-dom";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 const HomePage = () => {
-  const { tab, setTab } = useTab();
+  const { setTab } = useTab();
+  const [showSidebar, setShowSidebar] = useState(false);
+  const sidebarRef = useRef(null);
+  const location = useLocation();
 
   useEffect(() => {
     setTab("Home");
   }, []);
 
+  // Close sidebar on route change (on mobile)
+  useEffect(() => {
+    setShowSidebar(false);
+  }, [location.pathname]);
+
+  // Click outside to close
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(e.target) &&
+        e.target.closest(".sidebar-toggle") == null
+      ) {
+        setShowSidebar(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <div className="homepage">
-      <SideBar />
+      <button
+        className="sidebar-toggle"
+        onClick={() => setShowSidebar((prev) => !prev)}
+      >
+        <Icon icon="lucide:menu" width={32} height={32} color="white" />
+      </button>
+
+      <div
+        className={`sidebar-wrapper ${showSidebar ? "show" : ""}`}
+        ref={sidebarRef}
+      >
+        <SideBar />
+      </div>
+
       <div className="homepage-content">
         <Outlet />
       </div>

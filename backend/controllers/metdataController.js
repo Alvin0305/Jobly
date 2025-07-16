@@ -279,6 +279,7 @@ export const getJobDetails = async (req, res) => {
 };
 
 export const createDescription = async (req, res) => {
+  console.log("creating description");
   const user_id = req.params?.id || req.user?.id;
   const { description } = req.body;
 
@@ -298,7 +299,8 @@ export const createDescription = async (req, res) => {
       res.status(500).json(result);
     }
   } catch (err) {
-    console.error("createDescription controller error:", err.message);
+    // console.error("createDescription controller error:", err.message);
+    console.log(err);
     res.status(500).json({
       success: false,
       message: "Unexpected server error",

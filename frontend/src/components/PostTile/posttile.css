@@ -73,3 +73,12 @@
 .liked-icon * {
   fill: white;
 }
+
+@media (max-width: 768px) {
+  .post-tile {
+    width: 100% !important;
+    min-width: unset !important;
+    max-width: unset !important;
+    flex: 1 0 100% !important;
+  }
+}

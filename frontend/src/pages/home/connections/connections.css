@@ -38,10 +38,12 @@
 .tiles {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+
+  gap: 16px 16px;
 }
 
-.tile-wrapper {
-  flex: 1 1 calc(33.33% - 16px);
-  min-width: 250px;
+@media (max-width: 768px) {
+  .tiles {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }

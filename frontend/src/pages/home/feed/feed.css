@@ -210,3 +210,9 @@
 .view-post-comment-text {
   margin: 0;
 }
+
+@media (max-width: 768px) {
+  .feed-drop-down {
+    width: 100%;
+  }
+}

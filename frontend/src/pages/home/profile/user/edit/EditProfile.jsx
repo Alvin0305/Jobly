@@ -648,13 +648,15 @@ const EditProfile = () => {
           <div>
             {skill.map((item, i) => (
               <span key={i} className="skill-pill">
-                {item.name}
-                <button onClick={() => handleEditSkill(item.id, item.name)}>
-                  ✏️
-                </button>
-                <button onClick={() => handleDeleteSkill(item.id, item.name)}>
-                  🗑️
-                </button>
+                <h4 className="skill-pill-text">{item.name}</h4>
+                <div className="flex gap-10">
+                  <button onClick={() => handleEditSkill(item.id, item.name)}>
+                    ✏️
+                  </button>
+                  <button onClick={() => handleDeleteSkill(item.id, item.name)}>
+                    🗑️
+                  </button>
+                </div>
               </span>
             ))}
             <button onClick={() => handleAddSkill()}>Add +</button>
@@ -666,15 +668,19 @@ const EditProfile = () => {
           <div>
             {interest.map((item, i) => (
               <span key={i} className="skill-pill">
-                {item.name}
-                <button onClick={() => handleEditInterest(item.id, item.name)}>
-                  ✏️
-                </button>
-                <button
-                  onClick={() => handleDeleteInterest(item.id, item.name)}
-                >
-                  🗑️
-                </button>
+                <h4>{item.name}</h4>
+                <div className="flex gap-10">
+                  <button
+                    onClick={() => handleEditInterest(item.id, item.name)}
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    onClick={() => handleDeleteInterest(item.id, item.name)}
+                  >
+                    🗑️
+                  </button>
+                </div>
               </span>
             ))}
             <button onClick={() => handleAddInterest()}>Add +</button>

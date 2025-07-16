@@ -10,6 +10,8 @@ import {
 import "../create/createjob.css";
 import socket from "../../../../socket/index.js";
 import { useUser } from "../../../../contexts/userContext.jsx";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const CreateJob = () => {
   const [caption, setCaption] = useState("");
@@ -71,6 +73,7 @@ const CreateJob = () => {
   };
 
   const { user } = useUser();
+  const navigate = useNavigate();
 
   const handlePostJob = async () => {
     const token = localStorage.getItem("token");
@@ -128,6 +131,8 @@ const CreateJob = () => {
       //   // Optionally reset fields here
       // }
       socket.emit("create_job", payload);
+      toast.success("Job created successfully");
+      navigate("/home");
     } catch (error) {
       console.error("Error posting job:", error.response?.data || error);
       alert("Failed to post job.");
@@ -161,23 +166,27 @@ const CreateJob = () => {
             placeholder="Company name.."
             value={company}
             onChange={(e) => setCompany(e.target.value)}
+            className="create-job-input"
           />
           <input
             type="text"
             placeholder="Job title.."
             value={caption}
             onChange={(e) => setCaption(e.target.value)}
+            className="create-job-input"
           />
           <textarea
             placeholder="Description.."
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            className="create-job-input"
           />
           <input
             type="number"
             placeholder="Salary.."
             value={salary}
             onChange={(e) => setSalary(e.target.value)}
+            className="create-job-input"
           />
         </div>
       </div>

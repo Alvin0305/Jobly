@@ -229,3 +229,21 @@
     transform: rotate(360deg);
   }
 }
+
+@media (max-width: 768px) {
+  .create-post-top-buttons {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .create-post-add-image {
+    aspect-ratio: unset;
+    flex: 1;
+    height: 200px;
+  }
+
+  .create-post-page .post-tile {
+    height: 200px;
+    max-height: fit-content !important;
+  }
+}

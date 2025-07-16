@@ -100,7 +100,19 @@ button {
   color: white;
   padding: 5px 10px;
   border-radius: 16px;
-  display: inline-block;
   margin: 4px;
   font-size: 12px;
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.skill-pill-text {
+}
+
+@media (max-width: 768px) {
+  .skill-pill {
+  }
 }
