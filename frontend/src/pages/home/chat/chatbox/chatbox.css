@@ -1,6 +1,8 @@
+/* chatbox.css */
+
 .chat-box {
   width: 100%;
-  flex: 1;
+  flex: 1; /* This is KEY: It tells the chatbox to take all available vertical space */
   background-color: var(--color-primary);
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
@@ -8,18 +10,24 @@
   flex-direction: column;
   padding: 10px;
   box-sizing: border-box;
-  max-height: calc(100% - 80px);
+  /* === REMOVE THIS LINE === */
+  /* max-height: calc(100% - 80px); */ /* This is brittle and conflicts with flex: 1 */
   position: relative;
+  /* This is a crucial fix for flex children that need to scroll. */
+  /* It allows the component to shrink below its content's intrinsic size. */
+  min-height: 0;
 }
 
 .chat-box-content {
-  flex: 1;
+  flex: 1; /* This is KEY: The message list should take all available space inside the chat-box */
   display: flex;
   flex-direction: column;
   gap: 5px;
   margin-bottom: 10px;
-  overflow-y: auto;
+  overflow-y: auto; /* This enables scrolling ONLY for the messages */
   box-sizing: border-box;
+  /* Add this for a better scrolling experience on mobile */
+  -webkit-overflow-scrolling: touch;
 }
 
 .chat-box-content::-webkit-scrollbar {
@@ -34,6 +42,8 @@
   padding: 5px 10px;
   border-radius: 5px;
   box-sizing: border-box;
+  /* This ensures the message bar doesn't shrink */
+  flex-shrink: 0;
 }
 
 .chat-box-message-input {
@@ -64,6 +74,8 @@
   align-items: center;
   margin-bottom: 10px;
   border-radius: 5px;
+  /* This ensures the pinned message doesn't shrink */
+  flex-shrink: 0;
 }
 
 .pinned-message-content {
@@ -81,8 +93,11 @@
   padding: 10px;
   box-sizing: border-box;
   border-radius: 5px;
+  /* This ensures banners don't shrink */
+  flex-shrink: 0;
 }
 
+/* ... (rest of your banner and icon styles are fine) ... */
 .reply-banner-content,
 .edit-banner-content,
 .file-banner-content {
@@ -129,6 +144,9 @@
 @media (max-width: 768px) {
   .chat-box {
     max-width: 100%;
-    max-height: 100%;
+    /* === REMOVE THIS LINE === */
+    /* max-height: 100%; */ /* This was the main cause of the overflow */
+    /* Ensure no radius when it's part of the full-screen view */
+    border-radius: 0;
   }
 }
