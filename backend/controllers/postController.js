@@ -72,7 +72,8 @@ export const deletePost = async (req, res) => {
 export const getPostsByUser = async (req, res) => {
   // use the get posts by user function in the post model to get all the posts created by the user
   try {
-    const user_id = parseInt(req.params.id, 10);
+    const user_id = req.params.id;
+    console.log("user:", user_id);
     if (isNaN(user_id))
       return res.status(400).json({ error: "Userid invalid" });
     const posts = await getPostsByUserFunction(user_id);

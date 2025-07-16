@@ -64,6 +64,22 @@ const OtherProfile = () => {
         }
 
         try {
+          const postRes = await axios.get(
+            `${import.meta.env.VITE_API_URL}/api/post/user/${userData.id}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          console.log("postRes.data:", postRes.data);
+          setPost(postRes.data);
+        } catch (err) {
+          console.error(
+            "Error fetching post:",
+            err.response?.data || err.message
+          );
+        }
+
+        try {
           const quaRes = await axios.get(
             `${import.meta.env.VITE_API_URL}/api/metadata/qualification/${
               userData.id
@@ -130,22 +146,29 @@ const OtherProfile = () => {
   return (
     <div className="outerbox">
       <div className="innerbox">
-        <h3>HII {user.firstname.toUpperCase()},</h3>
+        <h3>Hi! {user.firstname.toUpperCase()},</h3>
+
         <div className="detailsBox">
-          <img src="./avatar.png" className="profilePic" />
+          <img
+            src={user?.image ? user.image : "/girl.png"}
+            alt="Profile"
+            className="profile-image"
+          />
+
           <h2 className="name">
             {user.firstname} {user.lastname}
           </h2>
           <p className="email">{user.email}</p>
           <p className="role">{user.role}</p>
+          {/* <button onClick={() => handleEdit()}>✏️</button> */}
         </div>
       </div>
 
-      <div className="info">
+      <div className="infoRow grid-row">
         <h3>Description</h3>
         <p>{desc}</p>
 
-        <div className="infoRow">
+        <div className="infoRow grid-card">
           <label>Graduation</label>
           <div>
             {(qualification?.length ?? 0) === 0 ? (
@@ -162,7 +185,7 @@ const OtherProfile = () => {
           </div>
         </div>
 
-        <div className="infoRow">
+        <div className="infoRow grid-card">
           <label>Posts</label>
           <div>
             {(post?.length ?? 0) === 0 ? (
@@ -170,16 +193,52 @@ const OtherProfile = () => {
                 <p>No Records Found</p>
               </div>
             ) : (
-              (post ?? []).map((item, index) => (
-                <div className="experienceCard" key={index}>
-                  <h4>{item.name}</h4>
+              Object.values(
+                post.reduce((acc, item) => {
+                  if (!acc[item.post_id]) {
+                    acc[item.post_id] = {
+                      post_id: item.post_id,
+                      blog: item.blog,
+                      description: item.description,
+                      images: [],
+                    };
+                  }
+                  if (item.image_url) {
+                    acc[item.post_id].images.push(item.image_url);
+                  }
+                  return acc;
+                }, {})
+              ).map((postItem, index) => (
+                <div className="postCard" key={index}>
+                  {postItem.blog && (
+                    <h4 className="postTitle">{postItem.blog}</h4>
+                  )}
+
+                  {postItem.images.length > 0 && (
+                    <div className="imageGrid">
+                      {postItem.images.map((imgUrl, imgIndex) => (
+                        <div className="imageCard" key={imgIndex}>
+                          <img
+                            src={imgUrl}
+                            alt={`Post ${postItem.post_id} Image ${
+                              imgIndex + 1
+                            }`}
+                            className="postImage"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <p className="postDescription">
+                    {postItem.description || "No description available."}
+                  </p>
                 </div>
               ))
             )}
           </div>
         </div>
 
-        <div className="infoRow">
+        <div className="infoRow grid-card">
           <label>Experience</label>
           <h3>
             {user?.role === "Employee" ? "Work Experience" : "Job Details"}
@@ -205,7 +264,7 @@ const OtherProfile = () => {
           )}
         </div>
 
-        <div className="infoRow">
+        <div className="infoRow grid-card">
           <label>Skills</label>
           <div>
             {skill.map((item, i) => (
@@ -216,7 +275,7 @@ const OtherProfile = () => {
           </div>
         </div>
 
-        <div className="infoRow">
+        <div className="infoRow grid-card">
           <label>Interests</label>
           <div>
             {interest.map((item, i) => (

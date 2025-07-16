@@ -188,9 +188,21 @@ export const deletePostFunction = async (post_id) => {
 export const getPostsByUserFunction = async (user_id) => {
   // get all the posts created by the user
   try {
-    const result = await pool.query("select * from posts where user_id = $1", [
-      user_id,
-    ]);
+    const result = await pool.query(
+      `SELECT 
+      p.id AS post_id,
+      p.blog,
+      p.description,
+      p.time,
+      pi.id AS image_id,
+      pi.image_url,
+      pi.uploaded_at
+    FROM posts p
+    LEFT JOIN post_images pi ON p.id = pi.post_id
+    WHERE p.user_id = $1
+    ORDER BY p.time DESC`,
+      [user_id]
+    );
     return result.rows;
   } catch (err) {
     console.log("Error fetching posts");

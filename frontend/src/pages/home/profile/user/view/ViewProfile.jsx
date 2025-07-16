@@ -203,11 +203,44 @@ const ViewProfile = () => {
                 <p>No Records Found</p>
               </div>
             ) : (
-              post.map((item, index) => (
-                <div className="experienceCard" key={index}>
-                  <h4>{item.blog || "Untitled Post"}</h4>
-                  <p>
-                    {item.blog?.substring(0, 100) || "No content available."}
+              Object.values(
+                post.reduce((acc, item) => {
+                  if (!acc[item.post_id]) {
+                    acc[item.post_id] = {
+                      post_id: item.post_id,
+                      blog: item.blog,
+                      description: item.description,
+                      images: [],
+                    };
+                  }
+                  if (item.image_url) {
+                    acc[item.post_id].images.push(item.image_url);
+                  }
+                  return acc;
+                }, {})
+              ).map((postItem, index) => (
+                <div className="postCard" key={index}>
+                  {postItem.blog && (
+                    <h4 className="postTitle">{postItem.blog}</h4>
+                  )}
+
+                  {postItem.images.length > 0 && (
+                    <div className="imageGrid">
+                      {postItem.images.map((imgUrl, imgIndex) => (
+                        <div className="imageCard" key={imgIndex}>
+                          <img
+                            src={imgUrl}
+                            alt={`Post ${postItem.post_id} Image ${
+                              imgIndex + 1
+                            }`}
+                            className="postImage"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <p className="postDescription">
+                    {postItem.description || "No description available."}
                   </p>
                 </div>
               ))
