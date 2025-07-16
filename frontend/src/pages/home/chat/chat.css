@@ -1,5 +1,3 @@
-/* chat.css */
-
 .chat-page {
   display: flex;
   width: 100vw;
@@ -24,8 +22,6 @@
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  /* Add this to handle potential overflow issues */
-  min-width: 0;
 }
 
 .chat-avatar {
@@ -36,15 +32,8 @@
 }
 
 @media (max-width: 768px) {
-  /* On mobile, remove page padding to use the full screen */
-  .chat-page {
-    padding: 0;
-    gap: 0;
-  }
-
   .chat-page-content {
     max-width: 100%;
-    /* This is important: ensure the content wrapper fills the page height */
-    height: 100vh;
+    /* max-height: 100%; */
   }
 }
