@@ -57,8 +57,8 @@ router.put("/skill/:id", protect, updateSkill);
 router.put("/interest/:id", protect, updateInterest);
 
 router.delete("/qualification", protect, deleteQual);
-router.delete("/skill", protect, deleteSkill);
-router.delete("/interest", protect, deleteInterest);
+router.delete("/skill/:id", protect, deleteSkill);
+router.delete("/interest/:id", protect, deleteInterest);
 
 router.post("/domain", protect, createDomain);
 

@@ -484,7 +484,8 @@ export const updateSkill = async (req, res) => {
 };
 
 export const deleteSkill = async (req, res) => {
-  const { user_id, skillid } = req.body;
+  const skillid = req.params.id;
+  const user_id = req.user.id;
 
   if (!user_id) return res.status(400).json({ error: "user ID is required" });
   if (!skillid) return res.status(400).json({ error: "Skill ID is required" });
@@ -527,7 +528,8 @@ export const updateInterest = async (req, res) => {
 };
 
 export const deleteInterest = async (req, res) => {
-  const { user_id, interest_id } = req.body;
+  const user_id = req.user.id;
+  const interest_id = req.params.id;
 
   console.log("Received for deletion:", { user_id, interest_id });
 
