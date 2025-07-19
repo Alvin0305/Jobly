@@ -105,7 +105,6 @@ Jobly/
 └── README.md
 ```
 👨‍💻 Contributors
-👨‍💻 Contributors
 - [Alvin A S](https://github.com/Alvin0305)
 - [Athira Antony](https://github.com/Athira-Antony)
 - [Durga Pillai](https://github.com/Durga-Pillai)
