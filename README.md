@@ -1,7 +1,7 @@
 🔗 Jobly – A Professional Social Network for Employees & Employers
 Jobly is a full-stack, real-time web application inspired by LinkedIn. It connects employees and employers through job listings, skill-based feeds, networking features, and a rich messaging interface. Built for seamless collaboration and communication, Jobly bridges the gap between job seekers and recruiters with intelligent features.
 
-🌐 Live Demo: [Jobly](jobly-lime.vercel.app)
+🌐 Live Demo: [Jobly](https://jobly-lime.vercel.app)
 
 🚀 Features
 👥 User Roles
