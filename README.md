@@ -90,7 +90,7 @@ Socket.IO (Real-time chat)
 Render (Deployment)
 
 📂 Project Structure
-bash
+```bash
 Copy
 Edit
 Jobly/
@@ -105,6 +105,7 @@ Jobly/
 │   ├── models/
 │   └── ...
 └── README.md
+```
 👨‍💻 Contributors
 👨‍💻 Contributors
 - [Alvin A S](https://github.com/Alvin0305)
