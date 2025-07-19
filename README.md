@@ -91,8 +91,6 @@ Render (Deployment)
 
 📂 Project Structure
 ```bash
-Copy
-Edit
 Jobly/
 ├── frontend/         # React client
 │   ├── pages/
